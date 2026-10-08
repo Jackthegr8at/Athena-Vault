@@ -1,0 +1,743 @@
+/*
+ * Phone-first Home composition.
+ *
+ * The desktop Home overview remains the source layout above. Phones get a
+ * deliberately smaller hierarchy: a single household pulse, one glance
+ * snapshot, then disclosure rows for the full data managers. This avoids
+ * turning the desktop dashboard into a stack of tiny cards while preserving
+ * every existing manager and action below the fold.
+ */
+.home-overview-mobile { display: none; }
+.home-mobile-disclosure { display: contents; }
+.home-mobile-disclosure > summary { display: none; }
+.home-mobile-disclosure-body { display: contents; }
+
+/*
+ * Page-canvas artwork: the Home module carries its own transparent mountain
+ * range anchored to the top-right of the main column. The isolated stacking
+ * context keeps it behind every card and control, and pointer-events stays
+ * off so the artwork never intercepts input.
+ */
+.home-shell .main { position: relative; isolation: isolate; }
+.home-shell .main::before { position: absolute; z-index: -1; top: -30px; right: clamp(12px, 1.5vw, 24px); width: min(74%, 1040px); height: 340px; content: ""; background: url("/brand/backgrounds/home.png") right top / contain no-repeat; opacity: .3; pointer-events: none; }
+/* Home timeline, maintenance and household rules moved here from globals.css;
+   these selectors are only rendered by the Home route. */
+.home-property-card .maintenance-table thead th, .home-household-ledger-card .maintenance-table thead th { background: #FCF9F1; border-bottom: 1px solid var(--gold); }
+.home-history-table td:last-child .maintenance-row-actions { justify-content: flex-end; }
+.home-timeline-viewport { container-type: inline-size; width: 100%; max-width: 100%; min-width: 0; overflow-x: auto; overflow-y: visible; margin-top: 18px; border: 1px solid var(--line); border-radius: 14px; overscroll-behavior-x: contain; }
+.home-timeline-table { width: max-content; min-width: 980px; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+.home-timeline-table.is-fluid { width: max-content; min-width: 980px; }
+@container (min-width: 388px) {
+  .home-timeline-table.is-fluid { width: 100%; }
+}
+.home-timeline-table th, .home-timeline-table td { border-top: 1px solid var(--line); border-right: 1px solid var(--line); padding: 10px; text-align: right; vertical-align: middle; font-size: 11px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+.home-timeline-table thead th { position: sticky; top: 0; z-index: 4; border-top: 0; border-bottom: 1px solid var(--gold); background: #FCF9F1; color: var(--muted); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.home-timeline-table tr > :last-child { border-right: 0; }
+.home-timeline-table tbody th { color: var(--ink); font-weight: 800; }
+.home-timeline-date-column { width: 116px; min-width: 116px; text-align: left !important; position: sticky; left: 0; z-index: 3; background: var(--surface); }
+.home-timeline-table thead .home-timeline-date-column { z-index: 6; background: var(--neutral-surface); }
+.home-timeline-date-column small { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; font-weight: 500; }
+.home-timeline-amount { display: block; font-weight: 800; }
+.home-timeline-table .timeline-status-badge { margin-top: 5px; }
+.home-timeline-table th:last-child, .home-timeline-table td:last-child { width: 64px; min-width: 64px; }
+.home-timeline-actions { min-width: 44px; display: flex; justify-content: flex-end; }
+.home-timeline-action-menu { position: relative; display: flex; justify-content: flex-end; }
+.home-timeline-action-popover { position: absolute; top: calc(100% + 6px); right: 0; z-index: 8; display: grid; gap: 6px; min-width: 156px; padding: 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+.home-timeline-action-popover .maintenance-action-menu-item { min-height: 36px; padding: 7px 9px; font-size: 10px; }
+.maintenance-card { position: relative; margin-top: 18px; min-width: 0; overflow: hidden; }
+.maintenance-card-head { position: relative; z-index: 1; align-items: flex-start; }
+.maintenance-item-count { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; padding: 7px 10px; border-radius: 999px; background: var(--gold-surface); color: var(--gold-ink); font-size: 10px; font-weight: 800; white-space: nowrap; }
+.maintenance-summary { position: relative; z-index: 1; }
+.maintenance-summary-metric:nth-child(2) { border-top-color: var(--navy); }
+.maintenance-summary-icon { position: absolute; top: 50%; right: 20px; display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border: 1px solid var(--gold); border-radius: 12px; color: var(--gold-ink); transform: translateY(-50%); }
+.maintenance-summary-metric:nth-child(2) .maintenance-summary-icon { color: var(--gold-ink); }
+.home-household-expenses { margin-top: 18px; min-width: 0; }
+.home-household-expenses-grid { display: grid; grid-template-columns: minmax(280px, .75fr) minmax(0, 1.7fr); gap: 18px; align-items: stretch; min-width: 0; }
+.home-household-expense-form { display: flex; flex-direction: column; height: 100%; margin-top: 0; background: #f9f6ef; }
+.home-household-expense-form .maintenance-form { display: flex; flex: 1 1 auto; flex-direction: column; }
+.home-household-expense-form .maintenance-form-actions { margin-top: auto; padding-top: 14px; }
+.home-household-expense-form .home-household-primary-fields { grid-template-columns: 1fr; }
+.home-household-expense-form .home-household-secondary-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 12px; row-gap: 12px; margin-top: 12px; }
+.home-household-amount-field { grid-column: 1; }
+
+.home-household-ledger-card { min-width: 0; overflow: hidden; border: 1px solid var(--navy); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); }
+.home-household-ledger-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 18px 20px; background: var(--navy); color: var(--navy-on-dark); }
+.home-household-ledger-header > div { min-width: 0; }
+.home-household-ledger-header .eyebrow { color: var(--gold-light); }
+.home-household-ledger-header .card-title { color: var(--surface); }
+.home-household-ledger-header .card-subtitle { color: var(--silver-on-dark); }
+.home-household-ledger-count { flex: 0 0 auto; color: var(--gold-light); font-size: 15px; font-weight: 800; line-height: 1.1; white-space: nowrap; }
+.home-household-ledger-card .maintenance-table-wrap { margin: 0; border: 0; border-radius: 0; }
+.home-household-ledger-card .maintenance-empty { margin: 0; border: 0; border-radius: 0; }
+.home-household-ledger-card .maintenance-table th:last-child { text-align: right; }
+.home-household-ledger-card .maintenance-table td:last-child { width: 76px; min-width: 76px; }
+.home-household-ledger-card .maintenance-row-actions { min-width: 0; justify-content: flex-end; }
+.maintenance-actions-button { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); color: var(--navy); cursor: pointer; }
+.maintenance-actions-button:hover, .maintenance-actions-button:focus-visible { border-color: var(--gold); background: var(--gold-surface); }
+.maintenance-actions-button:disabled { cursor: wait; opacity: .55; }
+.maintenance-modal-backdrop { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 20px; background: rgba(17, 28, 38, .48); }
+.maintenance-actions-modal { width: min(100%, 380px); padding: 20px; border: 1px solid var(--line-strong); border-radius: 16px; background: var(--surface); box-shadow: 0 24px 60px rgba(17, 28, 38, .28); }
+.maintenance-actions-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.maintenance-actions-modal-head > div { min-width: 0; }
+.maintenance-actions-modal-options { display: grid; gap: 8px; margin-top: 18px; }
+.maintenance-actions-modal-options form { margin: 0; }
+.maintenance-action-menu-item { display: flex; align-items: center; justify-content: flex-start; width: 100%; min-height: 44px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--navy); font-size: 12px; font-weight: 800; text-align: left; cursor: pointer; }
+.maintenance-action-menu-item:hover, .maintenance-action-menu-item:focus-visible { border-color: var(--gold); background: var(--gold-surface); }
+.maintenance-action-menu-item.is-danger { color: var(--danger); }
+.maintenance-action-menu-item.is-danger:hover, .maintenance-action-menu-item.is-danger:focus-visible { border-color: var(--danger-border); background: var(--danger-surface); }
+.maintenance-actions-confirmation { margin-top: 18px; padding: 12px; border: 1px solid var(--danger-border); border-radius: 10px; background: var(--danger-surface); color: var(--danger); }
+.maintenance-actions-confirmation p { margin: 0; font-size: 12px; line-height: 1.45; }
+.maintenance-actions-confirmation .maintenance-confirm-actions { margin-top: 12px; }
+@media (max-width: 1100px) { .home-household-expenses-grid { grid-template-columns: 1fr; } }
+.maintenance-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+.maintenance-summary-metric { display: grid; gap: 6px; padding: 14px 16px; background: var(--gold-surface); border: 1px solid #E5D5B2; border-radius: 15px; min-width: 0; }
+.maintenance-summary-metric span { color: var(--gold-ink); font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.maintenance-summary-metric strong { font-size: 22px; letter-spacing: -.04em; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+.maintenance-form-panel { margin-top: 18px; padding: 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; min-width: 0; }
+.home-household-expenses-grid .home-household-expense-form { margin-top: 0; background: #f9f6ef; }
+.maintenance-form-title { margin: 0; font-size: 14px; letter-spacing: -.02em; }
+.maintenance-form { margin-top: 16px; }
+.maintenance-form-fields { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(170px, .8fr) minmax(140px, .7fr); gap: 12px; }
+.maintenance-field { display: grid; align-content: start; gap: 6px; min-width: 0; }
+.maintenance-field label { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); font-size: 12px; font-weight: 700; }
+.maintenance-field input, .maintenance-field select { width: 100%; min-height: 44px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); color: var(--ink); padding: 9px 11px; }
+.maintenance-field input::placeholder { color: var(--muted); }
+.maintenance-field .investment-dropdown { min-width: 0; }
+.maintenance-field .investment-dropdown-trigger { font-size: 14px; }
+.maintenance-field-error { margin: 0; color: var(--danger); font-size: 12px; line-height: 1.35; }
+.maintenance-form-actions, .maintenance-row-actions, .maintenance-confirm-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.home-household-expense-form .maintenance-primary-button { display: inline-flex; align-items: center; }
+.maintenance-form-actions { margin-top: 14px; }
+.maintenance-primary-button, .maintenance-secondary-button, .maintenance-danger-button { min-height: 44px; border-radius: 10px; padding: 9px 14px; font-size: 12px; font-weight: 800; transition: background-color .18s ease, border-color .18s ease, color .18s ease, opacity .18s ease; }
+.maintenance-primary-button { border: 1px solid var(--navy-soft); background: var(--navy-soft); color: var(--surface); }
+.maintenance-primary-button:hover { background: var(--navy); border-color: var(--navy); }
+.maintenance-secondary-button { border: 1px solid var(--line-strong); background: var(--surface); color: var(--navy); }
+.maintenance-secondary-button:hover { background: var(--gold-surface); border-color: var(--gold); }
+.maintenance-danger-button { border: 1px solid var(--danger-border); background: var(--danger-surface); color: var(--danger); }
+.maintenance-danger-button:hover { background: #F3D6D0; border-color: #C8756A; }
+.maintenance-primary-button:disabled, .maintenance-secondary-button:disabled, .maintenance-danger-button:disabled { cursor: wait; opacity: .55; }
+.maintenance-message { margin: 12px 0 0; font-size: 12px; line-height: 1.45; }
+.module-first-use-form .maintenance-message { margin: 0; }
+.maintenance-message.is-success { color: var(--positive); }
+.maintenance-message.is-error { color: var(--danger); }
+.maintenance-table-wrap { width: 100%; min-width: 0; margin-top: 22px; overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+.maintenance-table { width: 100%; min-width: 680px; border-collapse: collapse; }
+.maintenance-table th, .maintenance-table td { padding: 14px 12px; border-top: 1px solid var(--line); text-align: left; font-size: 12px; vertical-align: top; }
+.maintenance-table thead th { border-top: 0; color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+.maintenance-table tbody th { color: var(--ink); font-weight: 800; }
+.maintenance-expense-cell { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.maintenance-expense-icon { display: inline-grid; place-items: center; width: 32px; height: 32px; flex: 0 0 32px; border-radius: 50%; background: var(--gold-surface); color: var(--gold-ink); }
+.maintenance-expense-icon svg { display: block; }
+.maintenance-expense-name { min-width: 0; overflow-wrap: anywhere; }
+.maintenance-frequency-badge { display: inline-flex; align-items: center; justify-content: center; min-height: 26px; padding: 4px 10px; border-radius: 999px; font-size: 10px; font-weight: 800; line-height: 1.1; white-space: nowrap; }
+.maintenance-frequency-badge.is-monthly, .maintenance-frequency-badge.is-biweekly { color: var(--positive); background: var(--positive-surface); }
+.maintenance-frequency-badge.is-annual { color: var(--gold-ink); background: var(--gold-surface); }
+.maintenance-frequency-badge.is-weekly, .maintenance-frequency-badge.is-quarterly { color: var(--navy-soft); background: var(--neutral-surface); }
+.maintenance-table td { color: var(--muted); font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+.maintenance-card-head .card-title { color: var(--ink); font-family: var(--font-display); font-size: clamp(28px, 3vw, 42px); font-weight: 500; letter-spacing: -.045em; line-height: 1.05; }
+.maintenance-card-head .card-subtitle { margin-top: 6px; font-size: 12px; }
+.maintenance-summary { gap: 18px; margin-top: 18px; }
+.maintenance-summary-metric { position: relative; display: flex; align-items: center; min-height: 84px; padding: 16px 20px; border: 1px solid #E5D5B2; border-top: 2px solid var(--gold); border-radius: 12px; background: var(--surface); }
+.maintenance-summary-metric:nth-child(2) { border-top-color: var(--navy); }
+.maintenance-summary-metric > div { display: grid; gap: 5px; }
+.maintenance-summary-icon { position: absolute; top: 50%; right: 20px; display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border: 1px solid var(--gold); border-radius: 12px; color: var(--gold-ink); transform: translateY(-50%); }
+.maintenance-summary-icon svg { display: block; }
+.maintenance-summary-label { color: var(--gold-ink) !important; font-size: 10px !important; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.maintenance-summary-metric strong { color: var(--ink); font-family: var(--font-numeric); font-size: 30px; font-weight: 500; letter-spacing: -.04em; font-variant-numeric: lining-nums tabular-nums; }
+.maintenance-form-title { font-family: var(--font-display); font-size: 17px; font-weight: 600; }
+
+.maintenance-row-actions { min-width: 150px; }
+.maintenance-table td:last-child { min-width: 250px; text-align: right; }
+.maintenance-table td:last-child .maintenance-row-actions { justify-content: flex-end; flex-wrap: nowrap; }
+.maintenance-confirm { display: grid; gap: 8px; margin-top: 10px; padding: 10px; border: 1px solid var(--danger-border); border-radius: 10px; background: var(--danger-surface); color: var(--danger); font-size: 12px; font-weight: 700; }
+.maintenance-card .maintenance-summary-metric, .maintenance-card .maintenance-table thead th { background: #FCF9F1; }
+.maintenance-card .maintenance-table thead th { border-bottom: 1px solid var(--gold); }
+.maintenance-empty { margin-top: 18px; padding: 16px; border: 1px dashed var(--line-strong); border-radius: 14px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+@media (max-width: 720px) { .maintenance-form-fields { grid-template-columns: 1fr; } .maintenance-form-panel { padding: 16px; } }
+
+
+/* Home mobile disclosure branches for the maintenance and timeline tables,
+   moved here from globals.css; they only apply inside Home disclosures. */
+@media (max-width: 720px) {
+  .home-mobile-subdisclosure-body > .maintenance-form-panel {
+    margin: 0;
+    padding: 0 0 12px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .home-mobile-disclosure .maintenance-table, .home-mobile-disclosure .home-timeline-table {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .home-mobile-disclosure-body > .home-property-card .home-timeline-viewport {
+    overflow: visible;
+  }
+
+  .home-mobile-disclosure .home-timeline-table {
+    display: block;
+    border-collapse: separate;
+    table-layout: auto;
+  }
+
+  .home-mobile-disclosure .home-timeline-table thead { display: none; }
+
+  .home-mobile-disclosure .home-timeline-table tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  .home-mobile-disclosure .home-timeline-table tbody tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border: 1px solid #E7D9B9;
+    border-radius: 13px;
+    background: var(--gold-surface);
+  }
+
+  .home-mobile-disclosure .home-timeline-table tbody th, .home-mobile-disclosure .home-timeline-table tbody td {
+    display: grid;
+    gap: 3px;
+    box-sizing: border-box;
+    min-width: 0;
+    width: auto;
+    padding: 4px 0;
+    border: 0;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+    position: static;
+    text-align: left !important;
+  }
+
+  .home-mobile-disclosure .home-timeline-table tbody th::before, .home-mobile-disclosure .home-timeline-table tbody td::before {
+    content: attr(data-label);
+    color: var(--gold-ink);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .home-mobile-disclosure .home-timeline-table tbody tr > :first-child {
+    grid-column: 1 / -1;
+    padding-top: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #E7D9B9;
+    color: var(--navy);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .home-mobile-disclosure .home-timeline-table tbody tr > :last-child {
+    grid-column: 1 / -1;
+    padding-top: 8px;
+    border-top: 1px solid #E7D9B9;
+  }
+
+  .home-mobile-disclosure .home-timeline-actions, .home-mobile-disclosure .home-timeline-action-menu {
+    display: block;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .home-mobile-disclosure .home-timeline-action-menu > .maintenance-actions-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .home-mobile-disclosure .home-timeline-action-popover {
+    position: static;
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin-top: 8px;
+    box-sizing: border-box;
+  }
+}
+
+
+@media (max-width: 720px) {
+  .home-shell .topbar { padding-bottom: 4px; }
+  .home-shell .main::before { top: 20px; right: 10px; width: min(92%, 620px); height: 240px; opacity: .2; }
+  .home-shell .topbar .page-title { font-size: 32px; line-height: 1; }
+  .home-shell .topbar .card-subtitle { display: none; }
+
+  .home-overview-top { display: none !important; }
+  .home-overview-mobile { display: grid; gap: 12px; margin-top: 14px; }
+
+  .home-mobile-pulse {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    gap: 18px;
+    padding: 20px 18px 0;
+    border: 1px solid var(--navy);
+    border-bottom: 4px solid var(--gold);
+    border-radius: 20px;
+    background: var(--navy-soft) url("/brand/athena-vault-background-home.svg") right bottom / cover no-repeat;
+    color: var(--navy-on-dark);
+    box-shadow: var(--shadow);
+  }
+  .home-mobile-pulse-copy { position: relative; min-width: 0; max-width: 80%; }
+  .home-mobile-pulse-copy .eyebrow { margin: 0; color: var(--gold-light); }
+  .home-mobile-pulse-copy h2 { margin: 5px 0 0; color: var(--surface); font-family: var(--font-display); font-size: 28px; font-weight: 500; letter-spacing: -.045em; line-height: 1.04; }
+  .home-mobile-pulse-value { margin-top: 14px; color: var(--surface); font-size: clamp(35px, 11vw, 48px); font-weight: 600; letter-spacing: -.065em; line-height: .98; font-family: var(--font-numeric); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+  .home-mobile-pulse-value span { color: var(--silver-on-dark); font-size: 14px; font-weight: 500; letter-spacing: 0; }
+  .home-mobile-pulse-copy > p:last-child { max-width: 270px; margin: 9px 0 0; color: var(--silver-on-dark); font-size: 13px; line-height: 1.45; }
+  .home-mobile-pulse-actions { display: grid; gap: 10px; min-width: 0; }
+  .home-mobile-primary-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 46px; padding: 10px 14px; border: 1px solid var(--gold); border-radius: 11px; background: var(--gold); color: var(--navy); font-size: 13px; font-weight: 800; text-decoration: none; }
+  .home-mobile-primary-action:hover, .home-mobile-primary-action:focus-visible { border-color: var(--gold-light); background: var(--gold-light); color: var(--navy); }
+  .home-mobile-automation { min-width: 0; border-top: 1px solid rgba(197, 204, 207, .24); }
+  .home-mobile-automation > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 8px 0; color: var(--surface); cursor: pointer; list-style: none; touch-action: manipulation; }
+  .home-mobile-automation > summary::-webkit-details-marker { display: none; }
+  .home-mobile-automation > summary::marker { display: none; }
+  .home-mobile-automation > summary:focus-visible { outline: 2px solid var(--gold-light); outline-offset: -2px; border-radius: 6px; }
+  .home-mobile-automation-copy { display: grid; gap: 2px; min-width: 0; }
+  .home-mobile-automation-label { color: var(--surface); font-size: 13px; font-weight: 800; line-height: 1.2; }
+  .home-mobile-automation-meta { color: var(--muted-on-dark); font-size: 12px; line-height: 1.2; }
+  .home-mobile-automation-chevron { flex: 0 0 auto; color: var(--gold-light); transition: transform .18s ease; }
+  .home-mobile-automation[open] .home-mobile-automation-chevron { transform: rotate(180deg); }
+  .home-mobile-pulse-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 4px 0 12px; }
+  .home-mobile-pulse-controls > * { min-width: 0; }
+  .home-mobile-pulse-controls button, .home-mobile-pulse-controls a { min-height: 40px; width: 100%; }
+  .home-mobile-pulse-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); min-width: 0; border-top: 1px solid rgba(197, 204, 207, .24); }
+  .home-mobile-pulse-stats > div { display: grid; align-content: center; gap: 5px; min-width: 0; padding: 13px 0 15px; border-left: 0; }
+  .home-mobile-pulse-stats > div:nth-child(2) { padding-left: 12px; border-left: 1px solid rgba(197, 204, 207, .24); }
+  .home-mobile-pulse-stats > div:nth-child(3) { grid-column: 1 / -1; padding-top: 12px; border-top: 1px solid rgba(197, 204, 207, .24); }
+  .home-mobile-pulse-stats span { color: var(--muted-on-dark); font-size: 12px; line-height: 1.2; }
+  .home-mobile-pulse-stats strong { overflow-wrap: anywhere; color: var(--surface); font-size: 16px; font-weight: 750; font-family: var(--font-numeric); font-variant-numeric: lining-nums tabular-nums; }
+
+  .home-mobile-snapshot { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); }
+  .home-mobile-snapshot-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; min-width: 0; }
+  .home-mobile-snapshot-head > div { min-width: 0; }
+  .home-mobile-snapshot-head .eyebrow { margin: 0; }
+  .home-mobile-snapshot-head h3 { margin: 4px 0 0; color: var(--ink); font-family: var(--font-display); font-size: 21px; font-weight: 500; letter-spacing: -.03em; line-height: 1.08; }
+  .home-mobile-status { display: inline-flex; flex: 0 0 auto; align-items: center; min-height: 26px; padding: 5px 9px; border-radius: 999px; font-size: 12px; font-weight: 800; white-space: nowrap; }
+  .home-mobile-status.is-positive { color: var(--positive); background: var(--positive-surface); }
+  .home-mobile-status.is-neutral { color: var(--gold-ink); background: var(--gold-surface); }
+  .home-mobile-snapshot-list { display: grid; margin-top: 12px; }
+  .home-mobile-snapshot-list > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; min-width: 0; padding: 10px 0; border-top: 1px solid var(--line); }
+  .home-mobile-snapshot-list span { color: var(--muted); font-size: 12px; }
+  .home-mobile-snapshot-list strong { color: var(--ink); font-size: 14px; font-family: var(--font-numeric); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+  .home-mobile-snapshot-note { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+  .home-mobile-text-action { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; margin-top: 3px; color: var(--gold-ink); font-size: 12px; font-weight: 800; text-decoration: none; }
+  .home-mobile-text-action:hover, .home-mobile-text-action:focus-visible { color: var(--navy); text-decoration: underline; text-underline-offset: 3px; }
+
+  .home-mobile-disclosure { display: block; min-width: 0; margin-top: 12px; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); scroll-margin-top: 16px; }
+  .home-mobile-disclosure > summary { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 10px; min-height: 70px; padding: 13px 15px; color: var(--ink); cursor: pointer; list-style: none; touch-action: manipulation; }
+  .home-mobile-disclosure > summary::-webkit-details-marker { display: none; }
+  .home-mobile-disclosure > summary::marker { display: none; }
+  .home-mobile-disclosure > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: -3px; }
+  .home-mobile-disclosure[open] > summary { border-bottom: 1px solid var(--line); background: #FCF9F1; }
+  .home-mobile-disclosure-copy { display: grid; gap: 3px; min-width: 0; }
+  .home-mobile-disclosure-eyebrow { color: var(--gold-ink); font-size: 12px; font-weight: 800; letter-spacing: .1em; line-height: 1.2; text-transform: uppercase; }
+  .home-mobile-disclosure-title { overflow-wrap: anywhere; color: var(--ink); font-size: 16px; font-weight: 800; line-height: 1.2; }
+  .home-mobile-disclosure-meta { color: var(--muted); font-size: 12px; line-height: 1.2; text-align: right; white-space: nowrap; }
+  .home-mobile-disclosure-chevron { color: var(--gold-ink); transition: transform .18s ease; }
+  .home-mobile-disclosure[open] .home-mobile-disclosure-chevron { transform: rotate(180deg); }
+  .home-mobile-disclosure-body { min-width: 0; padding: 0 12px 12px; }
+
+  /* Remove the nested desktop panels only inside the phone disclosure body. */
+  .home-mobile-disclosure-body > .home-section,
+  .home-mobile-disclosure-body > .home-property-card,
+  .home-mobile-disclosure-body > .home-household-expenses,
+  .home-mobile-disclosure-body > .maintenance-card { margin-top: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; }
+  .home-mobile-disclosure-body > .home-section { padding: 0; }
+  .home-mobile-disclosure-body > .home-section > .card { padding: 4px 0 0; border: 0; box-shadow: none; background: transparent; }
+  .home-mobile-disclosure-body > .home-household-expenses { padding: 0; }
+  .home-mobile-disclosure-body > .home-household-expenses .home-household-expenses-grid { display: block; }
+  .home-mobile-disclosure-body > .home-household-expenses .home-household-expense-form,
+  .home-mobile-disclosure-body > .home-household-expenses .home-household-ledger-card,
+  .home-mobile-disclosure-body > .maintenance-card .maintenance-form-panel,
+  .home-mobile-disclosure-body > .maintenance-card .maintenance-empty { border: 0; border-radius: 0; box-shadow: none; background: transparent; }
+  .home-mobile-disclosure-body > .home-household-expenses .home-household-expense-form { padding: 4px 0 12px; }
+  .home-mobile-disclosure-body > .home-household-expenses .home-household-ledger-card { margin-top: 12px; }
+  .home-mobile-disclosure-body > .home-household-expenses .home-household-ledger-header { padding: 14px 0; background: transparent; color: var(--ink); }
+  .home-mobile-disclosure-body > .home-household-expenses .home-household-ledger-header .eyebrow { color: var(--gold-ink); }
+  .home-mobile-disclosure-body > .home-household-expenses .home-household-ledger-header .card-title { color: var(--ink); }
+  .home-mobile-disclosure-body > .home-household-expenses .home-household-ledger-header .card-subtitle { color: var(--muted); }
+  .home-mobile-disclosure-body > .home-household-expenses .home-household-ledger-count { color: var(--gold-ink); }
+  .home-mobile-disclosure-body > .maintenance-card { padding: 4px 0 0; }
+  .home-mobile-disclosure-body > .maintenance-card .maintenance-card-head .card-title { font-size: 25px; }
+  .home-mobile-disclosure-body > .maintenance-card .maintenance-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+  .home-mobile-disclosure-body > .maintenance-card .maintenance-summary-metric { min-height: 70px; padding: 12px; border-radius: 12px; }
+  .home-mobile-disclosure-body > .maintenance-card .maintenance-summary-metric strong { font-size: 20px; }
+  .home-mobile-disclosure-body > .home-property-card { padding: 4px 0 0; }
+  .home-mobile-disclosure-body > .home-property-card .home-history-table-wrap,
+  .home-mobile-disclosure-body > .home-property-card .home-timeline-viewport { margin-top: 14px; }
+  .home-mobile-disclosure-body > .home-property-card .home-mortgage-card-head { gap: 12px; }
+  .home-mobile-disclosure-body > .home-property-card .home-mortgage-card-actions { justify-content: flex-start; }
+  .home-mobile-disclosure-body > .home-property-card .home-property-form-fields-wide { grid-template-columns: 1fr; }
+  .home-mobile-disclosure-body > .home-property-card .home-history-table-wrap,
+  .home-mobile-disclosure-body > .home-property-card .home-timeline-viewport { max-width: 100%; overflow-x: visible; }
+  .home-mobile-disclosure-body > .home-property-card .home-timeline-table { width: 100%; min-width: 0 !important; }
+  .home-mobile-disclosure-body > .home-section .home-table-spacing { margin-top: 14px; overflow-x: visible; }
+  .home-mobile-disclosure-body > .home-section .data-table { width: 100%; min-width: 0 !important; }
+
+  .home-mobile-disclosure .maintenance-form-fields,
+  .home-mobile-disclosure .home-household-primary-fields,
+  .home-mobile-disclosure .home-household-secondary-fields { grid-template-columns: 1fr; }
+  .home-mobile-disclosure .maintenance-form-panel { padding: 4px 0 12px; }
+  .home-mobile-disclosure .maintenance-table-wrap { margin-top: 14px; border-radius: 12px; }
+  .home-mobile-disclosure .maintenance-table { width: 100%; min-width: 0 !important; }
+  .home-mobile-disclosure .home-property-card .section-card { padding: 0; }
+
+  /*
+   * Opened Home managers are a single phone surface, not a desktop card
+   * nested inside another card. Keep the disclosure chrome, then give its
+   * contents a deliberate reading gutter and a predictable action rhythm.
+   */
+  .home-mobile-disclosure > .home-mobile-disclosure-body { padding: 0 16px 16px; }
+  .home-mobile-disclosure-body > .home-section,
+  .home-mobile-disclosure-body > .home-property-card,
+  .home-mobile-disclosure-body > .home-household-expenses,
+  .home-mobile-disclosure-body > .maintenance-card { min-width: 0; padding: 0 0 16px; }
+  .home-mobile-disclosure-body > .home-property-card > .card-head,
+  .home-mobile-disclosure-body > .maintenance-card > .maintenance-card-head,
+  .home-mobile-disclosure-body > .home-household-expenses .home-household-ledger-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 10px;
+    min-width: 0;
+    margin: 0;
+    padding: 16px 0 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .home-mobile-disclosure-body > .home-property-card.home-mortgage-settings-card > .home-mortgage-card-head { grid-template-columns: 1fr; }
+  .home-mobile-disclosure-body > .home-property-card.home-mortgage-settings-card > .home-mortgage-card-head .home-mortgage-card-actions { grid-column: 1; }
+  .home-mobile-disclosure-body .home-mortgage-card-head > div:first-child { min-width: 0; padding-right: 0; }
+  .home-mobile-disclosure-body .card-head .card-title,
+  .home-mobile-disclosure-body .maintenance-card-head .card-title { font-size: 22px; line-height: 1.12; }
+  .home-mobile-disclosure-body .card-head .card-subtitle,
+  .home-mobile-disclosure-body .maintenance-card-head .card-subtitle { max-width: none; margin-top: 6px; font-size: 14px; line-height: 1.45; }
+  .home-mobile-disclosure-body .home-mortgage-card-actions { display: grid; grid-template-columns: 1fr; width: 100%; justify-content: stretch; gap: 8px; }
+  .home-mobile-disclosure-body .home-mortgage-card-actions > * { width: 100%; min-height: 46px; justify-content: center; }
+  .home-mobile-disclosure-body .card-head > .period-date,
+  .home-mobile-disclosure-body .home-household-ledger-count { align-self: start; padding-top: 3px; }
+
+  /* Secondary editors use a divider and whitespace instead of another box. */
+  .home-mobile-disclosure-body .home-mobile-subdisclosure { margin: 0; border-top-color: var(--line); }
+  .home-mobile-disclosure-body .home-mobile-subdisclosure-body { padding: 0 0 14px; }
+  .home-mobile-disclosure-body .home-mobile-subdisclosure-body > .maintenance-form-panel,
+  .home-mobile-disclosure-body .maintenance-form-panel,
+  .home-mobile-disclosure-body .home-household-expense-form { margin-top: 0; padding: 14px 0 2px; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  .home-mobile-disclosure-body .maintenance-form-actions,
+  .home-mobile-disclosure-body .maintenance-row-actions,
+  .home-mobile-disclosure-body .maintenance-confirm-actions { display: grid; grid-template-columns: 1fr; align-items: stretch; gap: 8px; width: 100%; }
+  .home-mobile-disclosure-body .maintenance-form-actions > *,
+  .home-mobile-disclosure-body .maintenance-row-actions > *,
+  .home-mobile-disclosure-body .maintenance-row-actions form,
+  .home-mobile-disclosure-body .maintenance-row-actions form > button,
+  .home-mobile-disclosure-body .maintenance-confirm-actions > * { width: 100%; min-height: 44px; box-sizing: border-box; }
+
+  /* History is a readable list on a phone, not a stack of pale mini-cards. */
+  .home-mobile-disclosure-body .maintenance-table-wrap,
+  .home-mobile-disclosure-body .home-history-table-wrap,
+  .home-mobile-disclosure-body .home-timeline-viewport { margin: 14px 0 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; overflow: visible; }
+  .home-mobile-disclosure-body .home-property-card .maintenance-table tbody,
+  .home-mobile-disclosure-body .maintenance-card .maintenance-table tbody,
+  .home-mobile-disclosure-body .home-household-ledger-card .maintenance-table tbody { gap: 0; }
+  .home-mobile-disclosure-body .home-property-card .maintenance-table tbody tr,
+  .home-mobile-disclosure-body .maintenance-card .maintenance-table tbody tr,
+  .home-mobile-disclosure-body .home-household-ledger-card .maintenance-table tbody tr {
+    gap: 8px 12px;
+    padding: 14px 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-radius: 0;
+    background: transparent;
+  }
+  .home-mobile-disclosure-body .home-property-card .maintenance-table tbody tr:last-child,
+  .home-mobile-disclosure-body .maintenance-card .maintenance-table tbody tr:last-child,
+  .home-mobile-disclosure-body .home-household-ledger-card .maintenance-table tbody tr:last-child { border-bottom: 1px solid var(--line); }
+  .home-mobile-disclosure-body .home-property-card .maintenance-table tbody tr > :first-child,
+  .home-mobile-disclosure-body .maintenance-card .maintenance-table tbody tr > :first-child,
+  .home-mobile-disclosure-body .home-household-ledger-card .maintenance-table tbody tr > :first-child { border-bottom-color: var(--line); }
+  .home-mobile-disclosure-body .home-property-card .maintenance-table td:last-child,
+  .home-mobile-disclosure-body .maintenance-card .maintenance-table td:last-child,
+  .home-mobile-disclosure-body .home-household-ledger-card .maintenance-table td:last-child { border-top-color: var(--line); }
+
+  .home-mobile-disclosure-body .home-household-ledger-card { margin-top: 14px; }
+  .home-mobile-disclosure-body .home-household-ledger-header { padding: 14px 0; }
+  .home-mobile-disclosure-body .home-household-ledger-header .card-title { font-size: 20px; line-height: 1.15; }
+  .home-mobile-disclosure-body .home-household-ledger-header .card-subtitle { margin-top: 5px; font-size: 13px; line-height: 1.4; }
+}
+
+/*
+ * Disclosure wrappers are a phone-only composition layer. On the desktop
+ * layout their summaries stay hidden, but their bodies must remain visible
+ * even when the details element is not marked open. This explicit rule
+ * overrides the browser's closed-details UA rule and prevents the mobile
+ * redesign from removing the approved Home content below the hero.
+ */
+@media (min-width: 721px) {
+  .home-mobile-disclosure > .home-mobile-disclosure-body,
+  .home-mobile-subdisclosure > .home-mobile-subdisclosure-body {
+    display: contents !important;
+  }
+
+  .home-mobile-disclosure > summary,
+  .home-mobile-subdisclosure > summary {
+    display: none;
+  }
+}
+
+/*
+ * Opened phone sections need a real content box. `details` uses a UA rule
+ * that can hide a closed body, and `display: contents` makes the gutter
+ * ambiguous in nested managers. Keep the disclosure shell, then give its
+ * contents a stable reading gutter and safe width on small screens.
+ */
+@media (max-width: 720px) {
+  .home-mobile-disclosure > .home-mobile-disclosure-body {
+    display: block !important;
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 12px 16px 20px !important;
+  }
+
+  .home-mobile-subdisclosure > .home-mobile-subdisclosure-body {
+    display: block !important;
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 0 0 16px !important;
+  }
+
+  .home-mobile-disclosure-body > * {
+    min-width: 0;
+  }
+}
+
+/*
+ * Home disclosures use real buttons rather than the browser's closed-details
+ * behavior. This keeps every manager rendered in the approved desktop layout
+ * while giving mobile a reliable, accessible toggle and a real content box.
+ */
+.home-mobile-disclosure-trigger,
+.home-mobile-subdisclosure-trigger {
+  display: none;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+@media (min-width: 721px) {
+  .home-mobile-disclosure,
+  .home-mobile-subdisclosure,
+  .home-mobile-disclosure-body,
+  .home-mobile-subdisclosure-body {
+    display: contents !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .home-mobile-disclosure-trigger {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 10px;
+    min-height: 70px;
+    padding: 13px 15px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .home-mobile-disclosure-trigger:focus-visible,
+  .home-mobile-subdisclosure-trigger:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: -3px;
+    border-radius: 8px;
+  }
+
+  .home-mobile-disclosure[data-open="true"] > .home-mobile-disclosure-trigger {
+    border-bottom: 1px solid var(--line);
+    background: #FCF9F1;
+  }
+
+  .home-mobile-disclosure[data-open="false"] > .home-mobile-disclosure-body,
+  .home-mobile-subdisclosure[data-open="false"] > .home-mobile-subdisclosure-body {
+    display: none !important;
+  }
+
+  .home-mobile-disclosure[data-open="true"] > .home-mobile-disclosure-body {
+    display: block !important;
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 12px 16px 24px !important;
+  }
+
+  .home-mobile-disclosure[data-open="true"] .home-mobile-disclosure-chevron,
+  .home-mobile-subdisclosure[data-open="true"] .home-mobile-subdisclosure-chevron {
+    transform: rotate(180deg);
+  }
+
+  .home-mobile-subdisclosure {
+    display: block;
+    min-width: 0;
+  }
+
+  .home-mobile-subdisclosure-trigger {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 11px 0;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .home-mobile-subdisclosure[data-open="true"] > .home-mobile-subdisclosure-body {
+    display: block !important;
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 0 0 16px !important;
+  }
+
+  .home-mobile-disclosure-body > *,
+  .home-mobile-subdisclosure-body > * {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+.home-overview-top { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(340px, .95fr); gap: 18px; margin-bottom: 18px; }
+.home-summary-hero { position: relative; isolation: isolate; display: grid; grid-template-rows: auto auto auto 1fr; min-width: 0; min-height: 0; overflow: hidden; padding: 26px; border: 1px solid var(--navy); border-bottom: 4px solid var(--gold); border-radius: 20px; background: #111c26 url("/brand/athena-vault-background-home.svg") right bottom / cover no-repeat; color: var(--navy-on-dark); }
+.home-summary-hero::before { position: absolute; inset: 0; z-index: 0; content: ""; opacity: .35; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 320' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%23D7B76A' stroke-opacity='.08' stroke-width='1'%3E%3Cpath d='M-40 60 C100 10 220 100 360 45 S620 70 940 15'/%3E%3Cpath d='M-40 95 C110 40 230 130 370 75 S630 100 940 45'/%3E%3Cpath d='M-40 130 C120 70 240 160 380 105 S640 130 940 75'/%3E%3Cpath d='M-40 165 C130 100 250 190 390 135 S650 160 940 105'/%3E%3Cpath d='M-40 200 C140 130 260 220 400 165 S660 190 940 135'/%3E%3Cpath d='M-40 235 C150 160 270 250 410 195 S670 220 940 165'/%3E%3C/g%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 100% 100%; pointer-events: none; }
+.home-summary-content, .home-summary-metrics { position: relative; z-index: 3; }
+.home-summary-content .eyebrow { color: var(--gold-light); }
+.home-summary-content h2 { max-width: 420px; margin: 5px 0 0; color: var(--surface); font-family: var(--font-display); font-size: clamp(17px, 1.8vw, 22px); font-weight: 500; letter-spacing: -.025em; }
+.home-summary-value { margin-top: 22px; color: var(--surface); font-size: clamp(40px, 5vw, 64px); font-weight: 500; letter-spacing: -.055em; line-height: 1; font-family: var(--font-numeric); font-variant-numeric: lining-nums tabular-nums; }
+.home-summary-value span { color: var(--gold-light); font-size: 13px; font-weight: 500; letter-spacing: 0; }
+.home-summary-caption { margin: 8px 0 0; color: var(--silver-on-dark); font-size: 12px; }
+
+.home-summary-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-self: start; margin-top: 120px; padding-top: 20px; border-top: 1px solid rgba(197, 204, 207, .22); }
+.home-summary-metric { display: grid; grid-template-columns: 42px minmax(0, 1fr); align-items: center; gap: 14px; min-width: 0; padding: 0 16px; border-left: 1px solid rgba(197, 204, 207, .22); }
+.home-summary-metric > div { min-width: 0; }
+.home-summary-metric:first-child { padding-left: 0; border-left: 0; }
+.home-summary-metric small, .home-summary-metric > div > span { display: block; color: var(--muted-on-dark); font-size: 12px; line-height: 1.35; }
+.home-summary-metric small { font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.home-summary-metric strong { display: block; margin: 5px 0 4px; color: var(--surface); font-size: clamp(20px, 2.2vw, 26px); font-weight: 700; font-family: var(--font-numeric); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+.home-summary-metric .home-overview-icon { align-self: center; width: 42px; height: 42px; flex-basis: 42px; }
+.home-overview-side { display: grid; grid-template-rows: auto 1fr; gap: 12px; min-width: 0; }
+.home-liabilities-card, .home-glance-card { min-width: 0; border: 1px solid var(--line); border-radius: 17px; background: var(--surface); box-shadow: var(--shadow); }
+.home-liabilities-card-container { min-width: 0; container-type: inline-size; }
+.home-liabilities-card { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; gap: 16px; min-height: 150px; padding: 18px 20px; }
+.home-liabilities-summary, .home-cash-flow-summary { display: grid; align-content: center; gap: 4px; min-width: 0; }
+.home-liabilities-heading, .home-cash-flow-heading { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.home-liabilities-heading > div, .home-cash-flow-heading > div { display: grid; gap: 4px; min-width: 0; }
+.home-liabilities-card .home-liabilities-heading .home-overview-icon.is-navy { width: 52px; height: 52px; flex-basis: 52px; background: var(--gold-surface); color: var(--navy); }
+.home-liabilities-card .home-cash-flow-heading .home-overview-icon { width: 48px; height: 48px; flex-basis: 48px; }
+.home-liabilities-summary .eyebrow { margin: 0; font-size: 12px; }
+.home-liabilities-summary strong { color: var(--ink); font-size: 30px; font-weight: 500; font-family: var(--font-numeric); font-variant-numeric: lining-nums tabular-nums; }
+.home-liabilities-summary > span { margin-left: 68px; color: var(--muted); font-size: 12px; line-height: 1.35; }
+.home-cash-flow-heading small { color: var(--muted); font-size: 12px; line-height: 1.35; white-space: nowrap; }
+.home-cash-flow-summary { min-height: 100%; padding-left: 24px; border-left: 1px solid var(--line); }
+.home-cash-flow-heading strong { color: var(--ink); font-family: var(--font-display); font-size: 24px; font-weight: 500; }
+.home-cash-flow-summary a { display: inline-flex; align-items: center; gap: 8px; width: fit-content; min-height: 42px; margin: 8px 0 0 68px; padding: 0 14px; border: 1px solid var(--line); border-radius: 10px; color: var(--navy); background: var(--surface); font-size: 12px; font-weight: 800; text-decoration: none; }
+.home-cash-flow-summary a:hover { color: var(--gold-ink); }
+.home-glance-card { position: relative; overflow: hidden; padding: 18px; }
+
+/* Keep the Home overview visually related to the lighter Goals and Instrument
+   cards while reserving the dark household pulse for the primary story. */
+.home-shell .main.home-page .home-summary-hero { border-radius: 22px; box-shadow: 0 16px 42px rgba(17, 28, 38, .12); }
+.home-shell .main.home-page .home-liabilities-card,
+.home-shell .main.home-page .home-glance-card { border-radius: 20px; background: rgba(255, 253, 248, .92); box-shadow: 0 12px 32px rgba(23, 32, 41, .05); }
+@media (max-width: 720px) {
+  .home-shell .main.home-page .home-summary-hero { border-radius: 18px; }
+  .home-shell .main.home-page .home-liabilities-card,
+  .home-shell .main.home-page .home-glance-card { border-radius: 18px; }
+}
+.home-glance-head { position: relative; z-index: 1; display: flex; justify-content: space-between; }
+.home-glance-head .eyebrow { margin: 0; }
+.home-glance-art { position: absolute; right: -6%; bottom: -6%; z-index: 0; width: 150%; max-width: 300px; height: auto; object-fit: contain; object-position: right bottom; opacity: .30; pointer-events: none; }
+.home-glance-list { position: relative; z-index: 1; display: grid; margin-top: 8px; }
+.home-glance-row { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: 9px; min-width: 0; padding: 9px 0; border-top: 1px solid var(--line); }
+.home-glance-row:first-child { border-top: 0; }
+.home-glance-row > div { display: grid; gap: 2px; min-width: 0; }
+.home-glance-row > div > span { color: var(--muted); font-size: 12px; }
+.home-glance-row small { color: var(--muted); font-size: 12px; }
+.home-glance-row strong { color: var(--ink); font-size: 12px; font-family: var(--font-numeric); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+.home-glance-source { position: relative; z-index: 1; margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.35; }
+.home-overview-icon { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; flex: 0 0 30px; border-radius: 50%; }
+.home-overview-icon svg { display: block; flex: 0 0 auto; }
+.home-overview-icon.is-navy { background: var(--navy); color: var(--surface); }
+.home-overview-icon.is-gold { background: var(--gold-surface); color: var(--gold-ink); }
+.home-overview-icon.is-positive { background: var(--positive-surface); color: var(--positive); }
+.home-overview-icon.is-neutral { background: var(--neutral-surface); color: var(--navy-soft); }
+.home-overview-icon.is-ring-gold { border: 1px solid var(--gold); background: transparent; color: var(--gold); }
+.home-household-cash-flow-manager { margin-top: 18px; }
+@media (max-width: 1600px) and (min-width: 1001px) {
+  .home-summary-metrics { margin-top: 82px; padding-right: 0; }
+  .home-summary-metric { grid-template-columns: 1fr; gap: 4px; padding: 0 10px; }
+  .home-summary-metric:first-child { padding-left: 0; }
+  .home-summary-metric .home-overview-icon, .home-overview-icon { display: none; }
+  .home-summary-metric small { font-size: 12px; }
+  .home-summary-metric strong { font-size: clamp(18px, 1.65vw, 21px); letter-spacing: -.035em; }
+  .home-summary-metric > div > span { font-size: 12px; }
+  .home-liabilities-card { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 10px; padding: 14px 16px; }
+  .home-liabilities-heading, .home-cash-flow-heading { gap: 0; }
+  .home-liabilities-summary > span { margin-left: 0; }
+  .home-cash-flow-summary { padding-left: 16px; }
+  .home-cash-flow-heading small { max-width: none; white-space: normal; }
+  .home-cash-flow-heading strong { font-size: 21px; white-space: nowrap; }
+  .home-cash-flow-summary a { margin-left: 0; padding: 0 9px; font-size: 12px; white-space: nowrap; }
+  .home-glance-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+}
+
+@media (max-width: 1100px) and (min-width: 721px) {
+  .home-overview-top { grid-template-columns: 1fr; }
+  .home-overview-side { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto; }
+}
+
+@media (max-width: 900px) and (min-width: 721px) {
+  .home-overview-side { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+  .home-shell .main::before { right: 12px; width: min(84%, 720px); height: 290px; opacity: .25; }
+}
+
+@media (max-width: 800px) and (min-width: 721px) {
+  .home-summary-metrics { padding-right: 0; }
+  .home-summary-metric { grid-template-columns: 1fr; gap: 4px; padding: 0 8px; }
+  .home-summary-metric:first-child { padding-left: 0; }
+  .home-summary-metric .home-overview-icon { display: none; }
+  .home-summary-metric small { font-size: 12px; }
+  .home-summary-metric strong { font-size: clamp(17px, 2.1vw, 21px); letter-spacing: -.035em; }
+  .home-summary-metric > div > span { font-size: 12px; }
+}
+
+@media (max-width: 720px) {
+  .home-overview-top { grid-template-columns: 1fr; gap: 12px; }
+  .home-summary-hero { min-height: 360px; padding: 20px; background-position: right bottom; }
+  .home-summary-metrics { grid-template-columns: 1fr; gap: 12px; }
+  .home-summary-metric, .home-summary-metric:first-child { padding: 10px 0 0; border-top: 1px solid rgba(197, 204, 207, .22); border-left: 0; }
+  .home-summary-metric:first-child { padding-top: 0; border-top: 0; }
+  .home-liabilities-card { grid-template-columns: 1fr; gap: 14px; padding: 18px; }
+  .home-liabilities-card .home-liabilities-summary .home-overview-icon.is-navy, .home-liabilities-card .home-cash-flow-summary .home-overview-icon { width: 50px; height: 50px; flex-basis: 50px; }
+  .home-cash-flow-summary { padding: 14px 0 0; border-top: 1px solid var(--line); border-left: 0; }
+  .home-glance-card { padding: 16px; }
+  .home-glance-art { opacity: .1; }
+}
+
+@container (max-width: 720px) {
+  .home-liabilities-card { grid-template-columns: 1fr; gap: 16px; min-height: 0; padding: 18px; }
+  .home-cash-flow-summary { min-height: 0; padding: 16px 0 0; border-top: 1px solid var(--line); border-left: 0; }
+  .home-cash-flow-heading small { max-width: none; white-space: normal; }
+  .home-cash-flow-summary a { margin-left: 60px; white-space: nowrap; }
+}

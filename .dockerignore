@@ -1,0 +1,67 @@
+# Repository metadata and agent/worktree state
+.git
+.gitignore
+.devin
+.agents
+.claude
+.superpowers
+.tmp
+.worktrees
+worktrees
+superpowers
+
+# Local configuration and credentials; re-allow committed templates below
+.env*
+!.env.example
+!.env.docker.example
+
+# Host-installed dependencies, build output, and caches
+node_modules
+**/node_modules
+.next
+**/.next
+.next-*
+**/.next-*
+dist
+**/dist
+coverage
+**/coverage
+.pnpm-store
+**/.pnpm-store
+*.tsbuildinfo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+tmp
+**/tmp
+
+# Workbook and migration artifacts that must never enter an image context
+Budget.xlsx
+**/*.xlsx
+workbook-inspection
+**/workbook-inspection
+backups
+**/backups
+docker-backups
+docker-import
+infrastructure/docker/backups
+infrastructure/docker/caddy-data
+infrastructure/docker/caddy-config
+*.dump
+*.dump.*
+*.sql.gz
+*.backup
+*.bak
+
+# Large, documentation, and tool-specific files not needed in Docker builds
+mockup/
+plan/
+docs/
+infrastructure/
+mobile-cards.md
+.cody/
+.omp/
+.codex/
+.publication-candidate/

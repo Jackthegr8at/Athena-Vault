@@ -1,0 +1,54 @@
+/* Shared Investments shell. Rule order within this file follows the original investments stylesheet. */
+
+.investment-action-message {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.investment-action-message.is-error,
+.investment-field-error {
+  color: #a34f43;
+}
+
+.investment-action-message.is-success {
+  color: #357455;
+}
+
+.investment-field-error {
+  font-size: 12px;
+  font-weight: 600;
+}
+.investment-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Investments overview canvas: page-level artwork layer matching the instrument
+   detail treatment. The gradient scrim keeps content readable above the art. */
+.main.investments-page-main {
+  --investments-art-inset: clamp(12px, 1.5vw, 24px);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(90deg, rgba(246, 244, 238, .96) 0%, rgba(246, 244, 238, .78) 48%, rgba(246, 244, 238, .2) 100%),
+    url("/brand/backgrounds/investments.png");
+  background-position: 0 0, right var(--investments-art-inset) top;
+  background-repeat: no-repeat;
+  background-size: 100% 620px, min(100%, 1102px) auto;
+}
+
+.main.investments-page-main.editorial-module-page > :not(.topbar) { position: relative; z-index: 1; }
+
+@media (max-width: 720px) {
+  .main.investments-page-main {
+    --investments-art-inset: 10px;
+    background-size: 100% 480px, min(100%, 854px) auto;
+  }
+}

@@ -1,0 +1,5 @@
+/* Legacy compatibility barrel. InvestmentsLayout imports the four route stylesheets directly in cascade order. */
+@import "./investments-shared-shell.css";
+@import "./investments-holdings.css";
+@import "./investments-projection-planner.css";
+@import "./investments-instrument-dashboard.css";

@@ -1,0 +1,29 @@
+{
+  "name": "athena-vault",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "packageManager": "pnpm@10.12.4",
+  "scripts": {
+    "dev": "pnpm --filter @athena/web dev",
+    "build": "pnpm --filter @athena/web build",
+    "lint": "pnpm --filter @athena/web lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "release-gate": "./scripts/release-gate.sh local",
+    "release-gate:security": "./scripts/release-gate.sh local --with-security",
+    "security:secret": "./scripts/security/secret-scan-local.sh",
+    "security:sbom": "./scripts/security/sbom-local.sh \"${ATHENA_IMAGE_REF:?ATHENA_IMAGE_REF must be set}\"",
+    "security:vulnerability": "./scripts/security/image-vulnerability-local.sh \"${ATHENA_IMAGE_REF:?ATHENA_IMAGE_REF must be set}\"",
+    "security:provenance": "./scripts/security/image-provenance-local.sh \"${ATHENA_IMAGE_REF:?ATHENA_IMAGE_REF must be set}\"",
+    "security:alerts": "./scripts/security/failure-alert-check.sh \"${ATHENA_EVENTS_FILE:?ATHENA_EVENTS_FILE must be set}\"",
+    "db:migrate": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run-local-database.ps1 -Action migrate",
+    "db:verify": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run-local-database.ps1 -Action verify",
+    "db:integration": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run-local-database.ps1 -Action integration",
+    "a11y:zoom": "corepack pnpm --filter @athena/web exec tsx \"$PWD/scripts/a11y-zoom-check.ts\"",
+    "a11y:style": "corepack pnpm --filter @athena/web exec tsx \"$PWD/scripts/a11y-style-check.ts\" --scope high-use",
+    "web:vitals": "corepack pnpm --filter @athena/web exec tsx \"$PWD/scripts/web-vitals-check.ts\""
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,137 @@
+/* Focused mobile login composition: identity first, form first, and scroll-safe.
+   The approved desktop split layout remains unchanged. */
+@media (max-width: 720px) {
+  html:has(.auth-page) {
+    overflow-x: hidden;
+  }
+
+  .auth-page {
+    min-height: 100svh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .auth-canvas {
+    min-height: 100svh;
+    overflow: visible;
+    padding: max(24px, env(safe-area-inset-top)) 16px max(32px, env(safe-area-inset-bottom));
+    background-position: 18% top;
+    background-size: auto 100%;
+  }
+
+  .auth-shell {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .auth-brand-panel {
+    order: 0;
+    max-width: none;
+    padding: 0;
+    text-align: center;
+  }
+
+  .auth-brand-wordmark {
+    width: min(232px, 74vw);
+    margin-inline: auto;
+  }
+
+  .auth-brand-tagline {
+    width: auto;
+    margin: 8px auto 0;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+  }
+
+  .auth-brand-rule,
+  .auth-brand-panel h2,
+  .auth-brand-copy,
+  .auth-brand-features {
+    display: none;
+  }
+
+  .auth-form-column {
+    order: 1;
+    align-items: stretch;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: none;
+    padding: 24px 18px 22px;
+    border-radius: 16px;
+  }
+
+  .auth-card-eyebrow {
+    margin-top: 18px;
+    font-size: 12px;
+  }
+
+  .auth-card-title {
+    margin-top: 10px;
+    font-size: clamp(30px, 8vw, 38px);
+    line-height: 1.04;
+  }
+
+  .auth-card-subtitle {
+    max-width: none;
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .login-form {
+    gap: 18px;
+    margin-top: 24px;
+  }
+
+  .login-form label {
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .login-input-shell {
+    min-height: 54px;
+    border-radius: 10px;
+  }
+
+  .login-input-shell input {
+    min-height: 52px;
+    padding: 10px 12px;
+    font-size: 16px;
+  }
+
+  .login-password-toggle {
+    width: 44px;
+    height: 44px;
+    margin-right: 4px;
+  }
+
+  .login-submit-button {
+    min-height: 54px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .login-form-footer {
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .login-invite-button {
+    min-height: 48px;
+    font-size: 13px;
+  }
+
+  .auth-security-note {
+    max-width: 31rem;
+    margin-top: 16px;
+    padding-inline: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}

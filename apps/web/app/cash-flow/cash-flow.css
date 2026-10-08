@@ -1,0 +1,329 @@
+/*
+ * Compact desktop Cash Flow treatment.
+ *
+ * Laptop-width desktop layouts keep the sidebar, controls, and full period
+ * information, but dense timeline rows recompose into labelled metric cards.
+ * This prevents the fixed desktop columns from colliding or creating a
+ * viewport-wide overflow while leaving the phone composition below intact.
+ */
+
+/*
+ * Page-canvas artwork: the Cash Flow module carries its own transparent
+ * mountain range anchored to the top-right of the main column. The isolated
+ * stacking context keeps it behind every card and control, and pointer-events
+ * stays off so the artwork never intercepts input.
+ */
+.cash-flow-page { position: relative; isolation: isolate; }
+.cash-flow-page::before { position: absolute; z-index: -1; top: -30px; right: clamp(12px, 1.5vw, 24px); width: min(74%, 1040px); height: 340px; content: ""; background: url("/brand/backgrounds/cash-flow.png") right top / contain no-repeat; opacity: .3; pointer-events: none; }
+
+/* Let the page artwork and primary Cash Flow surfaces share the quieter,
+   editorial finish used by Goals and Instrument Details. */
+.cash-flow-page .cash-flow-workspace { margin-top: 0; }
+.cash-flow-page .cash-flow-selected-period-card { min-height: 316px; border-radius: 22px; box-shadow: 0 16px 42px rgba(17, 28, 38, .12); }
+.cash-flow-page .cash-flow-period-summary-card { border-radius: 20px; background: rgba(255, 253, 248, .92); box-shadow: 0 12px 32px rgba(23, 32, 41, .055); }
+@media (max-width: 720px) {
+  .cash-flow-page .cash-flow-selected-period-card { min-height: 260px; border-radius: 18px; }
+  .cash-flow-page .cash-flow-period-summary-card { border-radius: 16px; }
+}
+/* Base Cash Flow period timeline rules moved here from globals.css so the
+   route stylesheet owns the whole cascade. The desktop metrics wrapper and
+   phone summary resolve their display per breakpoint without !important. */
+.cash-flow-period-list::before { position: absolute; top: 24px; bottom: 24px; left: 15px; width: 1px; content: ""; background: var(--line-strong); }
+.cash-flow-period-row.has-payday-check { grid-template-columns: minmax(200px, 1.5fr) repeat(6, minmax(85px, 1fr)) minmax(170px, 1.4fr) minmax(90px, 1fr); }
+.cash-flow-period-payday-check { display: grid !important; gap: 3px; min-width: 0; }
+.cash-flow-period-metrics-separator { display: none; }
+.cash-flow-period-payday-check strong { color: var(--ink); font-size: 10px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.cash-flow-period-payday-check em { color: var(--muted); font-size: 9px; font-style: normal; font-weight: 700; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.cash-flow-period-payday-check .is-over { color: var(--positive); }
+.cash-flow-period-payday-check .is-under { color: var(--danger); }
+.cash-flow-period-marker { position: absolute; top: 50%; left: -36px; display: inline-grid !important; place-items: center; width: 28px; height: 28px; padding: 0 !important; border: 2px solid var(--line-strong); border-radius: 50%; background: var(--surface); transform: translateY(-50%); }
+.cash-flow-period-marker.is-past { border-color: var(--navy); background: var(--navy); }
+.cash-flow-period-marker.is-past::after { width: 8px; height: 4px; border-bottom: 2px solid var(--surface); border-left: 2px solid var(--surface); content: ""; transform: rotate(-45deg); }
+.cash-flow-period-marker.is-current { border-color: var(--gold-ink); box-shadow: inset 0 0 0 5px var(--surface); background: var(--gold-ink); }
+.cash-flow-period-marker.is-projected { border-color: var(--gold); background: var(--gold-surface); }
+.cash-flow-period-list { position: relative; display: grid; gap: 6px; margin-top: 14px; padding-left: 36px; }
+.cash-flow-period-row { position: relative; display: grid; grid-template-columns: minmax(200px, 1.5fr) repeat(6, minmax(85px, 1fr)) minmax(90px, 1fr); align-items: center; gap: 12px; min-height: 64px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); color: var(--ink); text-decoration: none; }
+.cash-flow-period-row:hover, .cash-flow-period-row.is-selected { border-color: var(--gold); background: var(--surface); }
+.cash-flow-period-row.is-selected { box-shadow: 0 0 0 1px rgba(197, 150, 34, .16); }
+.cash-flow-period-row > span { display: grid; gap: 4px; min-width: 0; }
+.cash-flow-period-row > .cash-flow-period-desktop-metrics { display: contents; }
+.cash-flow-period-desktop-metrics > span { display: inline-flex; align-items: baseline; column-gap: 4px; }
+.cash-flow-period-row > .cash-flow-period-mobile-summary { display: none; }
+.cash-flow-period-identity { display: grid; grid-template-columns: 90px max-content; justify-content: start; align-items: end; gap: 8px; min-width: 0; }
+.cash-flow-period-identity .cash-flow-period-date { display: grid; gap: 4px; min-width: 0; }
+.cash-flow-period-identity .timeline-status-badge { align-self: end; margin-bottom: 0; }
+.cash-flow-period-row small { color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.cash-flow-period-row strong { color: var(--ink); font-size: 12px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cash-flow-period-date strong { font-size: 13px; }
+.cash-flow-period-date small { text-transform: none; letter-spacing: 0; font-weight: 500; }
+.cash-flow-period-progress { position: relative; height: 4px; margin-top: 25px; border-radius: 999px; background: rgba(215, 183, 106, .24); }
+.cash-flow-period-progress span { position: relative; display: block; height: 100%; border-radius: inherit; background: var(--gold-light); box-shadow: 0 0 12px rgba(215, 183, 106, .25); }
+.cash-flow-period-progress span::after { position: absolute; top: 50%; right: -7px; width: 12px; height: 12px; border: 2px solid var(--gold-light); border-radius: 50%; background: var(--surface); box-shadow: 0 0 0 3px rgba(215, 183, 106, .12); content: ""; transform: translateY(-50%); }
+.cash-flow-period-summary-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-bottom: 4px solid var(--gold); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); }
+.cash-flow-period-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 20px 24px; }
+.cash-flow-period-controls .account-secondary-button, .cash-flow-period-controls .account-primary-button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; white-space: nowrap; }
+.cash-flow-period-navigation { display: inline-flex; align-items: center; gap: 0; }
+.cash-flow-period-navigation > * + * { margin-left: -1px; border-radius: 0; }
+.cash-flow-period-navigation > *:first-child { border-radius: 10px 0 0 10px; }
+.cash-flow-period-navigation > *:last-child { border-radius: 0 10px 10px 0; }
+.cash-flow-period-navigation > *:only-child { border-radius: 10px; }
+.cash-flow-period-navigation > .cash-flow-current-period-control { border-radius: 0; }
+.cash-flow-period-change .cash-flow-change { font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+
+
+@media (max-width: 900px) {
+  .cash-flow-page::before { right: 12px; width: min(84%, 720px); height: 290px; opacity: .25; }
+}
+@media (max-width: 1700px) and (min-width: 721px) {
+  .cash-flow-selected-period-card { padding: 28px; }
+  .cash-flow-selected-period-card h2 { max-width: 100%; font-size: clamp(34px, 3.8vw, 50px); overflow-wrap: anywhere; }
+  .cash-flow-available-summary strong { max-width: 100%; font-size: clamp(36px, 4.2vw, 56px); overflow-wrap: anywhere; }
+
+  .cash-flow-payday-check { padding-right: 18px; padding-left: 18px; }
+  .cash-flow-payday-check-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.55fr) minmax(0, 1.1fr); }
+  .cash-flow-payday-check-column { padding-right: 12px; padding-left: 12px; }
+  .cash-flow-payday-check-column:first-child { padding-left: 18px; }
+  .cash-flow-payday-check-column > strong, .cash-flow-payday-check-variance-column > strong { font-size: clamp(20px, 1.9vw, 28px); }
+  .cash-flow-payday-check-form input { padding-right: 8px; padding-left: 8px; font-size: 16px; }
+  .cash-flow-payday-check-form .account-primary-button { min-width: 58px; padding-right: 8px; padding-left: 8px; }
+
+  .cash-flow-period-list { min-width: 0; }
+  .cash-flow-period-row, .cash-flow-period-row.has-payday-check { grid-template-columns: minmax(150px, .7fr) minmax(0, 1.8fr); align-items: stretch; gap: 14px; min-width: 0; min-height: 104px; padding: 12px 14px; }
+  .cash-flow-period-identity { grid-template-columns: 1fr; align-content: center; align-items: start; gap: 8px; }
+  .cash-flow-period-identity .timeline-status-badge { align-self: start; }
+  .cash-flow-period-row > .cash-flow-period-desktop-metrics { display: grid; grid-column: 2; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; gap: 10px 14px; min-width: 0; }
+  .cash-flow-period-desktop-metrics > span { display: grid; align-content: center; gap: 3px; min-width: 0; }
+  .cash-flow-period-desktop-metrics > .cash-flow-period-metrics-separator { display: block; grid-column: 1 / -1; width: 100%; height: 1px; background: var(--line); }
+  .cash-flow-period-desktop-metrics > .cash-flow-period-metrics-separator.is-after-four { display: none; }
+  .cash-flow-period-row small { font-size: 12px; line-height: 1.15; overflow-wrap: anywhere; }
+  .cash-flow-period-row strong { font-size: 12px; line-height: 1.15; white-space: normal; overflow-wrap: anywhere; }
+  .cash-flow-period-date strong { font-size: 12px; white-space: normal; }
+  .cash-flow-period-payday-check strong, .cash-flow-period-payday-check em { white-space: normal; }
+}
+
+@media (max-width: 1700px) and (min-width: 1350px) {
+  .cash-flow-period-desktop-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .cash-flow-period-desktop-metrics > .cash-flow-period-metrics-separator.is-after-three { display: none; }
+  .cash-flow-period-desktop-metrics > .cash-flow-period-metrics-separator.is-after-four { display: block; }
+  .cash-flow-period-desktop-metrics > .cash-flow-period-metrics-separator.is-before-additional { display: none; }
+}
+
+@media (max-width: 720px) {
+  .cash-flow-workspace { grid-template-columns: 1fr; }
+  .cash-flow-page::before { top: 20px; right: 10px; width: min(92%, 620px); height: 240px; opacity: .2; }
+  .cash-flow-timeline-card { padding: 0; }
+  .cash-flow-selected-period-card { min-height: 260px; padding: 22px; }
+  .cash-flow-selected-period-card h2 { font-size: clamp(34px, 10vw, 48px); }
+  .cash-flow-period-progress { margin-top: 22px; }
+  .cash-flow-available-summary { padding-top: 26px; }
+  .cash-flow-available-summary strong { font-size: clamp(42px, 11vw, 56px); }
+  .cash-flow-selected-period-art { inset: -10% -28% -10% -10%; width: auto; max-width: none; height: 120%; opacity: .12; }
+  .cash-flow-payday-check { margin: 0; padding: 14px 16px; }
+  .cash-flow-payday-check-mobile-toggle { display: flex; align-items: center; gap: 10px; width: 100%; min-width: 0; min-height: 52px; padding: 10px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--navy); text-align: left; cursor: pointer; }
+  .cash-flow-payday-check-mobile-copy { display: grid; gap: 3px; min-width: 0; flex: 1 1 auto; }
+  .cash-flow-payday-check-mobile-copy strong { font-size: 14px; }
+  .cash-flow-payday-check-mobile-copy small { overflow: hidden; color: var(--muted); font-size: 12px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+  .cash-flow-payday-check-mobile-status { flex: 0 0 auto; padding: 5px 8px; border-radius: 999px; background: var(--gold-surface); color: var(--gold-ink); font-size: 12px; font-weight: 800; white-space: nowrap; }
+  .cash-flow-payday-check-mobile-status.is-confirmed { background: var(--positive-surface); color: var(--positive); }
+  .cash-flow-payday-check-mobile-toggle > svg { flex: 0 0 auto; color: var(--gold-ink); transition: transform .18s ease; }
+  .cash-flow-payday-check-mobile-toggle > svg.is-open { transform: rotate(180deg); }
+  .cash-flow-payday-check-details:not(.is-open) { display: none; }
+  .cash-flow-payday-check-head { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .cash-flow-payday-check-title-icon { width: 38px; height: 38px; flex-basis: 38px; }
+  .cash-flow-payday-check-title > div { grid-template-columns: 1fr; gap: 3px; }
+  .cash-flow-payday-check-title h3 { font-size: 18px; }
+  .cash-flow-payday-check-head-actions { width: 100%; justify-content: space-between; }
+  .cash-flow-payday-check-grid { grid-template-columns: 1fr; gap: 0; }
+  .cash-flow-payday-check-column, .cash-flow-payday-check-column:first-child { padding: 12px 0; }
+  .cash-flow-payday-check-column:first-child { padding-top: 4px; }
+  .cash-flow-payday-check-column + .cash-flow-payday-check-column { border-top: 1px solid #E8DDC6; border-left: 0; }
+  .cash-flow-payday-check-column + .cash-flow-payday-check-column::before { display: none; }
+  .cash-flow-payday-check-form input { font-size: 20px; }
+  .cash-flow-payday-check-input-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+  .cash-flow-period-controls { align-items: stretch; padding: 14px; }
+  .cash-flow-period-navigation { flex: 1 1 100%; }
+  .cash-flow-period-navigation > * { flex: 1 1 0; justify-content: center; }
+  .cash-flow-period-controls > .account-secondary-button, .cash-flow-period-controls > .account-primary-button { flex: 1 1 100%; justify-content: center; }
+  .cash-flow-summary-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 16px; }
+  .cash-flow-summary-metric { padding: 10px 0; border-left: 0; border-top: 1px solid var(--line); }
+  .cash-flow-summary-metric:nth-child(-n+2) { border-top: 0; }
+  .cash-flow-period-list::before, .cash-flow-period-marker { display: none !important; }
+  .account-page-context { display: block; margin: 0 0 5px; }
+  .recurring-summary-list { grid-template-columns: 1fr; }
+  .cash-flow-toolbar { align-items: stretch; flex-direction: column; }
+  .cash-flow-toolbar-actions { justify-content: stretch; }
+  .cash-flow-toolbar-actions .account-secondary-button { flex: 1 1 30%; text-align: center; }
+  .cash-flow-period-list { gap: 10px; margin-top: 14px; padding-left: 0; }
+  .cash-flow-period-row { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 8px 12px; min-height: 0; padding: 14px; border: 1px solid #E7D9B9; border-radius: 13px; background: var(--gold-surface); }
+  .cash-flow-period-row.has-payday-check { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cash-flow-period-row:hover, .cash-flow-period-row.is-selected { border-color: var(--gold); background: var(--gold-surface); }
+  .cash-flow-period-row.has-payday-check .cash-flow-period-payday-check { grid-column: 1 / -1; padding-top: 8px; border-top: 1px solid #E7D9B9; }
+  .cash-flow-period-row > .cash-flow-period-desktop-metrics { display: none; }
+  .cash-flow-period-row > .cash-flow-period-mobile-summary { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; padding: 3px 0 2px; }
+  .cash-flow-period-mobile-summary > span { display: grid; gap: 3px; min-width: 0; }
+  .cash-flow-period-mobile-summary > span strong { color: var(--navy); font-size: 17px; letter-spacing: -.02em; }
+  .cash-flow-period-mobile-summary > span:nth-child(2) strong { color: var(--ink); }
+  .cash-flow-period-row .cash-flow-period-mobile-submetrics { grid-column: 1 / -1; color: var(--muted); font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+  .cash-flow-period-row > .cash-flow-period-identity { display: grid; grid-template-columns: 90px max-content; justify-content: start; grid-column: 1 / -1; align-items: end; gap: 8px; padding: 0 0 8px; border-bottom: 1px solid #E7D9B9; }
+  .cash-flow-period-identity .cash-flow-period-date { gap: 3px; }
+  .cash-flow-period-date strong { color: var(--navy); font-size: 18px; line-height: 1.1; }
+  .cash-flow-period-date small, .cash-flow-period-row small { color: var(--gold-ink); font-size: 12px; }
+  .cash-flow-period-identity .timeline-status-badge { margin-left: auto; padding: 3px 7px; font-size: 12px; }
+  .cash-flow-period-row strong { font-size: 13px; }
+  .cash-flow-period-row > .cash-flow-period-change { grid-column: 1 / -1; padding: 8px 0 0; border-top: 1px solid #E7D9B9; margin-top: 2px; }
+  .cash-flow-account-details { padding: 0; overflow: hidden; }
+  .cash-flow-account-details > summary.cash-flow-details-header { align-items: flex-start; gap: 12px; margin: 0; padding: 18px 16px 16px; cursor: pointer; }
+  .cash-flow-account-details > summary.cash-flow-details-header > div { min-width: 0; }
+  .cash-flow-account-details > summary.cash-flow-details-header .card-title { font-size: 20px; }
+  .cash-flow-account-details > summary.cash-flow-details-header .card-subtitle { font-size: 12px; line-height: 1.35; }
+  .cash-flow-account-details-desktop-title, .cash-flow-account-details-desktop-subtitle { display: none; }
+  .cash-flow-account-details-mobile-title, .cash-flow-account-details-mobile-subtitle { display: inline; }
+  .cash-flow-account-details-toggle { display: flex; align-items: center; gap: 5px; flex: 0 0 auto; margin-top: 3px; color: var(--gold-light); font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+  .cash-flow-account-details-toggle svg { transition: transform .18s ease; }
+  .cash-flow-account-details[open] .cash-flow-account-details-toggle svg { transform: rotate(180deg); }
+  .cash-flow-account-details > .cash-flow-account-groups { margin-top: 0; padding: 0 16px 16px; }
+  .cash-flow-account-balance-strip > span { min-width: 0; flex: 1 1 calc(50% - 4px); }
+  .cash-flow-item-row { grid-template-columns: minmax(0, 1fr) auto; align-items: start; row-gap: 8px; }
+  .cash-flow-item-row > .cash-flow-item-main { grid-column: 1; grid-row: 1; min-width: 0; }
+  .cash-flow-item-row > .cash-flow-row-actions { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; margin-left: 0; min-width: 0; flex-wrap: wrap; }
+  .cash-flow-item-row > strong { grid-column: 2; grid-row: 1; align-self: start; }
+  .cash-flow-record-backdrop { padding: 12px; }
+  .cash-flow-record-form-grid { grid-template-columns: 1fr; }
+  .cash-flow-record-field-wide { grid-column: auto; }
+  .cash-flow-excluded-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+  .cash-flow-excluded-row > strong { grid-column: 2; grid-row: 1; }
+  .cash-flow-excluded-row > form { grid-column: 1 / -1; }
+  .cash-flow-excluded-row button { width: 100%; }
+  .recurring-series-actions { align-items: stretch; flex-direction: column; }
+  .recurring-series-actions form, .recurring-series-actions form > button, .recurring-series-actions .recurring-inline-field { width: 100%; }
+  .recurring-series-actions form { align-items: stretch; }
+  .accounts-shell .topbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 16px; }
+  .accounts-shell .topbar > div:first-child { min-width: 0; }
+  .accounts-shell .top-actions { min-width: 0; flex: 0 0 auto; }
+  .account-page-controls { align-items: stretch; }
+  .account-page-controls .account-secondary-button { width: 100%; }
+  .account-manager-card-actions { align-items: stretch; flex-direction: column; width: 100%; }
+  .account-manager-card-actions .account-add-account-button { width: 100%; }
+  .account-form-fields, .account-form-fields-snapshot { grid-template-columns: 1fr; }
+  .account-field-wide { grid-column: auto; }
+  .account-form-panel, .account-snapshot-fields { padding: 14px; }
+  .account-table-wrap { margin-top: 18px; border: 0; overflow: visible; }
+  .account-table { display: block; width: 100%; min-width: 0; }
+  .account-table thead { display: none; }
+  .account-table tbody { display: grid; width: 100%; gap: 10px; }
+  .account-table tbody tr { display: grid; grid-template-columns: 1fr; gap: 0; width: 100%; box-sizing: border-box; padding: 16px 14px 14px; border: 1px solid #E7D9B9; border-radius: 13px; background: var(--gold-surface); }
+  .account-table tbody tr.account-row-archived { background: var(--archived-surface); }
+  .account-table tbody tr.account-edit-row { display: block; padding: 0; border: 0; background: transparent; }
+  .account-table tbody tr.account-edit-row > td { display: block; width: 100%; padding: 0; border: 0; }
+  .account-table tbody th, .account-table tbody td { display: grid; gap: 5px; box-sizing: border-box; min-width: 0; width: auto; padding: 0; border: 0; overflow-wrap: anywhere; }
+  .account-table tbody th::before, .account-table tbody td::before { color: var(--gold-ink); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .account-table tbody th::before { content: "Account"; }
+  .account-table tbody td:nth-child(2)::before { content: "Type"; }
+  .account-table tbody td:nth-child(3)::before { content: "Cash Flow"; }
+  .account-table tbody td:nth-child(4)::before { content: "Actions"; }
+  .account-table tbody td:last-child { grid-column: auto; width: auto; min-width: 0; text-align: left; }
+  .account-table td:last-child .account-row-actions { justify-content: flex-start; flex-wrap: wrap; }
+  .account-table tbody th { gap: 5px; padding: 0 0 12px; border-bottom: 1px solid #E7D9B9; }
+  .account-row-name { color: var(--navy); font-size: 18px; line-height: 1.1; }
+  .account-row-institution { color: var(--gold-ink); font-size: 12px; margin-top: 1px; }
+  .account-table tbody td:nth-child(2) { gap: 6px; padding: 12px 0; border-bottom: 1px solid #E7D9B9; }
+  .account-table tbody td:nth-child(2) .account-kind-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 76px; width: max-content; max-width: none; white-space: nowrap; padding: 3px 8px; border-radius: 999px; background: var(--navy); color: var(--surface); font-size: 12px; font-weight: 800; line-height: 1.15; letter-spacing: .06em; text-transform: uppercase; }
+  .account-table tbody td:nth-child(3) { gap: 6px; padding: 8px 0 0; }
+  .account-cash-flow-settings { min-width: 0; width: 100%; }
+  .account-setting-form + .account-setting-form { padding-top: 6px; border-top: 1px solid #E7D9B9; }
+  .account-setting-control { min-height: 36px; }
+  .account-setting-copy strong { font-size: 12px; }
+  .account-setting-copy small { font-size: 12px; }
+  .account-table tbody td:nth-child(4) { gap: 8px; padding: 12px 0 0; border-top: 1px solid #E7D9B9; }
+  .account-row-actions { display: flex; justify-content: flex-start; gap: 8px; width: 100%; }
+  .account-row-menu-trigger { width: 44px; min-height: 44px; }
+  .account-row-menu-popover {
+    left: 0;
+    right: auto;
+    width: min(190px, calc(100vw - 32px));
+    min-width: 0;
+    max-width: calc(100vw - 32px);
+    box-sizing: border-box;
+  }
+  .account-menu-item { min-height: 40px; font-size: 12px; }
+  .account-row-name, .account-row-institution, .account-row-last-four { overflow-wrap: anywhere; }
+  .accounts-shell .timeline-account-column { width: 120px; min-width: 120px; max-width: 120px; }
+  .accounts-shell .timeline-date-column, .accounts-shell .timeline-balance-cell { width: 82px; min-width: 82px; }
+  .account-row-actions .account-primary-button, .account-row-actions .account-secondary-button, .account-row-actions .account-danger-button { padding-left: 8px; padding-right: 8px; }
+  .maintenance-table-wrap, .data-table-wrap { margin-top: 14px; border: 0; overflow: visible; }
+  .maintenance-table, .data-table { display: block; width: 100%; min-width: 0 !important; }
+  .maintenance-table thead, .data-table thead { display: none; }
+  .maintenance-table tbody, .data-table tbody { display: grid; width: 100%; gap: 10px; }
+  .maintenance-table tbody tr, .data-table tbody tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; width: 100%; box-sizing: border-box; padding: 14px; border: 1px solid #E7D9B9; border-radius: 13px; background: var(--gold-surface); }
+  .maintenance-table tbody tr.account-row-archived { background: var(--archived-surface); }
+  .maintenance-table tbody th, .maintenance-table tbody td,
+  .data-table tbody th, .data-table tbody td { display: grid; gap: 3px; box-sizing: border-box; min-width: 0; width: auto; padding: 4px 0; border: 0; overflow-wrap: anywhere; color: var(--ink); font-size: 13px; font-weight: 600; text-align: left !important; }
+  .maintenance-table tbody tr > :first-child, .data-table tbody tr > :first-child { grid-column: 1 / -1; padding-top: 0; padding-bottom: 8px; border-top: 0; border-bottom: 1px solid #E7D9B9; }
+  .maintenance-table tbody th::before, .maintenance-table tbody td::before,
+  .data-table tbody th::before, .data-table tbody td::before { content: attr(data-label); color: var(--gold-ink); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .maintenance-table tbody th, .data-table tbody tr > :first-child { color: var(--navy); font-size: 18px; font-weight: 800; line-height: 1.1; }
+  .maintenance-table td:last-child { grid-column: 1 / -1; min-width: 0; padding-top: 8px; border-top: 1px solid #E7D9B9; text-align: left; }
+  .maintenance-table td:last-child .maintenance-row-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 8px; width: 100%; justify-content: flex-start; }
+  .maintenance-table td:last-child .maintenance-row-actions button,
+  .maintenance-table td:last-child .maintenance-row-actions form,
+  .maintenance-table td:last-child .maintenance-row-actions form > button { width: 100%; min-height: 38px; }
+  .timeline-card-head { align-items: flex-start; }
+  .timeline-period-summary { justify-items: start; text-align: left; }
+  .timeline-navigation { align-items: stretch; }
+  .timeline-nav-button { flex: 1 1 calc(50% - 8px); }
+  .timeline-order-card > summary { align-items: flex-start; flex-direction: column; }
+  .timeline-order-sections { grid-template-columns: 1fr; }
+  .timeline-order-item { grid-template-columns: 20px minmax(0, 1fr); }
+  .timeline-order-button { width: 100%; }
+  .timeline-cell-delta { top: 3px; right: 4px; font-size: 12px; }
+  .timeline-total-cell { min-height: 30px; }
+  .timeline-date-select { width: 100%; margin-left: 0; }
+  .timeline-date-select select, .timeline-date-select-empty { width: 100%; }
+  .timeline-confirm-form { margin-left: 0; width: 100%; }
+  .timeline-confirm-form .account-secondary-button { width: 100%; }
+  .timeline-recalculation-toolbar { align-items: stretch; }
+  .timeline-recalculation-form { width: 100%; align-items: stretch; }
+  .timeline-recalculation-form .timeline-date-select { flex: 1 1 100%; }
+  .timeline-recalculation-actions { width: 100%; }
+  .timeline-recalculation-actions .account-primary-button, .timeline-recalculation-actions .account-secondary-button { flex: 1 1 50%; }
+  .timeline-extension-toolbar { align-items: stretch; }
+  .timeline-extension-form { width: 100%; align-items: end; }
+  .timeline-extension-form .timeline-date-select { flex: 1 1 auto; }
+  .timeline-extension-form .account-secondary-button { min-width: 92px; }
+  .contribution-form-fields { grid-template-columns: 1fr; }
+  .contribution-scope-field { grid-column: auto; }
+  .contribution-rule-summary { align-items: flex-start; flex-direction: column; }
+  .contribution-rule-actions { justify-content: start; }
+  .contribution-exception-form { grid-template-columns: 1fr 1fr; }
+  .contribution-exception-form input:first-of-type { grid-column: span 2; }
+  .contribution-exception-form .account-secondary-button { width: 100%; }
+}
+@media (min-width: 1501px) {
+  .cash-flow-period-summary-card { align-self: start; }
+  .cash-flow-period-controls { align-content: center; }
+  .cash-flow-period-controls > .account-primary-button:last-child { flex: 1 1 auto; }
+  .cash-flow-summary-metrics { align-items: center; }
+}
+
+@media (max-width: 1500px) and (min-width: 1251px) {
+  .cash-flow-period-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cash-flow-period-navigation { width: 100%; }
+  .cash-flow-period-navigation > * { flex: 1 1 0; justify-content: center; }
+  .cash-flow-period-controls > .account-secondary-button:nth-child(2) { grid-column: 2; }
+  .cash-flow-period-controls > .account-secondary-button:nth-child(3) { grid-column: 1; }
+  .cash-flow-period-controls > .account-primary-button { grid-column: 2; }
+  .cash-flow-summary-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cash-flow-summary-metric:nth-child(odd) { padding-left: 0; border-left: 0; }
+}
+
+@media (max-width: 1250px) and (min-width: 721px) {
+  .cash-flow-workspace { grid-template-columns: 1fr; }
+  .cash-flow-period-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cash-flow-period-navigation { width: 100%; }
+  .cash-flow-period-navigation > * { flex: 1 1 0; justify-content: center; }
+  .cash-flow-period-controls > .account-secondary-button:nth-child(2) { grid-column: 2; }
+  .cash-flow-period-controls > .account-secondary-button:nth-child(3) { grid-column: 1; }
+  .cash-flow-period-controls > .account-primary-button { grid-column: 2; }
+  .cash-flow-summary-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cash-flow-summary-metric:nth-child(odd) { padding-left: 0; border-left: 0; }
+}

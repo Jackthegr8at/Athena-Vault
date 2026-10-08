@@ -1,0 +1,58 @@
+# Windows Docker Desktop development override.
+# The repository remains editable on the host; named volumes keep Linux
+# dependencies and Next.js caches out of the Windows bind mount.
+
+services:
+  migrations:
+    environment:
+      ATHENA_DOCKER_EMPTY_DATABASE: ${ATHENA_DOCKER_EMPTY_DATABASE:-false}
+
+  web:
+    build:
+      target: development
+    command: ["pnpm", "--filter", "@athena/web", "dev", "--hostname", "0.0.0.0"]
+    environment:
+      NODE_ENV: development
+      WATCHPACK_POLLING: ${ATHENA_WATCHPACK_POLLING:-true}
+      CHOKIDAR_USEPOLLING: ${ATHENA_CHOKIDAR_USEPOLLING:-true}
+    ports:
+      - target: 3000
+        published: "${ATHENA_DEV_WEB_HOST_PORT:-3000}"
+        host_ip: "${ATHENA_DEV_WEB_BIND_HOST:-127.0.0.1}"
+    volumes:
+      - .:/workspace
+      - athena_dev_node_modules:/workspace/node_modules
+      - athena_dev_web_node_modules:/workspace/apps/web/node_modules
+      - athena_dev_database_node_modules:/workspace/packages/database/node_modules
+      - athena_dev_finance_node_modules:/workspace/packages/finance-engine/node_modules
+      - athena_dev_ui_node_modules:/workspace/packages/ui/node_modules
+      - athena_dev_validation_node_modules:/workspace/packages/validation/node_modules
+      - athena_dev_pnpm_store:/pnpm/store
+      - athena_dev_next:/workspace/apps/web/.next
+
+volumes:
+  postgres_data:
+    name: ${ATHENA_DEV_POSTGRES_VOLUME_NAME:-athena-vault-dev-postgres}
+  backup_data:
+    name: ${ATHENA_DEV_BACKUP_VOLUME_NAME:-athena-vault-dev-backups}
+  athena_dev_node_modules:
+    name: ${ATHENA_DEV_NODE_MODULES_VOLUME_NAME:-athena-vault-dev-node-modules}
+  athena_dev_web_node_modules:
+    name: ${ATHENA_DEV_WEB_NODE_MODULES_VOLUME_NAME:-athena-vault-dev-web-node-modules}
+  athena_dev_database_node_modules:
+    name: ${ATHENA_DEV_DATABASE_NODE_MODULES_VOLUME_NAME:-athena-vault-dev-database-node-modules}
+  athena_dev_finance_node_modules:
+    name: ${ATHENA_DEV_FINANCE_NODE_MODULES_VOLUME_NAME:-athena-vault-dev-finance-node-modules}
+  athena_dev_ui_node_modules:
+    name: ${ATHENA_DEV_UI_NODE_MODULES_VOLUME_NAME:-athena-vault-dev-ui-node-modules}
+  athena_dev_validation_node_modules:
+    name: ${ATHENA_DEV_VALIDATION_NODE_MODULES_VOLUME_NAME:-athena-vault-dev-validation-node-modules}
+  athena_dev_pnpm_store:
+    name: ${ATHENA_DEV_PNPM_STORE_VOLUME_NAME:-athena-vault-dev-pnpm-store}
+  athena_dev_next:
+    name: ${ATHENA_DEV_NEXT_VOLUME_NAME:-athena-vault-dev-next}
+
+networks:
+  athena_internal:
+    name: ${ATHENA_DEV_NETWORK_NAME:-athena-vault-dev-internal}
+    internal: false

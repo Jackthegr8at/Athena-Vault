@@ -1,0 +1,33 @@
+{
+  admin off
+  skip_install_trust
+}
+
+http://{$ATHENA_PRIVATE_HOSTNAME} {
+  redir https://{$ATHENA_PRIVATE_HOSTNAME}:{$ATHENA_PROD_HTTPS_PORT}{uri} permanent
+}
+
+https://{$ATHENA_PRIVATE_HOSTNAME} {
+  tls internal
+  encode gzip
+
+  reverse_proxy web:3000 {
+    header_up Host {http.request.hostport}
+    header_up X-Forwarded-Proto {scheme}
+    header_up X-Forwarded-Host {http.request.hostport}
+    header_up -X-Real-*
+    header_up X-Athena-Proxy-Source "{$ATHENA_PROD_CADDY_INTERNAL_IP}"
+    header_up X-Forwarded-For "{remote_host}, {$ATHENA_PROD_CADDY_INTERNAL_IP}"
+    header_up X-Forwarded-Port {$ATHENA_AUTH_PUBLIC_HTTPS_PORT}
+    health_uri /api/health
+    health_interval 10s
+    health_timeout 3s
+    health_headers {
+      X-Athena-Proxy-Source {$ATHENA_PROD_CADDY_INTERNAL_IP}
+      X-Forwarded-For {$ATHENA_PROD_CADDY_INTERNAL_IP}
+      X-Forwarded-Host {$ATHENA_PRIVATE_HOSTNAME}:{$ATHENA_AUTH_PUBLIC_HTTPS_PORT}
+      X-Forwarded-Proto https
+      X-Forwarded-Port {$ATHENA_AUTH_PUBLIC_HTTPS_PORT}
+    }
+  }
+}

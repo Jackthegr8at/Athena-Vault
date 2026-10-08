@@ -1,0 +1,39 @@
+node_modules/
+.next/
+.next-*/
+dist/
+coverage/
+.env
+.env.local
+*.log
+workbook-inspection/
+superpowers/
+.superpowers/
+.pnpm-store/
+~$Budget.xlsx
+
+# Docker deployment secrets, copied databases, backups, and generated state
+.env.docker
+.env.docker.*
+!.env.docker.example
+docker-backups/
+docker-import/
+docker-cache/
+infrastructure/docker/backups/
+infrastructure/docker/caddy-data/
+infrastructure/docker/caddy-config/
+*.dump
+*.dump.*
+*.sql.gz
+*.backup
+*.bak
+apps/web/tsconfig.tsbuildinfo
+.omp/*
+superpowers
+test-results/
+playwright-report/
+apps/web/e2e/.auth/
+# Local baseline harness artifacts
+tmp/baselines/
+# Local, fresh-history publication staging area; never nest it in a release payload.
+.publication-candidate/

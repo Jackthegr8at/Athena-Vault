@@ -1,0 +1,232 @@
+# Ubuntu production-like override. Only Caddy publishes a host port; the web
+# and PostgreSQL services stay on the internal Docker network.
+
+services:
+  postgres:
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    image: ${ATHENA_POSTGRES_IMAGE:?ATHENA_POSTGRES_IMAGE must be set and pinned to a digest}
+    mem_limit: ${ATHENA_PROD_POSTGRES_MEMORY:-768m}
+    cpus: ${ATHENA_PROD_POSTGRES_CPUS:-1.0}
+    pids_limit: ${ATHENA_PROD_POSTGRES_PIDS:-256}
+    logging:
+      driver: json-file
+      options:
+        max-size: ${ATHENA_PROD_LOG_MAX_SIZE:-10m}
+        max-file: ${ATHENA_PROD_LOG_MAX_FILES:-3}
+
+  migrations:
+    restart: "no"
+    build:
+      args:
+        NODE_IMAGE: ${ATHENA_NODE_IMAGE:?ATHENA_NODE_IMAGE must be set and pinned to a digest}
+    environment:
+      ATHENA_AUTH_ROLE_PASSWORD: ${ATHENA_AUTH_ROLE_PASSWORD:?ATHENA_AUTH_ROLE_PASSWORD must be set in the Docker environment file}
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: ${ATHENA_PROD_MIGRATIONS_MEMORY:-512m}
+    cpus: ${ATHENA_PROD_MIGRATIONS_CPUS:-1.0}
+    pids_limit: ${ATHENA_PROD_MIGRATIONS_PIDS:-256}
+    logging:
+      driver: json-file
+      options:
+        max-size: ${ATHENA_PROD_LOG_MAX_SIZE:-10m}
+        max-file: ${ATHENA_PROD_LOG_MAX_FILES:-3}
+
+  demo-provision:
+    restart: "no"
+    build:
+      args:
+        NODE_IMAGE: ${ATHENA_NODE_IMAGE:?ATHENA_NODE_IMAGE must be set and pinned to a digest}
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: ${ATHENA_PROD_DEMO_PROVISION_MEMORY:-512m}
+    cpus: ${ATHENA_PROD_DEMO_PROVISION_CPUS:-1.0}
+    pids_limit: ${ATHENA_PROD_DEMO_PROVISION_PIDS:-256}
+    logging:
+      driver: json-file
+      options:
+        max-size: ${ATHENA_PROD_LOG_MAX_SIZE:-10m}
+        max-file: ${ATHENA_PROD_LOG_MAX_FILES:-3}
+
+  web:
+    build:
+      target: runtime
+      args:
+        BETTER_AUTH_URL: ${BETTER_AUTH_URL:?BETTER_AUTH_URL must be set in the Docker environment file}
+        ATHENA_AUTH_TRUSTED_ORIGINS: ${ATHENA_AUTH_TRUSTED_ORIGINS:-}
+        ATHENA_AUTH_TRUSTED_PROXY_IPS: ${ATHENA_AUTH_TRUSTED_PROXY_IPS:?ATHENA_AUTH_TRUSTED_PROXY_IPS must be set in the Docker environment file}
+        ATHENA_PASSKEYS_ENABLED: ${ATHENA_PASSKEYS_ENABLED:?ATHENA_PASSKEYS_ENABLED must be set in the Docker environment file}
+        NODE_IMAGE: ${ATHENA_NODE_IMAGE:?ATHENA_NODE_IMAGE must be set and pinned to a digest}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      ATHENA_AUTH_SETUP_TOKEN: ${ATHENA_AUTH_SETUP_TOKEN:?ATHENA_AUTH_SETUP_TOKEN must be set in the Docker environment file}
+      ATHENA_AUTH_DATABASE_URL: ${ATHENA_AUTH_DATABASE_URL:?ATHENA_AUTH_DATABASE_URL must be set in the Docker environment file}
+      ATHENA_AUTH_ROLE_PASSWORD: ${ATHENA_AUTH_ROLE_PASSWORD:?ATHENA_AUTH_ROLE_PASSWORD must be set in the Docker environment file}
+      ATHENA_EODHD_API_TOKEN: ${ATHENA_EODHD_API_TOKEN:-}
+      ATHENA_PROD_CADDY_INTERNAL_IP: ${ATHENA_PROD_CADDY_INTERNAL_IP:?ATHENA_PROD_CADDY_INTERNAL_IP must be set in the Docker environment file}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:?BETTER_AUTH_URL must be set in the Docker environment file}
+      ATHENA_AUTH_COOKIE_SECURE: ${ATHENA_AUTH_COOKIE_SECURE:?ATHENA_AUTH_COOKIE_SECURE must be set in the Docker environment file}
+      ATHENA_AUTH_TRUSTED_PROXY_IPS: ${ATHENA_AUTH_TRUSTED_PROXY_IPS:?ATHENA_AUTH_TRUSTED_PROXY_IPS must be set in the Docker environment file}
+      ATHENA_AUTH_REQUIRE_2FA: ${ATHENA_AUTH_REQUIRE_2FA:?ATHENA_AUTH_REQUIRE_2FA must be set in the Docker environment file}
+      ATHENA_PASSKEYS_ENABLED: ${ATHENA_PASSKEYS_ENABLED:?ATHENA_PASSKEYS_ENABLED must be set in the Docker environment file}
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: ${ATHENA_PROD_WEB_MEMORY:-768m}
+    cpus: ${ATHENA_PROD_WEB_CPUS:-1.0}
+    pids_limit: ${ATHENA_PROD_WEB_PIDS:-256}
+    logging:
+      driver: json-file
+      options:
+        max-size: ${ATHENA_PROD_LOG_MAX_SIZE:-10m}
+        max-file: ${ATHENA_PROD_LOG_MAX_FILES:-3}
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"const url = new URL(process.env.BETTER_AUTH_URL); const proxySource = process.env.ATHENA_PROD_CADDY_INTERNAL_IP; fetch('http://127.0.0.1:3000/api/health', {headers:{'X-Athena-Proxy-Source':proxySource,'X-Forwarded-For':proxySource,'X-Forwarded-Host':url.host,'X-Forwarded-Proto':url.protocol.slice(0,-1),'X-Forwarded-Port':url.port || (url.protocol === 'https:' ? '443' : '80')}}).then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+  db-tools:
+    image: ${ATHENA_DB_TOOLS_IMAGE:?ATHENA_DB_TOOLS_IMAGE must be set to an immutable local image ID}
+    build:
+      args:
+        POSTGRES_IMAGE: ${ATHENA_POSTGRES_IMAGE:?ATHENA_POSTGRES_IMAGE must be set and pinned to a digest}
+
+  caddy:
+    image: ${ATHENA_CADDY_IMAGE:?ATHENA_CADDY_IMAGE must be set and pinned to a digest}
+    restart: unless-stopped
+    environment:
+      ATHENA_PRIVATE_HOSTNAME: ${ATHENA_PRIVATE_HOSTNAME:?ATHENA_PRIVATE_HOSTNAME must be set in the Docker environment file}
+      ATHENA_PROD_HTTPS_PORT: ${ATHENA_PROD_HTTPS_PORT:-8443}
+      ATHENA_AUTH_PUBLIC_HTTPS_PORT: ${ATHENA_AUTH_PUBLIC_HTTPS_PORT:-443}
+      ATHENA_PROD_CADDY_INTERNAL_IP: ${ATHENA_PROD_CADDY_INTERNAL_IP:?ATHENA_PROD_CADDY_INTERNAL_IP must be set in the Docker environment file}
+    extra_hosts:
+      - "${ATHENA_PRIVATE_HOSTNAME:?ATHENA_PRIVATE_HOSTNAME must be set in the Docker environment file}:127.0.0.1"
+    depends_on:
+      web:
+        condition: service_healthy
+    ports:
+      - target: 80
+        published: "${ATHENA_PROD_HTTP_PORT:-8080}"
+        host_ip: "${ATHENA_PROD_BIND_HOST:-127.0.0.1}"
+      - target: 443
+        published: "${ATHENA_PROD_HTTPS_PORT:-8443}"
+        host_ip: "${ATHENA_PROD_BIND_HOST:-127.0.0.1}"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: ${ATHENA_PROD_CADDY_MEMORY:-256m}
+    cpus: ${ATHENA_PROD_CADDY_CPUS:-0.5}
+    logging:
+      driver: json-file
+      options:
+        max-size: ${ATHENA_PROD_LOG_MAX_SIZE:-10m}
+        max-file: ${ATHENA_PROD_LOG_MAX_FILES:-3}
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-check-certificate --spider --no-verbose --header \"Host: $${ATHENA_PRIVATE_HOSTNAME}:$${ATHENA_AUTH_PUBLIC_HTTPS_PORT}\" --header \"X-Athena-Proxy-Source: $${ATHENA_PROD_CADDY_INTERNAL_IP}\" --header \"X-Forwarded-For: $${ATHENA_PROD_CADDY_INTERNAL_IP}\" --header \"X-Forwarded-Host: $${ATHENA_PRIVATE_HOSTNAME}:$${ATHENA_AUTH_PUBLIC_HTTPS_PORT}\" --header \"X-Forwarded-Proto: https\" --header \"X-Forwarded-Port: $${ATHENA_AUTH_PUBLIC_HTTPS_PORT}\" https://$${ATHENA_PRIVATE_HOSTNAME}:443/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    volumes:
+      - ./infrastructure/docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      athena_internal:
+        ipv4_address: ${ATHENA_PROD_CADDY_INTERNAL_IP:?ATHENA_PROD_CADDY_INTERNAL_IP must be set in the Docker environment file}
+      athena_edge: {}
+
+  scheduled-backup:
+    image: ${ATHENA_BACKUP_IMAGE:?ATHENA_BACKUP_IMAGE must be set to an immutable local image ID}
+    build:
+      context: .
+      dockerfile: Dockerfile.db-tools
+      args:
+        POSTGRES_IMAGE: ${ATHENA_POSTGRES_IMAGE:?ATHENA_POSTGRES_IMAGE must be set and pinned to a digest}
+        AGE_PACKAGE_VERSION: ${ATHENA_AGE_PACKAGE_VERSION:-1.3.1-r6}
+    profiles: ["scheduled-backup"]
+    restart: "no"
+    command: ["/usr/local/bin/scheduled-backup.sh"]
+    user: "${ATHENA_BACKUP_CONTAINER_UID:?ATHENA_BACKUP_CONTAINER_UID must be set}:${ATHENA_BACKUP_CONTAINER_GID:?ATHENA_BACKUP_CONTAINER_GID must be set}"
+    environment:
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGDATABASE: ${ATHENA_DB_NAME:-athena_vault}
+      PGUSER: ${ATHENA_MIGRATOR_USER:-athena_migrator}
+      PGPASSWORD: ${ATHENA_MIGRATOR_PASSWORD:?ATHENA_MIGRATOR_PASSWORD must be set in the Docker environment file}
+      ATHENA_BACKUP_DIRECTORY: /backups
+      ATHENA_BACKUP_ENCRYPTION_RECIPIENT: ${ATHENA_BACKUP_ENCRYPTION_RECIPIENT:-}
+      ATHENA_BACKUP_RETENTION_DAYS: ${ATHENA_BACKUP_RETENTION_DAYS:-30}
+      ATHENA_BACKUP_RETENTION_COUNT: ${ATHENA_BACKUP_RETENTION_COUNT:-14}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: ${ATHENA_PROD_BACKUP_MEMORY:-256m}
+    cpus: ${ATHENA_PROD_BACKUP_CPUS:-0.5}
+    pids_limit: ${ATHENA_PROD_BACKUP_PIDS:-128}
+    logging:
+      driver: json-file
+      options:
+        max-size: ${ATHENA_PROD_LOG_MAX_SIZE:-10m}
+        max-file: ${ATHENA_PROD_LOG_MAX_FILES:-3}
+    volumes:
+      - backup_data:/backups
+    networks:
+      - athena_internal
+
+volumes:
+  postgres_data:
+    name: ${ATHENA_PROD_POSTGRES_VOLUME_NAME:-athena-vault-prod-postgres}
+  backup_data:
+    name: ${ATHENA_PROD_BACKUP_VOLUME_NAME:-athena-vault-prod-backups}
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${ATHENA_BACKUP_HOST_PATH:?ATHENA_BACKUP_HOST_PATH must be an existing protected host directory}
+  caddy_data:
+    name: ${ATHENA_PROD_CADDY_DATA_VOLUME_NAME:-athena-vault-prod-caddy-data}
+    external: true
+  caddy_config:
+    name: ${ATHENA_PROD_CADDY_CONFIG_VOLUME_NAME:-athena-vault-prod-caddy-config}
+    external: true
+
+networks:
+  athena_internal:
+    name: ${ATHENA_PROD_INTERNAL_NETWORK_NAME:-athena-vault-prod-internal}
+    internal: true
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${ATHENA_PROD_INTERNAL_SUBNET:?ATHENA_PROD_INTERNAL_SUBNET must be set in the Docker environment file}
+          ip_range: ${ATHENA_PROD_INTERNAL_IP_RANGE:?ATHENA_PROD_INTERNAL_IP_RANGE must be set in the Docker environment file}
+  athena_edge:
+    name: ${ATHENA_PROD_EDGE_NETWORK_NAME:-athena-vault-prod-edge}

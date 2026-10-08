@@ -1,0 +1,12 @@
+[Unit]
+Description=Run Athena Vault encrypted PostgreSQL backup daily at 04:00 VM local time
+
+[Timer]
+OnCalendar=*-*-* 04:00:00
+Persistent=true
+AccuracySec=1min
+RandomizedDelaySec=0
+Unit=athena-vault-scheduled-backup.service
+
+[Install]
+WantedBy=timers.target

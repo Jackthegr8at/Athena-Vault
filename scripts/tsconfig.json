@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "typeRoots": ["../apps/web/node_modules/@types"],
+    "paths": {
+      "@athena/finance-engine": ["../packages/finance-engine/src/index.ts"],
+      "@athena/validation": ["../packages/validation/src/index.ts"],
+      "@athena/database": ["../packages/database/src/index.ts"],
+      "@athena/ui": ["../packages/ui/src/index.ts"],
+      "drizzle-orm": ["../packages/database/node_modules/drizzle-orm"],
+      "postgres": ["../packages/database/node_modules/postgres"],
+      "better-auth/crypto": ["../apps/web/node_modules/better-auth/dist/crypto/index.d.mts"],
+      "vitest": ["../apps/web/node_modules/vitest"]
+    }
+  },
+  "include": ["./**/*.ts"]
+}

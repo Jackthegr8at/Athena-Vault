@@ -1,0 +1,1623 @@
+/* Investments holdings workspace. Rule order within this file follows the original investments stylesheet. */
+
+/* Current REEI/RDSP holdings workspace. The ledger deliberately has its own
+   surface so it cannot be mistaken for the projection planner below. */
+.investment-holdings-workspace {
+  display: grid;
+  gap: 22px;
+  margin: 26px 0 34px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--surface, #fffdf8);
+}
+
+.investment-holdings-heading,
+.investment-holdings-account-header,
+.investment-holding-card-header,
+.investment-holding-card-footer,
+.investment-holding-fx-panel {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.investment-holdings-heading h2,
+.investment-holdings-account-header h3,
+.investment-holding-card-header h3,
+.investment-holdings-empty h3 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.investment-holdings-heading p:not(.investment-holding-eyebrow),
+.investment-holdings-empty p,
+.investment-holding-fx-panel p,
+.investment-holding-card-header p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.investment-holding-eyebrow {
+  margin: 0 0 8px;
+  color: var(--gold-ink, #8a5b15);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.investment-holding-as-of,
+.investment-holding-currency-badge,
+.investment-holding-kind {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.investment-holding-kind {
+  display: inline-block;
+  margin-bottom: 7px;
+  padding: 4px 7px;
+  border-color: rgba(178, 123, 44, .35);
+  color: var(--gold-ink, #8a5b15);
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+
+.investment-holdings-empty,
+.investment-holding-create-form,
+.investment-holdings-account,
+.investment-holding-fx-panel {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface-soft, #faf7ef);
+}
+
+.investment-holdings-empty {
+  display: grid;
+  gap: 12px;
+}
+
+.investment-holdings-empty .navy-action-button {
+  width: fit-content;
+  text-decoration: none;
+}
+
+.investment-holdings-account-picker,
+.investment-holding-dropdown-field,
+.investment-holding-create-form label,
+.investment-holding-transaction-form label,
+.investment-holding-mini-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.investment-holdings-account-picker {
+  max-width: 560px;
+}
+
+.investment-holdings-account-picker select,
+.investment-holding-create-form input,
+.investment-holding-create-form select,
+.investment-holding-transaction-form input,
+.investment-holding-transaction-form select,
+.investment-holding-mini-form input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 11px;
+  border: 1px solid var(--line-strong, #c8c5bc);
+  border-radius: 10px;
+  background: var(--surface, #fffdf8);
+  color: var(--ink);
+  font: inherit;
+}
+
+.investment-holding-create-form fieldset,
+.investment-holding-transaction-form fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.investment-holding-create-form legend,
+.investment-holding-transaction-form legend {
+  margin-bottom: 5px;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.investment-form-help {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.investment-holding-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.investment-holding-form-wide {
+  grid-column: 1 / -1;
+}
+
+.investment-holding-form-actions,
+.investment-holding-mini-form,
+.investment-holding-refresh-form,
+.investment-holding-card-footer,
+.investment-holding-delete-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.investment-holding-form-actions {
+  margin-top: 16px;
+}
+
+
+.investment-holdings-account {
+  display: grid;
+  gap: 18px;
+}
+
+.investment-holdings-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.investment-holdings-summary > div {
+  display: grid;
+  gap: 5px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface, #fffdf8);
+}
+
+.investment-holdings-summary span,
+.investment-holding-value span,
+.investment-holding-price-readout span,
+.investment-holding-metrics dt {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.investment-holdings-summary strong {
+  color: var(--ink);
+  font-size: 17px;
+}
+
+.investment-holding-reconciliation {
+  margin: 0;
+  padding: 11px 13px;
+  border-left: 3px solid var(--line-strong, #c8c5bc);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.investment-holding-reconciliation.is-matched {
+  border-color: #4e9270;
+  color: #286348;
+}
+
+.investment-holding-reconciliation.is-difference {
+  border-color: #b27b2c;
+  color: #79511a;
+}
+
+.investment-holding-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 14px;
+}
+
+.investment-holding-card {
+  display: grid;
+  gap: 15px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface, #fffdf8);
+}
+
+.investment-holding-card-header h3 {
+  display: inline;
+  margin-right: 8px;
+  font-size: 21px;
+}
+.investment-holding-card-header h3 a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.investment-holding-card-header h3 a:hover,
+.investment-holding-card-header h3 a:focus-visible {
+  color: var(--gold-ink, #6c4a19);
+  text-decoration: underline;
+}
+
+.investment-holding-value {
+  display: grid;
+  gap: 4px;
+  text-align: right;
+}
+
+.investment-holding-value strong {
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.investment-holding-value small,
+.investment-holding-price-readout small,
+.investment-holding-refresh-form small,
+.investment-holding-card-footer > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.investment-holding-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+  margin: 0;
+}
+
+.investment-holding-metrics > div {
+  min-width: 0;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--surface-soft, #faf7ef);
+}
+
+.investment-holding-metrics dd {
+  margin: 5px 0 0;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.investment-holding-unavailable {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff5df;
+  color: #79511a;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.investment-holding-price-readout {
+  display: grid;
+  gap: 4px;
+}
+
+.investment-holding-price-readout strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.investment-holding-mini-form {
+  align-items: end;
+}
+
+.investment-holding-mini-form label {
+  min-width: 110px;
+  flex: 1 1 125px;
+}
+
+.investment-holding-mini-form button,
+.investment-holding-refresh-form button {
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.investment-holding-refresh-form {
+  align-items: center;
+}
+
+.investment-holding-history {
+  display: grid;
+  gap: 10px;
+  padding-top: 15px;
+  border-top: 1px solid var(--line);
+}
+
+.investment-holding-history h4,
+.investment-holding-fx-panel h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.investment-holding-table-wrap {
+  overflow-x: auto;
+}
+
+.investment-holding-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+}
+
+.investment-holding-table th,
+.investment-holding-table td {
+  padding: 9px 8px;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.investment-holding-table th {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.investment-holding-delete-form {
+  justify-content: flex-end;
+}
+
+.investment-holding-delete-form button {
+  min-height: 34px;
+  padding: 6px 9px;
+}
+
+.investment-holding-fx-panel {
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.investment-holding-fx-panel > div:first-child {
+  max-width: 330px;
+}
+
+.investment-holding-fx-actions {
+  display: grid;
+  flex: 1 1 560px;
+  gap: 12px;
+}
+
+
+.investment-holdings-workspace button:focus-visible,
+.investment-holdings-workspace input:focus-visible,
+.investment-holdings-workspace select:focus-visible,
+.investment-holdings-workspace a:focus-visible {
+  outline: 3px solid rgba(178, 123, 44, .55);
+  outline-offset: 2px;
+}
+
+@media (max-width: 800px) {
+  .investment-holdings-heading,
+  .investment-holdings-account-header,
+  .investment-holding-card-header,
+  .investment-holding-fx-panel {
+    display: grid;
+  }
+
+  .investment-holding-value {
+    text-align: left;
+  }
+
+  .investment-holdings-summary,
+  .investment-holding-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .investment-holding-fx-panel > div:first-child {
+    max-width: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .investment-holdings-workspace {
+    margin-right: -8px;
+    margin-left: -8px;
+    padding: 18px 14px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+  }
+
+  .investment-holding-form-grid,
+  .investment-holdings-summary,
+  .investment-holding-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .investment-holding-form-wide {
+    grid-column: auto;
+  }
+
+  .investment-holdings-empty,
+  .investment-holding-create-form,
+  .investment-holdings-account,
+  .investment-holding-fx-panel,
+  .investment-holding-card {
+    padding: 15px;
+  }
+
+  .investment-holding-mini-form,
+  .investment-holding-refresh-form {
+    align-items: stretch;
+  }
+
+  .investment-holding-mini-form > *,
+  .investment-holding-refresh-form > * {
+    width: 100%;
+  }
+
+  .investment-holding-card-footer {
+    align-items: stretch;
+  }
+
+  .investment-holding-card-footer button {
+    flex: 1 1 auto;
+  }
+}
+
+/* REEI/RDSP holdings editorial presentation. The controls and data contracts
+   above remain unchanged; this layer only gives the workspace its visual
+   hierarchy and responsive composition. */
+.investment-holdings-workspace {
+  gap: 24px;
+  margin: 18px 0 36px;
+  padding: 6px 0 34px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.investment-holdings-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 26px;
+  align-items: start;
+}
+
+.investment-holdings-heading > div {
+  min-width: 0;
+}
+
+.investment-holdings-heading h2,
+.investment-holdings-account-header h3,
+.investment-holdings-empty h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+
+.investment-holding-card-header h3 {
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+
+.investment-holdings-heading h2 {
+  font-size: clamp(36px, 5vw, 58px);
+  line-height: 1.03;
+}
+
+.investment-holdings-heading p:not(.investment-holding-eyebrow) {
+  max-width: 760px;
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.investment-holding-as-of {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: start;
+  padding: 10px 14px;
+  border-color: var(--line-strong, #bec3c5);
+  background: rgba(255, 253, 248, .72);
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.investment-holding-as-of svg {
+  flex: 0 0 auto;
+  color: var(--gold-ink, #6c4a19);
+}
+
+.investment-holdings-account-picker {
+  width: min(100%, 710px);
+  max-width: none;
+}
+
+.investment-holding-dropdown-field {
+  min-width: 0;
+}
+
+.investment-holdings-account-label,
+.investment-holding-dropdown-label {
+  display: block;
+}
+
+.investment-dropdown {
+  position: relative;
+  display: block;
+  z-index: 1;
+}
+
+.investment-dropdown.is-open {
+  z-index: 1100;
+}
+
+.investment-dropdown-trigger {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 40px 9px 11px;
+  border: 1px solid var(--line-strong, #c8c5bc);
+  border-radius: 10px;
+  color: var(--ink);
+  background: var(--surface, #fffdf8);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.investment-dropdown-trigger:hover {
+  border-color: var(--gold-ink, #6c4a19);
+}
+
+.investment-dropdown-trigger:disabled {
+  cursor: not-allowed;
+  opacity: .62;
+}
+
+.investment-dropdown-trigger:focus-visible {
+  outline: 2px solid var(--gold, #b27b2c);
+  outline-offset: 2px;
+}
+
+.investment-dropdown.is-open .investment-dropdown-trigger {
+  border-color: var(--gold-ink, #6c4a19);
+  box-shadow: 0 0 0 3px rgba(178, 123, 44, .22);
+}
+
+.investment-dropdown-trigger[aria-invalid="true"] {
+  border-color: var(--danger, #a34f43);
+}
+
+.investment-dropdown-trigger-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.investment-dropdown-chevron {
+  flex: 0 0 auto;
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  pointer-events: none;
+  color: var(--gold-ink, #6c4a19);
+  transform: translateY(-50%);
+  transition: transform 140ms ease;
+}
+
+.investment-dropdown.is-open .investment-dropdown-chevron {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.investment-dropdown-options {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  z-index: 1100;
+  display: grid;
+  gap: 4px;
+  max-height: min(320px, calc(100dvh - 32px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
+  border: 1px solid var(--line-strong, #c8c5bc);
+  border-radius: 12px;
+  background: var(--surface, #fffdf8);
+  box-shadow: 0 14px 30px rgba(17, 28, 38, .16);
+  scrollbar-width: thin;
+}
+
+.investment-dropdown-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--ink);
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+}
+
+.investment-dropdown-option > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.investment-dropdown-option:hover,
+.investment-dropdown-option.is-active,
+.investment-dropdown-option[aria-selected="true"] {
+  color: var(--navy);
+  background: var(--gold-surface, #f8f1e2);
+}
+
+.investment-dropdown-option:focus-visible {
+  outline: 2px solid var(--gold, #b27b2c);
+  outline-offset: -2px;
+}
+
+.investment-holdings-account-picker .investment-dropdown-trigger {
+  min-height: 50px;
+  padding: 9px 42px 9px 14px;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.investment-holdings-account-picker .investment-dropdown-option {
+  font-size: 15px;
+}
+
+.investment-holding-create-form .investment-dropdown-trigger {
+  min-height: 50px;
+  border-radius: 9px;
+}
+
+.investment-symbol-search-field {
+  display: grid;
+  gap: 7px;
+  color: var(--ink);
+  position: relative;
+  z-index: 2;
+}
+
+.investment-symbol-search {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.investment-symbol-search:focus-within {
+  z-index: 1200;
+}
+
+.investment-symbol-search-options {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  z-index: 1200;
+  display: grid;
+  gap: 4px;
+  max-height: min(320px, calc(100dvh - 32px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
+  border: 1px solid var(--line-strong, #c8c5bc);
+  border-radius: 12px;
+  background: var(--surface, #fffdf8);
+  box-shadow: 0 14px 30px rgba(17, 28, 38, .16);
+  scrollbar-width: thin;
+}
+
+.investment-symbol-search-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 50px;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--ink);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.investment-symbol-search-option:hover,
+.investment-symbol-search-option.is-active {
+  color: var(--navy);
+  background: var(--gold-surface, #f8f1e2);
+}
+
+.investment-symbol-search-option:focus-visible {
+  outline: 2px solid var(--gold, #b27b2c);
+  outline-offset: -2px;
+}
+
+.investment-symbol-search-option-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.investment-symbol-search-option-copy strong {
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.investment-symbol-search-option-copy small,
+.investment-symbol-search-option-meta,
+.investment-symbol-search-status {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.investment-symbol-search-option-copy small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.investment-symbol-search-option-meta {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.investment-symbol-search-status {
+  margin: 4px 6px;
+}
+
+.investment-projection-modal-form .investment-dropdown-trigger {
+  min-height: 35px;
+  padding: 8px 34px 8px 10px;
+  border-radius: 7px;
+  font-size: 12px;
+}
+
+.investment-holdings-empty,
+.investment-holding-create-form,
+.investment-holdings-account,
+.investment-holding-fx-panel {
+  border-radius: 18px;
+  background: var(--panel, #f9f6ef);
+  box-shadow: 0 8px 26px rgba(23, 32, 41, .045);
+}
+
+.investment-holding-create-form {
+  padding: 26px 28px;
+}
+
+.investment-holding-create-form legend {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin: 0 0 22px;
+  font-size: 21px;
+}
+
+.investment-holding-create-icon,
+.investment-holdings-account-icon,
+.investment-holding-avatar,
+.investment-holdings-summary-icon,
+.investment-holding-reconciliation-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.investment-holding-create-icon {
+  width: 56px;
+  height: 56px;
+  border: 1px solid rgba(183, 138, 62, .42);
+  border-radius: 50%;
+  background: var(--gold-surface, #f8f1e2);
+  color: var(--gold-ink, #6c4a19);
+}
+
+.investment-holding-create-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.investment-holding-create-copy strong {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -.025em;
+}
+
+.investment-holding-create-copy small {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.investment-holding-create-form .investment-holding-form-grid {
+  grid-template-columns: minmax(150px, .9fr) minmax(180px, 1.05fr) minmax(220px, 1.3fr) minmax(130px, .75fr) minmax(150px, .85fr);
+  gap: 14px;
+  align-items: end;
+}
+
+.investment-holding-create-form input,
+.investment-holding-create-form select {
+  min-height: 50px;
+  border-radius: 9px;
+  background: var(--surface, #fffdf8);
+}
+
+.investment-holding-create-form .investment-holding-form-actions {
+  display: grid;
+  gap: 8px;
+  align-self: end;
+  min-width: 0;
+  margin-top: 0;
+}
+
+.investment-holding-create-form .investment-holding-form-actions .navy-action-button,
+.investment-holding-card-market button,
+.investment-holding-card-footer button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.investment-holding-create-form .investment-holding-form-actions .navy-action-button {
+  width: 100%;
+  min-height: 50px;
+}
+
+.investment-holdings-account {
+  gap: 20px;
+  padding: 24px;
+}
+
+.investment-holdings-account-header {
+  align-items: center;
+}
+
+.investment-holdings-account-identity {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  min-width: 0;
+}
+
+.investment-holdings-account-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--gold-surface, #f8f1e2);
+  color: var(--gold-ink, #6c4a19);
+}
+
+.investment-holdings-account-header h3 {
+  font-size: 31px;
+  line-height: 1.05;
+}
+
+.investment-holding-currency-badge {
+  padding: 9px 13px;
+  background: var(--surface, #fffdf8);
+  color: var(--muted);
+}
+
+.investment-holdings-summary {
+  gap: 12px;
+}
+
+.investment-holdings-summary > div {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 78px;
+  padding: 15px 16px;
+  border-radius: 12px;
+  background: var(--surface, #fffdf8);
+}
+
+.investment-holdings-summary > div.is-unavailable {
+  border-color: #d8e6ed;
+  background: #f2f7f9;
+}
+
+.investment-holdings-summary-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--gold-surface, #f8f1e2);
+  color: var(--gold-ink, #6c4a19);
+}
+
+.investment-holdings-summary > div > .investment-holdings-summary-icon {
+  color: var(--gold-ink, #6c4a19);
+  font-size: inherit;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.investment-holdings-summary > div.is-unavailable .investment-holdings-summary-icon {
+  background: #e0edf2;
+  color: #466878;
+}
+
+.investment-holdings-summary-copy {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.investment-holdings-summary-copy > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.investment-holdings-summary-copy strong {
+  font-size: 18px;
+}
+
+.investment-holding-reconciliation {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  background: rgba(255, 253, 248, .54);
+}
+
+.investment-holding-reconciliation-icon {
+  width: 24px;
+  height: 24px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--gold-surface, #f8f1e2);
+  color: var(--gold-ink, #6c4a19);
+}
+
+.investment-holding-reconciliation.is-matched .investment-holding-reconciliation-icon {
+  background: var(--positive-surface, #e7f2ea);
+  color: var(--positive, #1f5e3a);
+}
+
+.investment-holding-list {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+
+.investment-holding-card {
+  gap: 20px;
+  padding: 25px 26px;
+  border-radius: 16px;
+  background: var(--surface, #fffdf8);
+  box-shadow: 0 10px 30px rgba(23, 32, 41, .055);
+}
+
+.investment-holding-card-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+  gap: 28px;
+  min-width: 0;
+}
+
+.investment-holding-card-overview {
+  display: grid;
+  gap: 26px;
+  align-content: start;
+  min-width: 0;
+}
+
+.investment-holding-card-identity {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.investment-holding-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  background: var(--gold-surface, #f8f1e2);
+  color: var(--gold-ink, #6c4a19);
+  font-size: 28px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.investment-holding-avatar.is-vanguard {
+  width: 92px;
+  height: 92px;
+  background: #f9e9eb;
+  color: #a31d36;
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 500;
+  letter-spacing: -.08em;
+}
+
+.investment-holding-card-header {
+  display: block;
+  min-width: 0;
+}
+
+.investment-holding-kind {
+  margin-bottom: 8px;
+  background: var(--gold-surface, #f8f1e2);
+}
+
+.investment-holding-card-header h3 {
+  display: block;
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.03;
+}
+
+.investment-holding-card-header p {
+  margin-top: 8px;
+  font-size: 15px;
+}
+
+.investment-holding-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.investment-holding-metrics > div {
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  background: var(--panel, #f9f6ef);
+}
+
+.investment-holding-metrics dd {
+  font-size: 14px;
+}
+
+.investment-holding-card-market {
+  display: grid;
+  align-content: start;
+  grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr);
+  gap: 16px 18px;
+  min-width: 0;
+  padding-left: 28px;
+  border-left: 1px solid var(--line);
+}
+
+.investment-holding-value {
+  grid-column: 2;
+  grid-row: 1;
+  justify-items: start;
+  padding: 15px 16px;
+  border: 1px solid #d8e6ed;
+  border-radius: 12px;
+  background: #f2f7f9;
+  text-align: left;
+}
+
+.investment-holding-value strong {
+  font-size: 29px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+}
+
+.investment-holding-value.is-unavailable {
+  background: var(--neutral-surface, #eff1ef);
+}
+
+.investment-holding-price-readout {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  min-width: 0;
+  gap: 5px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.investment-holding-price-readout strong {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+}
+
+.investment-holding-price-readout small {
+  display: block;
+}
+
+.investment-holding-price-actions {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+  align-items: end;
+}
+
+.investment-holding-price-actions > .investment-holding-save-price-button {
+  grid-column: 2;
+  grid-row: 2;
+  min-height: 46px;
+  border-color: var(--navy);
+  color: var(--surface);
+  background: var(--navy);
+}
+
+.investment-holding-price-actions > .investment-action-message {
+  grid-column: 1 / -1;
+}
+
+.investment-holding-price-actions > .investment-holding-refresh-price-button {
+  grid-column: 1;
+  grid-row: 2;
+  min-height: 46px;
+  border-color: var(--gold);
+  color: var(--gold-ink);
+  background: var(--surface);
+}
+
+.investment-holding-price-actions > .investment-holding-price-note {
+  grid-column: 1 / -1;
+}
+
+.investment-holding-card-footer {
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.investment-holding-card-footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.investment-holding-delete-control {
+  display: grid;
+  gap: 6px;
+  align-items: center;
+}
+
+.investment-holding-card-footer button {
+  min-height: 42px;
+}
+
+.investment-holding-price-actions > .investment-holding-save-price-button:hover:not(:disabled) {
+  border-color: var(--navy-soft);
+  background: var(--navy-soft);
+}
+
+.investment-holding-price-actions > .investment-holding-refresh-price-button:hover:not(:disabled) {
+  border-color: var(--gold-ink);
+  color: var(--gold-ink-deep);
+  background: var(--gold-surface);
+}
+
+.investment-holding-fx-panel {
+  align-items: center;
+  padding: 18px 20px;
+  background: var(--gold-surface, #f8f1e2);
+  box-shadow: none;
+}
+
+.investment-holdings-workspace svg {
+  flex: 0 0 auto;
+}
+
+/* Compact desktop tuning for the existing viewport band. */
+@media (min-width: 981px) and (max-width: 1220px) {
+  .investment-holding-card { padding: 20px; }
+  .investment-holding-card-layout { grid-template-columns: minmax(0, 1fr) minmax(0, .92fr); gap: 20px; }
+  .investment-holding-card-market { grid-template-columns: minmax(0, .65fr) minmax(0, 1.35fr); gap: 12px; padding-left: 20px; }
+  .investment-holding-card-header h3 { font-size: 30px; }
+  .investment-holding-card-header p { max-width: 100%; font-size: 14px; line-height: 1.35; }
+  .investment-holding-value { padding: 13px; }
+  .investment-holding-value strong { font-size: 25px; }
+  .investment-holding-price-readout strong { font-size: 24px; }
+  .investment-holding-price-actions { gap: 8px; }
+  .investment-holding-price-actions > button { min-width: 0; padding-inline: 10px; font-size: 13px; }
+}
+
+
+@media (max-width: 980px) {
+  .investment-holdings-heading {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .investment-holding-as-of {
+    justify-self: start;
+  }
+
+  .investment-holding-create-form .investment-holding-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .investment-holding-create-form .investment-holding-form-actions {
+    grid-column: 1 / -1;
+    justify-self: start;
+    width: min(100%, 220px);
+  }
+
+  .investment-holding-card-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .investment-holding-card-market {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 22px;
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
+  .investment-holding-card-market .investment-holding-value,
+  .investment-holding-card-market .investment-holding-price-readout,
+  .investment-holding-price-actions {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .investment-holding-price-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .investment-holding-price-actions > .investment-holding-save-price-button,
+  .investment-holding-price-actions > .investment-holding-refresh-price-button,
+  .investment-holding-price-actions > .investment-holding-price-note,
+  .investment-holding-price-actions > .investment-action-message {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .investment-holdings-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .investment-holdings-account-header {
+    display: grid;
+  }
+
+  .investment-holding-currency-badge {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 560px) {
+  .investment-holdings-workspace {
+    gap: 18px;
+    margin: 18px 0 28px;
+    padding: 0 0 24px;
+  }
+
+  .investment-holdings-heading h2 {
+    font-size: clamp(35px, 11vw, 48px);
+  }
+
+  .investment-holding-create-form,
+  .investment-holdings-account,
+  .investment-holding-fx-panel,
+  .investment-holding-card {
+    padding: 18px;
+  }
+
+  .investment-holding-create-form legend {
+    align-items: flex-start;
+  }
+
+  .investment-holding-create-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .investment-holding-create-copy strong {
+    font-size: 23px;
+  }
+
+  .investment-holding-create-form .investment-holding-form-grid,
+  .investment-holdings-summary,
+  .investment-holding-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .investment-holding-create-form .investment-holding-form-actions {
+    grid-column: auto;
+    justify-self: stretch;
+    width: auto;
+  }
+
+  .investment-holdings-account-identity {
+    align-items: flex-start;
+  }
+
+  .investment-holdings-account-header h3 {
+    font-size: 28px;
+  }
+
+  .investment-holding-card-identity {
+    gap: 12px;
+  }
+
+  .investment-holding-avatar {
+    width: 58px;
+    height: 58px;
+  }
+
+  .investment-holding-avatar.is-vanguard {
+    width: 58px;
+    height: 58px;
+    font-size: 38px;
+  }
+
+  .investment-holding-card-header h3 {
+    font-size: 29px;
+  }
+
+  .investment-holding-price-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .investment-holding-price-actions > .investment-holding-save-price-button,
+  .investment-holding-price-actions > .investment-holding-refresh-price-button,
+  .investment-holding-price-actions > .investment-holding-price-note,
+  .investment-holding-price-actions > .investment-action-message {
+    grid-column: 1;
+    grid-row: auto;
+    width: 100%;
+  }
+
+  .investment-holding-card-footer {
+    align-items: stretch;
+  }
+
+  .investment-holding-card-footer-actions {
+    width: 100%;
+  }
+
+  .investment-holding-card-footer-actions > .investment-secondary-button,
+  .investment-holding-card-footer-actions > .investment-holding-delete-control {
+    flex: 1 1 auto;
+  }
+
+  .investment-holding-delete-control button {
+    width: 100%;
+  }
+}
+
+/* Reconciliation notice: align the live treatment with the rounded investment mockup. */
+.investment-holding-reconciliation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  margin: 0;
+  padding: 12px 16px 12px 18px;
+  border: 1px solid rgba(213, 215, 216, 0.72);
+  border-left: 6px solid #d7c8a4;
+  border-radius: 14px;
+  background: var(--panel, #f9f6ef);
+  color: var(--navy);
+  line-height: 1.45;
+}
+
+.investment-holding-reconciliation-icon {
+  width: 28px;
+  height: 28px;
+  margin-top: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #b28a48;
+  color: var(--surface, #fffdf8);
+}
+
+.investment-holding-reconciliation > span:last-child {
+  min-width: 0;
+}
+
+.investment-holding-reconciliation strong {
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.investment-holding-reconciliation.is-matched {
+  border-left-color: #6fa185;
+  background: var(--positive-surface, #e7f2ea);
+  color: #286348;
+}
+
+.investment-holding-reconciliation.is-matched strong {
+  color: #286348;
+}
+
+.investment-holding-reconciliation.is-matched .investment-holding-reconciliation-icon {
+  background: var(--positive, #1f5e3a);
+  color: var(--surface, #fffdf8);
+}
+
+.investment-holding-reconciliation.is-difference {
+  border-left-color: var(--gold);
+  background: var(--gold-surface, #f8f1e2);
+  color: #79511a;
+}
+
+.investment-holding-reconciliation.is-difference strong {
+  color: var(--gold-ink, #6c4a19);
+}
+
+.investment-holding-reconciliation.is-difference .investment-holding-reconciliation-icon,
+.investment-holding-reconciliation:not(.is-matched):not(.is-difference) .investment-holding-reconciliation-icon {
+  background: var(--gold-ink, #6c4a19);
+  color: var(--surface, #fffdf8);
+}
+
+/* The sidebar reduces the usable width before the viewport breakpoints run.
+   Container queries keep the holdings layout tied to its real content width,
+   including zoomed and compact desktop windows. */
+.investment-holdings-workspace {
+  container-type: inline-size;
+  min-width: 0;
+}
+
+.investment-holdings-account,
+.investment-holdings-account-header,
+.investment-holdings-summary,
+.investment-holding-card > *,
+.investment-holding-card-market > *,
+.investment-holding-card-footer-actions,
+.investment-holding-price-actions > * {
+  min-width: 0;
+}
+
+.investment-holding-card-market button {
+  max-width: 100%;
+  min-width: 0;
+}
+
+@container (max-width: 1260px) {
+  .investment-holdings-heading {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .investment-holding-as-of {
+    justify-self: start;
+  }
+
+  .investment-holding-create-form .investment-holding-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .investment-holding-create-form .investment-holding-form-actions {
+    grid-column: 1 / -1;
+    justify-self: start;
+    width: min(100%, 220px);
+  }
+
+  .investment-holdings-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .investment-holdings-account-header {
+    flex-wrap: wrap;
+  }
+}
+
+@container (max-width: 1160px) {
+  .investment-holding-card-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .investment-holding-card-market {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-top: 22px;
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
+  .investment-holding-card-market .investment-holding-value,
+  .investment-holding-card-market .investment-holding-price-readout {
+    grid-row: 1;
+  }
+
+  .investment-holding-card-market .investment-holding-value {
+    grid-column: 2;
+  }
+
+  .investment-holding-card-market .investment-holding-price-readout {
+    grid-column: 1;
+  }
+
+  .investment-holding-price-actions {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .investment-holding-price-actions > label {
+    min-width: 0;
+  }
+
+  .investment-holding-price-actions > button {
+    width: 100%;
+  }
+}
+
+@container (max-width: 740px) {
+  .investment-holdings-summary,
+  .investment-holding-card-market,
+  .investment-holding-price-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .investment-holding-card-market .investment-holding-value,
+  .investment-holding-card-market .investment-holding-price-readout,
+  .investment-holding-price-actions,
+  .investment-holding-price-actions > .investment-holding-save-price-button,
+  .investment-holding-price-actions > .investment-holding-refresh-price-button,
+  .investment-holding-price-actions > .investment-holding-price-note,
+  .investment-holding-price-actions > .investment-action-message {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}

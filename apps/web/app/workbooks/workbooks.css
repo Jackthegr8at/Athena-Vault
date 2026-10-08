@@ -1,0 +1,111 @@
+/* Private calculation workbench */
+.workbook-page { display: grid; gap: 18px; min-width: 0; }
+.main.module-page-art-workbooks::before { opacity: .82; }
+.workbook-intro.editorial-page-art-surface { border-color: rgba(213, 215, 216, .82); background: rgba(255, 253, 248, .78); box-shadow: 0 12px 34px rgba(23, 32, 41, .055); }
+.workbook-intro { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 20px 22px; }
+.workbook-intro-icon, .workbook-empty-icon { display: inline-grid; place-items: center; width: 48px; height: 48px; flex: 0 0 48px; border: 1px solid #E5D5B2; border-radius: 15px; background: var(--gold-surface); color: var(--gold-ink); }
+.workbook-intro h3, .workbook-empty-state h3 { margin: 3px 0 0; color: var(--ink); font-family: var(--font-display); font-size: clamp(21px, 2vw, 28px); font-weight: 500; letter-spacing: -.035em; line-height: 1.08; }
+.workbook-intro p:not(.eyebrow), .workbook-empty-state p:not(.eyebrow) { max-width: 760px; margin: 7px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.workbook-intro-boundary { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--muted); font-size: 11px; font-weight: 700; white-space: nowrap; }
+.workbook-shell { display: grid; grid-template-columns: minmax(225px, 280px) minmax(0, 1fr); align-items: stretch; gap: 18px; min-width: 0; }
+.workbook-shell.is-expanded { grid-template-columns: 1fr; }
+.main:has(.workbook-shell.is-expanded) { max-width: none; padding-inline: clamp(16px, 2vw, 30px); }
+.workbook-sidebar { align-self: start; min-width: 0; padding: 18px; }
+.workbook-sidebar-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.workbook-sidebar-count { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+.workbook-add-button, .workbook-expand-button, .workbook-delete-button { display: inline-grid; place-items: center; width: 38px; height: 38px; flex: 0 0 38px; padding: 0; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); color: var(--navy); cursor: pointer; }
+.workbook-add-button:hover, .workbook-add-button:focus-visible, .workbook-expand-button:hover, .workbook-expand-button:focus-visible { border-color: var(--gold); background: var(--gold-surface); color: var(--gold-ink); }
+.workbook-add-button:disabled, .workbook-expand-button:disabled, .workbook-delete-button:disabled { cursor: wait; opacity: .5; }
+.workbook-full-page-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 8px 13px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); color: var(--navy); font-size: 12px; font-weight: 800; cursor: pointer; }
+.workbook-full-page-button:hover, .workbook-full-page-button:focus-visible { border-color: var(--gold); background: var(--gold-surface); color: var(--gold-ink); }
+.workbook-full-page-button:disabled { cursor: wait; opacity: .5; }
+.workbook-full-page-error { flex: 1 0 100%; color: var(--danger); font-size: 11px; font-weight: 700; text-align: right; }
+.workbook-editor-shell:fullscreen { width: 100vw; height: 100vh; min-height: 0; max-height: 100vh; border: 0; border-radius: 0; box-shadow: none; background: var(--surface); }
+.workbook-editor-shell:fullscreen::backdrop { background: var(--surface); }
+.workbook-editor-shell:fullscreen .workbook-editor-frame { padding: 0; }
+.workbook-editor-shell:fullscreen .athena-univer-editor, .workbook-editor-shell:fullscreen .workbook-editor-loading { height: 100%; min-height: 0; border: 0; border-radius: 0; }
+.workbook-editor-shell:fullscreen .workbook-expand-button { display: none; }
+.workbook-demo-note { display: flex; align-items: center; gap: 7px; margin: 16px 0 0; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--neutral-surface); color: var(--muted); font-size: 11px; line-height: 1.35; }
+.workbook-migration-note { display: flex; align-items: center; gap: 7px; margin: 16px 0 0; padding: 9px 10px; border: 1px solid var(--gold); border-radius: 10px; background: var(--gold-surface); color: var(--gold-ink); font-size: 11px; font-weight: 700; line-height: 1.35; }
+.workbook-list { display: grid; gap: 6px; margin-top: 18px; }
+.workbook-list-item { display: flex; align-items: center; gap: 10px; width: 100%; min-width: 0; min-height: 58px; padding: 9px 10px; border: 1px solid transparent; border-radius: 11px; background: transparent; color: var(--ink); text-align: left; cursor: pointer; }
+.workbook-list-item:hover, .workbook-list-item:focus-visible { border-color: var(--line-strong); background: var(--panel); }
+.workbook-list-item.is-selected { border-color: var(--gold); background: var(--gold-surface); box-shadow: inset 3px 0 0 var(--gold); }
+.workbook-list-item-icon { display: inline-grid; place-items: center; width: 32px; height: 32px; flex: 0 0 32px; border-radius: 9px; background: var(--navy); color: var(--gold-light); }
+.workbook-list-item-copy { display: grid; min-width: 0; gap: 4px; }
+.workbook-list-item-copy strong { overflow: hidden; color: var(--ink); font-size: 12px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+.workbook-list-item-copy small { overflow: hidden; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.workbook-sidebar-empty { display: grid; justify-items: center; gap: 8px; margin-top: 28px; padding: 20px 10px; border-top: 1px solid var(--line); color: var(--muted); text-align: center; }
+.workbook-sidebar-empty p { margin: 0; font-size: 11px; line-height: 1.4; }
+.workbook-editor-shell { display: flex; min-width: 0; min-height: 720px; flex-direction: column; overflow: hidden; padding: 0; }
+.workbook-editor-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; padding: 20px 22px 14px; border-bottom: 1px solid var(--line); }
+.workbook-title-field { display: grid; min-width: min(100%, 400px); gap: 6px; }
+.workbook-title-field label { color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.workbook-title-field input { width: 100%; min-height: 42px; padding: 8px 11px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); color: var(--ink); font-size: 15px; font-weight: 800; }
+.workbook-title-field input:disabled { background: var(--neutral-surface); color: var(--muted); }
+.workbook-editor-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.workbook-save-state { color: var(--muted); font-size: 11px; font-weight: 700; white-space: nowrap; }
+.workbook-save-state.is-dirty, .workbook-save-state.is-saving { color: var(--gold-ink); }
+.workbook-save-state.is-error { color: var(--danger); }
+.workbook-save-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 8px 13px; border: 1px solid var(--navy); border-radius: 10px; background: var(--navy); color: var(--surface); font-size: 12px; font-weight: 800; cursor: pointer; }
+.workbook-save-button:hover, .workbook-save-button:focus-visible { border-color: var(--gold); background: var(--navy-soft); }
+.workbook-save-button:disabled { cursor: wait; opacity: .5; }
+.workbook-delete-button { color: var(--danger); }
+.workbook-delete-button:hover, .workbook-delete-button:focus-visible { border-color: var(--danger-border); background: var(--danger-surface); }
+.workbook-editor-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 22px; color: var(--muted); font-size: 10px; line-height: 1.35; }
+.workbook-editor-meta span:last-child { color: var(--gold-ink); font-weight: 700; }
+.workbook-editor-frame { min-width: 0; min-height: 0; flex: 1 1 auto; padding: 0 12px 12px; }
+.athena-univer-editor { position: relative; width: 100%; height: min(72vh, 820px); min-height: 600px; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.athena-univer-editor > div:not(.workbook-editor-error) { height: 100%; }
+.workbook-editor-loading { display: grid; place-items: center; width: 100%; height: min(72vh, 820px); min-height: 600px; border: 1px dashed var(--line-strong); border-radius: 12px; background: var(--panel); color: var(--muted); font-size: 13px; }
+.workbook-editor-error { position: absolute; inset: 18px; z-index: 2; display: grid; place-items: center; padding: 20px; border: 1px solid var(--danger-border); border-radius: 12px; background: var(--danger-surface); color: var(--danger); font-size: 13px; text-align: center; }
+.workbook-empty-state { display: grid; justify-items: center; align-content: center; min-height: 720px; padding: 40px 24px; text-align: center; }
+.workbook-empty-state .workbook-empty-icon { width: 64px; height: 64px; margin-bottom: 20px; border-radius: 19px; }
+.workbook-empty-state h3 { margin-top: 6px; font-size: clamp(28px, 3vw, 40px); }
+.workbook-empty-state p:not(.eyebrow) { max-width: 520px; margin-top: 12px; }
+.workbook-empty-state .account-primary-button { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; }
+.workbook-action-error { max-width: 520px; margin: 16px 0 0; color: var(--danger); font-size: 12px; line-height: 1.45; }
+.workbook-footnote { margin: -4px 2px 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+@media (max-width: 1000px) {
+  .workbook-shell { grid-template-columns: 1fr; }
+  .workbook-sidebar { align-self: stretch; }
+  .workbook-list { display: flex; min-width: 0; margin-inline: -4px; padding: 2px 4px 4px; overflow-x: auto; }
+  .workbook-list-item { width: min(230px, 72vw); flex: 0 0 min(230px, 72vw); }
+}
+@media (max-width: 720px) {
+  .workbook-intro { grid-template-columns: auto minmax(0, 1fr); padding: 18px; }
+  .workbook-intro-boundary { grid-column: 1 / -1; justify-self: start; }
+  .workbook-editor-shell, .workbook-empty-state { min-height: 620px; }
+  .workbook-editor-head { align-items: stretch; flex-direction: column; padding: 18px; }
+  .workbook-title-field { min-width: 0; }
+  .workbook-editor-actions { justify-content: space-between; }
+  .workbook-editor-meta { align-items: flex-start; flex-direction: column; padding-inline: 18px; }
+  .workbook-editor-frame { padding: 0 8px 8px; }
+  .athena-univer-editor, .workbook-editor-loading { height: 68vh; min-height: 520px; }
+  .workbook-footnote { margin-top: 0; }
+}
+
+@media (max-width: 1100px) {
+  .net-worth-history-card { padding: 0; }
+  .net-worth-history-main { padding: 18px; }
+  .net-worth-history-dashboard-layout { grid-template-columns: 1fr; }
+  .net-worth-history-metric-stack { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
+  .net-worth-history-metric-card { min-height: 102px; }
+}
+
+@media (max-width: 720px) {
+  .net-worth-history-card { padding: 0; }
+  .net-worth-history-main { padding: 16px; }
+  .net-worth-history-header { grid-template-columns: 1fr; align-items: flex-start; }
+  .net-worth-history-header .card-title { font-size: 22px; }
+  .net-worth-history-header-controls { width: 100%; flex-wrap: wrap; justify-content: flex-start; }
+  .net-worth-history-date-range { width: 100%; justify-content: center; }
+  .net-worth-history-svg { height: 214px; }
+  .net-worth-history-date-axis text { display: none; }
+  .net-worth-history-date-axis text:first-child,
+  .net-worth-history-date-axis text:nth-child(4n + 1),
+  .net-worth-history-date-axis text:last-child { display: block; }
+  .net-worth-history-metric-stack { grid-template-columns: 1fr; }
+  .net-worth-history-change-summary ul { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 12px; }
+  .net-worth-history-change-summary li:nth-child(3) { padding-left: 0; border-left: 0; }
+}

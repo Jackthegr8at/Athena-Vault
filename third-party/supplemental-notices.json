@@ -1,0 +1,171 @@
+{
+  "@better-auth/utils@0.5.0": {
+    "license": "MIT",
+    "file": "upstream/better-auth-utils-0.5.0-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/better-auth/utils/ef522888b7b2ff77ca13f0afb476dfae8f297862/LICENSE",
+    "gitHead": "f03c1c76aff7bfa3f4de4af47b112315c770a0d1",
+    "review": "Authentic later upstream LICENSE addition while package version remains 0.5.0. Official comparison changes only LICENSE/package.json, not source code. Original archive omitted the notice; no authorship is inferred."
+  },
+  "react-remove-scroll-bar@2.3.8": {
+    "license": "MIT",
+    "file": "upstream/react-remove-scroll-bar-2.3.8-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/theKashey/react-remove-scroll-bar/7301c160fda44cb8cf2b9fdfde61efad35736196/LICENSE",
+    "gitHead": "b3b1287aad81def2e2ae707274b74531b61ddbaf",
+    "review": "Authentic upstream notice added after v2.3.7. SHA-512-verified 2.3.7/2.3.8 archives have identical dist/constants files and README; only package.json differs. Exact file hashes are retained in the adjacent provenance JSON."
+  },
+  "imurmurhash@0.1.4": {
+    "license": "MIT",
+    "file": "upstream/imurmurhash-0.1.4-LICENSE.txt",
+    "source": "https://registry.npmjs.org/imurmurhash/-/imurmurhash-0.1.4.tgz",
+    "review": "Complete original License (MIT) section copied verbatim from the installed matching-version README. Its setext heading was not recognized by the collector; no neighboring/current license substituted."
+  },
+  "@next/eslint-plugin-next@16.3.5": {
+    "license": "MIT",
+    "file": "upstream/next-16.3.5-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/vercel/next.js/v16.3.5/license.md"
+  },
+  "eslint-config-next@16.3.5": {
+    "license": "MIT",
+    "file": "upstream/next-16.3.5-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/vercel/next.js/v16.3.5/license.md"
+  },
+  "@next/swc-linux-x64-gnu@16.3.4": {
+    "license": "MIT",
+    "file": "upstream/next-16.3.4-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/vercel/next.js/v16.3.4/license.md",
+    "review": "Top-level Next package notice only; embedded native/Rust component notices and corresponding-source review remain separate."
+  },
+  "@next/swc-linux-x64-musl@16.3.4": {
+    "license": "MIT",
+    "file": "upstream/next-16.3.4-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/vercel/next.js/v16.3.4/license.md",
+    "review": "Top-level Next package notice only; embedded native/Rust component notices and corresponding-source review remain separate."
+  },
+  "@next/swc-win32-x64-msvc@16.3.4": {
+    "license": "MIT",
+    "file": "upstream/next-16.3.4-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/vercel/next.js/v16.3.4/license.md",
+    "review": "Top-level Next package notice only; embedded native/Rust component notices and corresponding-source review remain separate."
+  },
+  "@next/env@16.3.4": {
+    "license": "MIT",
+    "file": "upstream/next-16.3.4-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/vercel/next.js/v16.3.4/license.md"
+  },
+  "drizzle-orm@0.45.2": {
+    "license": "Apache-2.0",
+    "file": "upstream/drizzle-orm-0.45.2-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/drizzle-team/drizzle-orm/0.45.2/LICENSE"
+  },
+  "postgres@3.4.9": {
+    "license": "Unlicense",
+    "file": "upstream/postgres-3.4.9-Unlicense.txt",
+    "source": "https://raw.githubusercontent.com/spdx/license-list-data/main/text/Unlicense.txt"
+  },
+  "@esbuild/linux-x64@0.25.12": {
+    "license": "MIT",
+    "file": "upstream/esbuild-0.25.12-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/evanw/esbuild/208f539945b145e7c9d6d844290f81c3fe5af320/LICENSE.md",
+    "gitHead": "208f539945b145e7c9d6d844290f81c3fe5af320"
+  },
+  "@esbuild/win32-x64@0.25.12": {
+    "license": "MIT",
+    "file": "upstream/esbuild-0.25.12-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/evanw/esbuild/208f539945b145e7c9d6d844290f81c3fe5af320/LICENSE.md",
+    "gitHead": "208f539945b145e7c9d6d844290f81c3fe5af320"
+  },
+  "@esbuild/linux-x64@0.28.1": {
+    "license": "MIT",
+    "file": "upstream/esbuild-0.28.1-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/evanw/esbuild/bb9db84c02433fbe37b3509f53f9f3e3cc48725e/LICENSE.md",
+    "gitHead": "bb9db84c02433fbe37b3509f53f9f3e3cc48725e"
+  },
+  "@esbuild/win32-x64@0.28.1": {
+    "license": "MIT",
+    "file": "upstream/esbuild-0.28.1-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/evanw/esbuild/bb9db84c02433fbe37b3509f53f9f3e3cc48725e/LICENSE.md",
+    "gitHead": "bb9db84c02433fbe37b3509f53f9f3e3cc48725e"
+  },
+  "@rollup/rollup-linux-x64-gnu@4.62.4": {
+    "license": "MIT",
+    "file": "upstream/rollup-4.62.4-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/rollup/rollup/ddc4ffab628944e45dbb8d66d58aae818015440f/LICENSE.md",
+    "gitHead": "ddc4ffab628944e45dbb8d66d58aae818015440f"
+  },
+  "@rollup/rollup-linux-x64-musl@4.62.4": {
+    "license": "MIT",
+    "file": "upstream/rollup-4.62.4-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/rollup/rollup/ddc4ffab628944e45dbb8d66d58aae818015440f/LICENSE.md",
+    "gitHead": "ddc4ffab628944e45dbb8d66d58aae818015440f"
+  },
+  "@rollup/rollup-win32-x64-gnu@4.62.4": {
+    "license": "MIT",
+    "file": "upstream/rollup-4.62.4-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/rollup/rollup/ddc4ffab628944e45dbb8d66d58aae818015440f/LICENSE.md",
+    "gitHead": "ddc4ffab628944e45dbb8d66d58aae818015440f"
+  },
+  "@rollup/rollup-win32-x64-msvc@4.62.4": {
+    "license": "MIT",
+    "file": "upstream/rollup-4.62.4-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/rollup/rollup/ddc4ffab628944e45dbb8d66d58aae818015440f/LICENSE.md",
+    "gitHead": "ddc4ffab628944e45dbb8d66d58aae818015440f"
+  },
+  "@unrs/resolver-binding-linux-x64-gnu@1.12.2": {
+    "license": "MIT",
+    "file": "upstream/unrs-resolver-1.12.2-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/unrs/unrs-resolver/ccb26d205e2938b16069c64a28996b48ee97ff94/LICENSE",
+    "gitHead": "ccb26d205e2938b16069c64a28996b48ee97ff94"
+  },
+  "@unrs/resolver-binding-linux-x64-musl@1.12.2": {
+    "license": "MIT",
+    "file": "upstream/unrs-resolver-1.12.2-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/unrs/unrs-resolver/ccb26d205e2938b16069c64a28996b48ee97ff94/LICENSE",
+    "gitHead": "ccb26d205e2938b16069c64a28996b48ee97ff94"
+  },
+  "@unrs/resolver-binding-win32-x64-msvc@1.12.2": {
+    "license": "MIT",
+    "file": "upstream/unrs-resolver-1.12.2-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/unrs/unrs-resolver/ccb26d205e2938b16069c64a28996b48ee97ff94/LICENSE",
+    "gitHead": "ccb26d205e2938b16069c64a28996b48ee97ff94"
+  },
+  "unrs-resolver@1.12.2": {
+    "license": "MIT",
+    "file": "upstream/unrs-resolver-1.12.2-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/unrs/unrs-resolver/ccb26d205e2938b16069c64a28996b48ee97ff94/LICENSE",
+    "gitHead": "ccb26d205e2938b16069c64a28996b48ee97ff94"
+  },
+  "franc-min@6.2.0": {
+    "license": "MIT",
+    "file": "upstream/franc-6.2.0-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/wooorm/franc/3f9f0b51a96c5df32a407dad865a3011ac0fa2d1/license",
+    "gitHead": "3f9f0b51a96c5df32a407dad865a3011ac0fa2d1"
+  },
+  "saxes@6.0.0": {
+    "license": "ISC",
+    "file": "upstream/saxes-6.0.0-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/lddubeau/saxes/211fa0ebec9b628affc09219199639887174bfc3/LICENSE",
+    "gitHead": "211fa0ebec9b628affc09219199639887174bfc3"
+  },
+  "@img/sharp-libvips-linux-x64@1.3.3": {
+    "license": "LGPL-3.0-or-later",
+    "file": "upstream/sharp-libvips-1.3.3-NOTICES.txt",
+    "source": "https://raw.githubusercontent.com/lovell/sharp-libvips/6e5971d333377743163edc3ad9e5d0b897abcbc9/THIRD-PARTY-NOTICES.md",
+    "additionalSources": [
+      "https://raw.githubusercontent.com/spdx/license-list-data/main/text/LGPL-3.0-only.txt",
+      "https://raw.githubusercontent.com/spdx/license-list-data/main/text/GPL-3.0-only.txt"
+    ],
+    "gitHead": "6e5971d333377743163edc3ad9e5d0b897abcbc9",
+    "review": "Native component source/relink obligations require final distribution review; notice retention alone is not clearance."
+  },
+  "@img/sharp-libvips-linuxmusl-x64@1.3.3": {
+    "license": "LGPL-3.0-or-later",
+    "file": "upstream/sharp-libvips-1.3.3-NOTICES.txt",
+    "source": "https://raw.githubusercontent.com/lovell/sharp-libvips/6e5971d333377743163edc3ad9e5d0b897abcbc9/THIRD-PARTY-NOTICES.md",
+    "additionalSources": [
+      "https://raw.githubusercontent.com/spdx/license-list-data/main/text/LGPL-3.0-only.txt",
+      "https://raw.githubusercontent.com/spdx/license-list-data/main/text/GPL-3.0-only.txt"
+    ],
+    "gitHead": "6e5971d333377743163edc3ad9e5d0b897abcbc9",
+    "review": "Native component source/relink obligations require final distribution review; notice retention alone is not clearance."
+  }
+}

@@ -1,0 +1,343 @@
+{
+  "formatVersion": 1,
+  "reviewDate": "2026-10-07",
+  "scope": "Evidence for the previously tested Linux x86-64 Alpine runtime only, not a source-delivery archive or approval to redistribute a binary. Recollect against the exact final image; apk installs are not package-version pinned.",
+  "node": {
+    "version": "22.15.1",
+    "source": "https://nodejs.org/dist/v22.15.1/node-v22.15.1.tar.xz",
+    "noticeFile": "upstream/node-22.15.1-LICENSE.txt",
+    "noticeSource": "https://raw.githubusercontent.com/nodejs/node/v22.15.1/LICENSE",
+    "noticeSha256": "1ae62e2015784ba438db7b04ebd33f3c4ff3efdb824c111c4ececd99945fd52d"
+  },
+  "libvips": {
+    "package": "@img/sharp-libvips-linuxmusl-x64@1.3.3",
+    "archive": "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.3.3.tgz",
+    "integrity": "sha512-fj8Mv0HHfD1Rr+4I68+3agJynxDWtBFgicTbSOb9Bke6pIwzGcJ+RX/yHjmiEGFMCavY/dxvem7MyNaJF+wDiw==",
+    "versions": {
+      "aom": "3.15.0",
+      "archive": "3.8.9",
+      "cairo": "1.18.4",
+      "cgif": "0.5.3",
+      "exif": "0.6.26",
+      "expat": "2.8.3",
+      "ffi": "3.8.0",
+      "fontconfig": "2.18.3",
+      "freetype": "2.14.3",
+      "fribidi": "1.0.16",
+      "glib": "2.89.4",
+      "harfbuzz": "14.3.1",
+      "heif": "1.23.2",
+      "highway": "1.4.0",
+      "imagequant": "2.4.1",
+      "lcms": "2.19.1",
+      "mozjpeg": "0826579",
+      "pango": "1.58.2",
+      "pixman": "0.46.4",
+      "png": "1.6.58",
+      "proxy-libintl": "0.5",
+      "rsvg": "2.62.91",
+      "tiff": "4.7.2",
+      "uhdr": "2.0.2",
+      "vips": "8.18.6",
+      "webp": "1.6.0",
+      "xml2": "2.15.3",
+      "zlib-ng": "2.3.3"
+    },
+    "recipe": {
+      "source": "https://raw.githubusercontent.com/lovell/sharp-libvips/6e5971d333377743163edc3ad9e5d0b897abcbc9/build/posix.sh",
+      "sha256": "230a0b344ba78116c8dd230383141b1d3498fceeb8f5320c0b573ebf67a61267"
+    },
+    "buildRepository": "https://github.com/lovell/sharp-libvips/tree/6e5971d333377743163edc3ad9e5d0b897abcbc9",
+    "sourceDelivery": "Not completed: archive component sources, patches, generated build settings, dependency sources and notices. A recipe URL is not corresponding-source delivery."
+  },
+  "alpine": [
+    {
+      "origin": "alpine-baselayout",
+      "commit": "5f0cd7890349e7fe11128478ac506c709805224d",
+      "packages": [
+        {
+          "name": "alpine-baselayout",
+          "version": "3.6.8-r1",
+          "license": "GPL-2.0-only",
+          "origin": "alpine-baselayout",
+          "aportsCommit": "5f0cd7890349e7fe11128478ac506c709805224d"
+        },
+        {
+          "name": "alpine-baselayout-data",
+          "version": "3.6.8-r1",
+          "license": "GPL-2.0-only",
+          "origin": "alpine-baselayout",
+          "aportsCommit": "5f0cd7890349e7fe11128478ac506c709805224d"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/5f0cd7890349e7fe11128478ac506c709805224d/main/alpine-baselayout/APKBUILD",
+      "sha256": "2f4dd6c70f9a877244e38cd337d8863ef62486878c5de940ab494339daaf9d34",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "alpine-keys",
+      "commit": "6d473fb38effb2389f567b29fb7eb27039b3a279",
+      "packages": [
+        {
+          "name": "alpine-keys",
+          "version": "2.5-r0",
+          "license": "MIT",
+          "origin": "alpine-keys",
+          "aportsCommit": "6d473fb38effb2389f567b29fb7eb27039b3a279"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/6d473fb38effb2389f567b29fb7eb27039b3a279/main/alpine-keys/APKBUILD",
+      "sha256": "8b51c80bff0f2477f9be7bc9ff98aa760f5759dfcd3a5026ca518c20a89347c6",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "alpine-base",
+      "commit": "899c70c801638ce9aea29a822aaa07a1488efa15",
+      "packages": [
+        {
+          "name": "alpine-release",
+          "version": "3.21.3-r0",
+          "license": "MIT",
+          "origin": "alpine-base",
+          "aportsCommit": "899c70c801638ce9aea29a822aaa07a1488efa15"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/899c70c801638ce9aea29a822aaa07a1488efa15/main/alpine-base/APKBUILD",
+      "sha256": "704c02964a1f651d98370df102b2592b8f3f1c51a8a039139f87d474d17e551a",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "apk-tools",
+      "commit": "41847d6ccff08940b5bf1ba0d6005e95897039f9",
+      "packages": [
+        {
+          "name": "apk-tools",
+          "version": "2.14.6-r3",
+          "license": "GPL-2.0-only",
+          "origin": "apk-tools",
+          "aportsCommit": "41847d6ccff08940b5bf1ba0d6005e95897039f9"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/41847d6ccff08940b5bf1ba0d6005e95897039f9/main/apk-tools/APKBUILD",
+      "sha256": "f5b991f93984953f8364f0a9baad3568bac608830e641623ab32e3edaae6f8bb",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "busybox",
+      "commit": "9c49608930ef6a9936750e9e39edec56b3db9cd5",
+      "packages": [
+        {
+          "name": "busybox",
+          "version": "1.37.0-r12",
+          "license": "GPL-2.0-only",
+          "origin": "busybox",
+          "aportsCommit": "9c49608930ef6a9936750e9e39edec56b3db9cd5"
+        },
+        {
+          "name": "busybox-binsh",
+          "version": "1.37.0-r12",
+          "license": "GPL-2.0-only",
+          "origin": "busybox",
+          "aportsCommit": "9c49608930ef6a9936750e9e39edec56b3db9cd5"
+        },
+        {
+          "name": "ssl_client",
+          "version": "1.37.0-r12",
+          "license": "GPL-2.0-only",
+          "origin": "busybox",
+          "aportsCommit": "9c49608930ef6a9936750e9e39edec56b3db9cd5"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/9c49608930ef6a9936750e9e39edec56b3db9cd5/main/busybox/APKBUILD",
+      "sha256": "68764ef686c153c377aaf8c2462344a23c12375510ec8e7f1bad68dcd2dbb513",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "ca-certificates",
+      "commit": "707ff77afebd8ef5bd60f3a5dd1b08f8c480f531",
+      "packages": [
+        {
+          "name": "ca-certificates-bundle",
+          "version": "20241121-r1",
+          "license": "MPL-2.0 AND MIT",
+          "origin": "ca-certificates",
+          "aportsCommit": "707ff77afebd8ef5bd60f3a5dd1b08f8c480f531"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/707ff77afebd8ef5bd60f3a5dd1b08f8c480f531/main/ca-certificates/APKBUILD",
+      "sha256": "b890d659ae576a7b462df83f501117ffe06e6a35e104adda958d3d2ee589de9c",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "gcompat",
+      "commit": "c2ababc1304156a02f7596a66d03253fa50cdbff",
+      "packages": [
+        {
+          "name": "gcompat",
+          "version": "1.1.0-r4",
+          "license": "NCSA",
+          "origin": "gcompat",
+          "aportsCommit": "c2ababc1304156a02f7596a66d03253fa50cdbff"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/c2ababc1304156a02f7596a66d03253fa50cdbff/main/gcompat/APKBUILD",
+      "sha256": "340dd160a89c78783597142450a65f66356ca8c426065dea09e91f72f8556d20",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "openssl",
+      "commit": "ddbf4a43b534e1e2da4ccb72bdc4ffcd9b85ce03",
+      "packages": [
+        {
+          "name": "libcrypto3",
+          "version": "3.3.3-r0",
+          "license": "Apache-2.0",
+          "origin": "openssl",
+          "aportsCommit": "ddbf4a43b534e1e2da4ccb72bdc4ffcd9b85ce03"
+        },
+        {
+          "name": "libssl3",
+          "version": "3.3.3-r0",
+          "license": "Apache-2.0",
+          "origin": "openssl",
+          "aportsCommit": "ddbf4a43b534e1e2da4ccb72bdc4ffcd9b85ce03"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/ddbf4a43b534e1e2da4ccb72bdc4ffcd9b85ce03/main/openssl/APKBUILD",
+      "sha256": "0046db804687b568d1f3ff62542108d61a74c1dc143e37e389364b0246c040a3",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "gcc",
+      "commit": "1a03a2a9c9e77f1a07d48b6f6805e72c8c63c03f",
+      "packages": [
+        {
+          "name": "libgcc",
+          "version": "14.2.0-r4",
+          "license": "GPL-2.0-or-later AND LGPL-2.1-or-later",
+          "origin": "gcc",
+          "aportsCommit": "1a03a2a9c9e77f1a07d48b6f6805e72c8c63c03f"
+        },
+        {
+          "name": "libstdc++",
+          "version": "14.2.0-r4",
+          "license": "GPL-2.0-or-later AND LGPL-2.1-or-later",
+          "origin": "gcc",
+          "aportsCommit": "1a03a2a9c9e77f1a07d48b6f6805e72c8c63c03f"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/1a03a2a9c9e77f1a07d48b6f6805e72c8c63c03f/main/gcc/APKBUILD",
+      "sha256": "392e19a434cd12e8eb6d3ef2b941fdc6a170d4e2e4f74d6014125fe0852660cb",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "libucontext",
+      "commit": "add3dbfb8c9bcd60b1f60ec179b4b6360d270c1f",
+      "packages": [
+        {
+          "name": "libucontext",
+          "version": "1.3.2-r0",
+          "license": "ISC",
+          "origin": "libucontext",
+          "aportsCommit": "add3dbfb8c9bcd60b1f60ec179b4b6360d270c1f"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/add3dbfb8c9bcd60b1f60ec179b4b6360d270c1f/main/libucontext/APKBUILD",
+      "sha256": "5936c8d31a2726461eda40ea5ec54406ea530067ba77db2c2b291a14893f4655",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "musl",
+      "commit": "efd4d5df7be0ea48d98512671f676fc5ceb14899",
+      "packages": [
+        {
+          "name": "musl",
+          "version": "1.2.5-r9",
+          "license": "MIT",
+          "origin": "musl",
+          "aportsCommit": "efd4d5df7be0ea48d98512671f676fc5ceb14899"
+        },
+        {
+          "name": "musl-utils",
+          "version": "1.2.5-r9",
+          "license": "MIT AND BSD-2-Clause AND GPL-2.0-or-later",
+          "origin": "musl",
+          "aportsCommit": "efd4d5df7be0ea48d98512671f676fc5ceb14899"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/efd4d5df7be0ea48d98512671f676fc5ceb14899/main/musl/APKBUILD",
+      "sha256": "5c31b8e5c25bcc4fe51e913dce8e057bebaf9c8980b88f76bc19d05d67a906ba",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "musl-obstack",
+      "commit": "c9ccd9cb45c7c3cbeac15b2022206741010dcabe",
+      "packages": [
+        {
+          "name": "musl-obstack",
+          "version": "1.2.3-r2",
+          "license": "GPL-2.0-or-later",
+          "origin": "musl-obstack",
+          "aportsCommit": "c9ccd9cb45c7c3cbeac15b2022206741010dcabe"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/c9ccd9cb45c7c3cbeac15b2022206741010dcabe/main/musl-obstack/APKBUILD",
+      "sha256": "deaa84345e03f7dac2ccc9e2f88db7d91fde491465e92a7d31010e83a143c218",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "pax-utils",
+      "commit": "398a5aee3025ec8a4d0d761e448dc86ac777fa09",
+      "packages": [
+        {
+          "name": "scanelf",
+          "version": "1.3.8-r1",
+          "license": "GPL-2.0-only",
+          "origin": "pax-utils",
+          "aportsCommit": "398a5aee3025ec8a4d0d761e448dc86ac777fa09"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/398a5aee3025ec8a4d0d761e448dc86ac777fa09/main/pax-utils/APKBUILD",
+      "sha256": "94093b0c82b24c09bd3a5c307273cbee8f6ceaee49b66f75e574a2441a409862",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    },
+    {
+      "origin": "zlib",
+      "commit": "4c2722e7ecc1c5e3ba882429044a101497121223",
+      "packages": [
+        {
+          "name": "zlib",
+          "version": "1.3.1-r2",
+          "license": "Zlib",
+          "origin": "zlib",
+          "aportsCommit": "4c2722e7ecc1c5e3ba882429044a101497121223"
+        }
+      ],
+      "url": "https://raw.githubusercontent.com/alpinelinux/aports/4c2722e7ecc1c5e3ba882429044a101497121223/main/zlib/APKBUILD",
+      "sha256": "47ba2fb65734f65fbbfc980d261cf86ab99e8c5bad9d0977a59620cde18ffd53",
+      "recipeVerified": true,
+      "sourceDelivery": "Not completed: archive recipe, all local patches/configuration and checksum-verified source inputs, plus required component notices."
+    }
+  ],
+  "openBinaryGates": [
+    "Missing original client-only/server-only and remaining npm notices",
+    "Complete libvips component-specific notices and corresponding source, including dependencies of components",
+    "LGPL user replacement/relinking acceptance and applicable installation information",
+    "GPL OS corresponding source, exact patches/build instructions and applicable runtime exceptions",
+    "pnpm bundled/native toolchain and SWC vendored-component rights review",
+    "Exact image/version/digest refresh and source-delivery availability for recipients"
+  ]
+}

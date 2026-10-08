@@ -1,0 +1,15 @@
+[Unit]
+Description=Athena Vault encrypted PostgreSQL backup
+Wants=network-online.target
+After=network-online.target docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+# Template only: replace every REPLACE_ME value with this host's actual account and path.
+User=REPLACE_ME
+WorkingDirectory=/REPLACE_ME/athena-vault
+ExecStart=/bin/sh /REPLACE_ME/athena-vault/scripts/docker/run-scheduled-backup.sh /REPLACE_ME/athena-vault/.env.docker.prod
+TimeoutStartSec=30min
+UMask=0077
+SyslogIdentifier=athena-vault-scheduled-backup

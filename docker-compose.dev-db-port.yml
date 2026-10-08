@@ -1,0 +1,9 @@
+# Optional Windows Docker Desktop development database port.
+# Include this narrow override only when localhost PostgreSQL access is needed.
+
+services:
+  postgres:
+    ports:
+      - target: 5432
+        published: "${ATHENA_DEV_DB_HOST_PORT:-55432}"
+        host_ip: "${ATHENA_DEV_DB_BIND_HOST:-127.0.0.1}"

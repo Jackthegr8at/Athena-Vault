@@ -1,0 +1,665 @@
+/* Independent annual-expense budgets */
+
+.annual-expenses-page {
+  position: relative;
+  isolation: isolate;
+}
+
+.annual-expenses-page::before {
+  position: absolute;
+  z-index: -1;
+  top: -22px;
+  right: clamp(12px, 1.5vw, 24px);
+  width: min(76%, 1100px);
+  height: 320px;
+  content: "";
+  background: url("/brand/backgrounds/annual-expenses.png") right top / contain no-repeat;
+  opacity: .34;
+  pointer-events: none;
+}
+
+.annual-overview-metrics { margin-top: 18px; }
+.annual-planning-hero { position: relative; isolation: isolate; display: grid; grid-template-rows: 1fr auto; min-height: 200px; margin-top: 18px; overflow: hidden; padding: 24px 28px 0; border: 1px solid var(--navy); border-bottom: 4px solid var(--gold); border-radius: 18px; background: #111c26 url("/brand/athena-vault-background-expenses.svg") right bottom / auto 100% no-repeat; color: var(--navy-on-dark); }
+.annual-planning-hero::before { position: absolute; inset: 0; z-index: 0; content: ""; opacity: .35; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 320' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%23D7B76A' stroke-opacity='.08' stroke-width='1'%3E%3Cpath d='M-40 60 C100 10 220 100 360 45 S620 70 940 15'/%3E%3Cpath d='M-40 95 C110 40 230 130 370 75 S630 100 940 45'/%3E%3Cpath d='M-40 130 C120 70 240 160 380 105 S640 130 940 75'/%3E%3Cpath d='M-40 165 C130 100 250 190 390 135 S650 160 940 105'/%3E%3Cpath d='M-40 200 C140 130 260 220 400 165 S660 190 940 135'/%3E%3C/g%3E%3C/svg%3E"); background-size: 100% 100%; pointer-events: none; }
+.annual-planning-content, .annual-planning-stats { position: relative; z-index: 3; }
+.annual-planning-content { max-width: 680px; }
+.annual-planning-content .eyebrow { color: var(--gold-light); }
+.annual-planning-content h1 { margin: 4px 0 0; color: var(--surface); font-family: var(--font-display); font-size: clamp(28px, 4vw, 48px); font-weight: 500; letter-spacing: -.05em; line-height: 1.05; }
+.annual-planning-active { display: flex; align-items: baseline; gap: 10px; margin-top: 10px; }
+.annual-planning-active strong { color: var(--gold-light); font-size: clamp(34px, 4.5vw, 52px); font-weight: 500; letter-spacing: -.055em; line-height: 1; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+.annual-planning-active span { color: var(--surface); font-family: var(--font-display); font-size: 18px; }
+.annual-planning-content > p:last-child { max-width: 440px; margin: 8px 0 18px; color: var(--silver-on-dark); font-size: 12px; line-height: 1.45; }
+.annual-planning-stats { display: flex; align-items: center; gap: 0; width: fit-content; min-height: 76px; padding: 10px 0; border-top: 1px solid rgba(197, 204, 207, .22); box-sizing: border-box; }
+.annual-planning-stat { display: flex; flex: 0 0 auto; align-items: center; gap: 10px; min-width: 0; padding: 0 35px; border-left: 1px solid rgba(197, 204, 207, .22); }
+.annual-planning-stat:first-child { padding-left: 0; border-left: 0; }
+.annual-planning-stat-icon { display: inline-grid; place-items: center; width: 36px; height: 36px; flex: 0 0 36px; border: 1px solid var(--gold); border-radius: 50%; color: var(--gold-light); }
+.annual-planning-stat > span:last-child { display: grid; gap: 1px; }
+.annual-planning-stat strong { color: var(--surface); font-size: 14px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+.annual-planning-stat small { color: var(--muted-on-dark); font-size: 12px; }
+
+/* The page header supplies the breathing room now; the planning card can act
+   as a single editorial feature surface instead of a second page header. */
+.annual-expenses-page .annual-planning-hero { min-height: 226px; margin-top: 0; padding: 28px 32px 0; border-radius: 22px; box-shadow: 0 16px 42px rgba(17, 28, 38, .12); }
+.annual-expenses-page .annual-planning-toolbar { border-radius: 14px; background: rgba(255, 253, 248, .92); box-shadow: 0 10px 28px rgba(23, 32, 41, .045); }
+@media (max-width: 720px) {
+  .annual-expenses-page .annual-planning-hero { min-height: 0; margin-top: 16px; padding: 18px 16px 0; border-radius: 14px; }
+}
+.annual-planning-toolbar { display: grid; grid-template-columns: minmax(90px, .3fr) minmax(250px, 1.3fr) auto; align-items: center; gap: 12px; margin-top: 8px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); }
+.annual-planning-year-control { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.annual-planning-year-control label, .annual-planning-control-label { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.annual-planning-year-control select { width: 90px; min-width: 0; min-height: 36px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--ink); padding: 7px 9px; font-size: 12px; }
+.annual-planning-year-control .investment-dropdown { width: 90px; }
+.annual-planning-year-control .investment-dropdown-trigger { min-height: 36px; border-radius: 8px; font-size: 12px; }
+.annual-budget-filter-controls { display: flex; align-items: center; align-self: stretch; gap: 6px; min-width: 0; padding-left: 16px; border-left: 1px solid var(--line); flex-wrap: wrap; }
+.annual-budget-filter { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--muted); font-size: 12px; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.annual-budget-filter span { color: var(--gold-ink); }
+.annual-budget-filter:hover, .annual-budget-filter.is-active { border-color: var(--gold); background: var(--gold-surface); color: var(--navy); }
+.annual-budget-filter.is-active span { color: var(--navy); }
+.annual-manage-budgets-button { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; white-space: nowrap; }
+.annual-budget-manager { margin-top: 18px; min-width: 0; }
+.annual-year-control { display: flex; align-items: end; gap: 10px; flex-wrap: wrap; padding: 14px 16px; border: 1px solid var(--line); border-radius: 15px; background: var(--gold-surface); }
+.annual-year-control label { color: var(--gold-ink); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.annual-year-control select { min-height: 42px; min-width: 120px; border: 1px solid #D5BC83; border-radius: 9px; background: var(--surface); color: var(--ink); padding: 8px 10px; }
+.annual-year-hint { flex: 1 1 300px; color: var(--gold-ink-deep); font-size: 12px; line-height: 1.45; }
+.annual-budget-management { display: grid; gap: 16px; margin-top: 18px; }
+.annual-budget-management-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.annual-budget-management-bar h3 { display: flex; align-items: center; gap: 8px; }
+.annual-budget-management-bar .annual-budget-count { margin-left: 0; }
+.annual-budget-management-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.annual-budget-management-grid.has-archived { grid-template-columns: 2fr 1fr; }
+.annual-budget-management-grid:not(.has-archived) { grid-template-columns: 1fr; }
+.annual-budget-management-column { min-width: 0; padding: 13px; border: 1px solid var(--line); border-radius: 13px; background: var(--panel); }
+.annual-budget-list-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.annual-budget-list-heading h4, .annual-budget-create h4 { margin: 0; color: var(--ink); font-size: 13px; }
+.annual-budget-count { display: inline-flex; min-width: 24px; justify-content: center; padding: 4px 7px; border-radius: 999px; color: var(--gold-ink); background: var(--gold-surface); font-size: 12px; font-weight: 800; }
+.annual-budget-manage-list { display: grid; gap: 9px; }
+.annual-budget-manage-row { display: grid; gap: 9px; padding: 11px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); }
+.annual-budget-manage-row.is-archived { background: var(--archived-surface); }
+.annual-budget-manage-summary { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.annual-budget-manage-summary > div:first-child { display: grid; gap: 3px; min-width: 0; }
+.annual-budget-order-actions { display: flex; gap: 5px; flex: 0 0 auto; }
+.annual-budget-order-actions form { display: inline-flex; }
+.annual-budget-order-actions .annual-secondary-button { min-width: 32px; min-height: 32px; padding: 5px 8px; font-size: 13px; }
+.annual-budget-manage-summary strong { color: var(--ink); font-size: 12px; }
+.annual-budget-manage-summary span { color: var(--muted); font-size: 12px; }
+.annual-budget-manage-form, .annual-budget-create-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px; align-items: end; }
+.annual-budget-manage-form label, .annual-budget-create-form label { display: grid; gap: 5px; color: var(--ink); font-size: 12px; font-weight: 700; }
+.annual-budget-manage-form input, .annual-budget-manage-form select, .annual-budget-create-form input, .annual-budget-create-form select { width: 100%; min-height: 38px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--ink); padding: 7px 9px; font-size: 12px; }
+.annual-budget-manage-form .investment-dropdown-trigger, .annual-budget-create-form .investment-dropdown-trigger { min-height: 38px; border-radius: 8px; font-size: 12px; }
+.annual-budget-manage-form .annual-field-error, .annual-budget-create-form .annual-field-error { grid-column: 1 / -1; }
+.annual-budget-danger-details { border-top: 1px solid var(--line); padding-top: 8px; }
+.annual-budget-danger-details > summary { color: var(--danger); cursor: pointer; font-size: 12px; font-weight: 800; }
+.annual-budget-manage-empty { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.annual-budget-create { display: grid; gap: 10px; padding: 13px; border: 1px solid #D5BC83; border-radius: 13px; background: var(--gold-surface); }
+.annual-budget-create .card-subtitle { margin: 4px 0 0; }
+.annual-template-panel { margin-top: 18px; }
+.annual-template-panel-head { align-items: flex-start; }
+.annual-add-item-button { flex: 0 0 auto; min-height: 38px; border-color: var(--navy); border-radius: 9px; padding: 8px 8px 8px 12px; background: var(--navy); white-space: nowrap; }
+.annual-form-grid { display: grid; grid-template-columns: minmax(150px, 1.2fr) minmax(140px, .8fr) minmax(170px, 1fr) minmax(110px, .55fr) minmax(110px, .55fr); gap: 12px; align-items: start; margin-top: 18px; }
+.annual-field { display: grid; gap: 6px; min-width: 0; }
+.annual-field label, .annual-inline-form label { color: var(--ink); font-size: 12px; font-weight: 700; }
+.annual-field label span { color: var(--muted); font-size: 12px; font-weight: 500; }
+.annual-field input, .annual-field select, .annual-inline-form input, .annual-inline-form select { width: 100%; min-height: 42px; border: 1px solid var(--line-strong); border-radius: 9px; background: var(--surface); color: var(--ink); padding: 8px 10px; }
+.annual-field .investment-dropdown-trigger { min-height: 42px; border-radius: 9px; font-size: 14px; }
+.annual-field-error { margin: 0; color: var(--danger); font-size: 12px; line-height: 1.35; }
+.annual-form-actions { display: flex; align-items: end; gap: 8px; min-height: 42px; }
+.annual-primary-button, .annual-secondary-button, .annual-danger-button { min-height: 42px; border-radius: 9px; padding: 8px 12px; font-size: 12px; font-weight: 800; transition: background-color .18s ease, border-color .18s ease, color .18s ease, opacity .18s ease; }
+.annual-primary-button { border: 1px solid var(--navy-soft); background: var(--navy-soft); color: var(--surface); }
+.annual-primary-button:hover { border-color: var(--navy); background: var(--navy); }
+.annual-secondary-button { border: 1px solid var(--line-strong); background: var(--surface); color: var(--navy); }
+.annual-secondary-button:hover { border-color: var(--gold); background: var(--gold-surface); }
+.annual-danger-button { border: 1px solid var(--danger-border); background: var(--danger-surface); color: var(--danger); }
+.annual-danger-button:hover { border-color: #C8756A; background: #F3D6D0; }
+.annual-primary-button:disabled, .annual-secondary-button:disabled, .annual-danger-button:disabled { cursor: wait; opacity: .55; }
+.annual-form-actions .navy-action-button, .annual-template-panel .annual-add-item-button { height: 38px; max-height: 38px; min-height: 38px; border-color: var(--navy); border-radius: 9px; padding: 8px 8px 8px 12px; background: var(--navy); box-sizing: border-box; }
+.annual-action-message { margin: 12px 0 0; font-size: 12px; line-height: 1.45; }
+.annual-action-message.is-success { color: var(--positive); }
+.annual-action-message.is-error { color: var(--danger); }
+.annual-budget-sections { display: grid; gap: 18px; margin-top: 18px; }
+.annual-budget-card { min-width: 0; overflow-x: clip; }
+.annual-budget-card.is-archived .annual-budget-header { background: var(--navy-soft); }
+.projects-toolbar { justify-content: flex-end; }
+.annual-budget-account-summary { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.annual-budget-account-summary > span { display: grid; gap: 3px; min-width: 150px; padding: 8px 10px; border: 1px solid rgba(213, 215, 216, .22); border-radius: 10px; background: rgba(255, 253, 248, .08); }
+.annual-budget-account-summary small { color: var(--muted-on-dark); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.annual-budget-account-summary strong { color: var(--navy-on-dark); font-size: 12px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+.annual-budget-account-summary em { color: var(--silver-on-dark); font-size: 12px; font-style: normal; }
+.annual-budget-total { display: grid; gap: 6px; justify-items: end; padding: 10px 12px; border-radius: 12px; background: var(--gold-surface); color: var(--gold-ink); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; white-space: nowrap; }
+.annual-budget-total strong { color: var(--ink); font-size: 20px; letter-spacing: -.04em; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+.annual-budget-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+.annual-budget-metrics > div { display: grid; gap: 5px; min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.annual-budget-metrics span { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.annual-budget-metrics strong { color: var(--ink); font-size: 14px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.annual-budget-expense-search { display: grid; gap: 6px; margin-top: 18px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.annual-budget-expense-search-label { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.annual-budget-expense-search-control { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.annual-budget-expense-search-control input { box-sizing: border-box; width: 100%; min-width: 0; min-height: 40px; border: 1px solid var(--line-strong); border-radius: 9px; background: var(--surface); color: var(--ink); padding: 8px 10px; font: inherit; font-size: 12px; }
+.annual-budget-expense-search-control input:focus { border-color: var(--gold-ink); box-shadow: 0 0 0 3px rgba(183, 145, 66, .14); outline: 0; }
+.annual-budget-expense-search-clear { flex: 0 0 auto; min-height: 40px; padding: 8px 12px; font-size: 12px; }
+.annual-budget-expense-search-meta { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.35; }
+.positive-text { color: var(--positive) !important; }
+.negative-text { color: var(--danger) !important; }
+.annual-table-wrap { width: 100%; max-width: 100%; min-width: 0; margin-top: 18px; overflow-x: auto; overflow-y: visible; border: 1px solid var(--line); border-radius: 14px; overscroll-behavior-x: contain; }
+.annual-budget-table { width: 100%; min-width: 820px; border-collapse: collapse; }
+.annual-budget-table th, .annual-budget-table td { padding: 13px 11px; border-top: 1px solid var(--line); text-align: left; vertical-align: top; font-size: 12px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+.annual-budget-table thead th { border-top: 0; border-bottom: 1px solid var(--gold); background: #FCF9F1; color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+.annual-budget-table tbody th { color: var(--ink); font-weight: 800; }
+.annual-budget-table tbody td { color: var(--muted); }
+.annual-budget-table tbody td:nth-child(3), .annual-budget-table tbody td:nth-child(4), .annual-budget-table tbody td:nth-child(5) { color: var(--ink); font-weight: 700; white-space: nowrap; }
+.annual-budget-table tr.is-archived th, .annual-budget-table tr.is-archived td { background: var(--archived-surface); }
+.annual-archived-label { display: block; width: fit-content; margin-top: 5px; padding: 3px 6px; border: 1px solid #D5CBAF; border-radius: 999px; color: var(--gold-ink); background: var(--gold-surface); font-size: 12px; font-weight: 800; }
+.annual-status { display: inline-flex; align-items: center; justify-content: center; min-width: 68px; min-height: 26px; box-sizing: border-box; padding: 5px 7px; border-radius: 999px; color: var(--gold-ink); background: var(--gold-surface); font-size: 12px; font-weight: 800; white-space: nowrap; }
+.annual-status--positive { color: var(--positive); background: var(--positive-surface); }
+.annual-status--negative { color: var(--danger); background: var(--danger-surface); }
+.annual-payment-details { position: relative; z-index: 1; display: inline-block; max-width: 100%; }
+.annual-payment-details[open] { z-index: 10; }
+.annual-payment-summary { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; color: var(--navy); cursor: pointer; font-size: 12px; font-weight: 800; list-style: none; }
+.annual-payment-summary::-webkit-details-marker { display: none; }
+.annual-payment-disclosure { color: var(--gold-ink); font-size: 12px; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+.annual-payment-popover { position: absolute; top: calc(100% + 6px); left: 0; z-index: 20; display: grid; gap: 6px; min-width: 170px; margin: 0; padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); box-shadow: 0 10px 24px rgba(17, 28, 38, .12); }
+.annual-payment-popover-heading { color: var(--ink); font-size: 12px; }
+.annual-payment-popover-list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.annual-payment-popover-list li { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 12px; }
+.annual-payment-popover-list strong { color: var(--ink); white-space: nowrap; }
+.annual-item-details { min-width: 116px; }
+.annual-item-details > summary, .annual-item-tools details > summary { color: var(--navy); cursor: pointer; font-size: 12px; font-weight: 800; white-space: nowrap; }
+.annual-item-actions { display: inline-flex; align-items: center; justify-content: flex-end; gap: 6px; flex-wrap: wrap; }
+.annual-item-actions form { display: inline-flex; }
+.annual-manage-trigger, .annual-quick-paid-trigger { min-height: 34px; padding: 6px 12px; font-size: 12px; }
+.annual-modal-layer { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 24px; background: rgba(17, 28, 38, .38); }
+.annual-modal { width: min(900px, 100%); max-height: calc(100vh - 48px); display: grid; grid-template-rows: auto auto auto minmax(0, 1fr); overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: 0 28px 80px rgba(17, 28, 38, .30); }
+.annual-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px 22px 14px; border-bottom: 1px solid var(--line); }
+.annual-modal-heading { display: grid; gap: 4px; min-width: 0; }
+.annual-modal-heading .card-title { font-size: 18px; }
+.annual-modal-close { flex: 0 0 auto; display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--line-strong); border-radius: 9px; background: var(--surface); color: var(--navy); font-size: 12px; font-weight: 800; }
+.annual-modal-close:hover { border-color: var(--gold); background: var(--gold-surface); }
+.annual-modal-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; padding: 14px 22px; border-bottom: 1px solid var(--line); background: var(--panel); }
+.annual-modal-stats > div { display: grid; gap: 4px; min-width: 0; }
+.annual-modal-stats span { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.annual-modal-stats strong { color: var(--ink); font-size: 13px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+.annual-modal-tabs { display: flex; gap: 6px; padding: 12px 22px 0; border-bottom: 1px solid var(--line); }
+.annual-modal-tab { min-height: 36px; padding: 8px 12px; border: 1px solid transparent; border-bottom: 0; border-radius: 10px 10px 0 0; background: transparent; color: var(--muted); font-size: 12px; font-weight: 800; }
+.annual-modal-tab:hover { color: var(--navy); background: var(--gold-surface); }
+.annual-modal-tab.is-active { border-color: var(--line); background: var(--surface); color: var(--navy); margin-bottom: -1px; }
+.annual-modal-body { overflow-y: auto; padding: 20px 22px 22px; }
+.annual-modal-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: end; }
+.annual-modal-form label { display: grid; gap: 5px; min-width: 0; color: var(--ink); font-size: 12px; font-weight: 700; }
+.annual-modal-form input, .annual-modal-form select { width: 100%; min-height: 40px; border: 1px solid var(--line-strong); border-radius: 9px; background: var(--surface); color: var(--ink); padding: 8px 10px; font-size: 12px; }
+.annual-modal-form .investment-dropdown-trigger { min-height: 40px; border-radius: 9px; font-size: 12px; }
+.annual-modal-field-wide { grid-column: 1 / -1; }
+.annual-modal-optional { color: var(--muted); font-size: 12px; font-weight: 500; }
+.annual-modal-help { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.annual-modal-actions { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap; }
+.annual-modal-form .annual-field-error, .annual-modal-form .annual-action-message { grid-column: 1 / -1; }
+.annual-modal-form-danger { align-content: start; padding: 14px; border: 1px solid var(--danger-border); border-radius: 12px; background: var(--danger-surface); }
+.annual-modal-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.annual-modal-payments { display: grid; gap: 16px; }
+.annual-remainder-transfer-panel { display: grid; gap: 18px; max-width: 720px; }
+.annual-remainder-transfer-heading { display: grid; gap: 5px; }
+.annual-remainder-transfer-heading .eyebrow { margin: 0; color: var(--gold-ink); }
+.annual-remainder-transfer-heading h4 { margin: 0; color: var(--ink); font-family: var(--font-display); font-size: 22px; line-height: 1.1; }
+.annual-remainder-transfer-summary { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 14px; align-items: center; padding: 16px; border: 1px solid #D5BC83; border-radius: 14px; background: var(--gold-surface); }
+.annual-remainder-transfer-summary > div { display: grid; gap: 5px; min-width: 0; }
+.annual-remainder-transfer-summary span { color: var(--gold-ink-deep); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.annual-remainder-transfer-summary strong { color: var(--ink); font-size: 15px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+.annual-remainder-transfer-summary small { color: var(--muted); font-size: 12px; line-height: 1.4; }
+.annual-remainder-transfer-arrow { color: var(--gold-ink-deep) !important; font-size: 22px !important; letter-spacing: 0 !important; }
+.annual-remainder-transfer-form { gap: 12px; }
+.annual-remainder-transfer-empty { display: grid; gap: 5px; padding: 16px; border: 1px dashed var(--line-strong); border-radius: 12px; background: var(--panel); }
+.annual-remainder-transfer-empty strong { color: var(--ink); font-size: 12px; }
+.annual-remainder-transfer-empty p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.annual-quick-paid { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 16px; border: 1px solid #D5BC83; border-radius: 12px; background: var(--gold-surface); }
+.annual-quick-paid > div { display: grid; gap: 4px; min-width: 0; }
+.annual-quick-paid strong { color: var(--gold-ink-deep); font-size: 12px; }
+.annual-quick-paid span { color: var(--gold-ink); font-size: 12px; }
+.annual-quick-paid form { flex: 0 0 auto; }
+.annual-modal-payment-list { display: grid; gap: 6px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.annual-item-tools > details { padding-top: 9px; border-top: 1px solid var(--line); }
+.annual-inline-form { display: grid; gap: 8px; margin-top: 9px; padding: 10px; border-radius: 10px; background: var(--surface); }
+.annual-inline-form label { display: grid; gap: 5px; font-size: 12px; }
+.annual-inline-form input, .annual-inline-form select { min-height: 38px; font-size: 12px; }
+.annual-confirm-copy { margin: 8px 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+.annual-payment-history { display: grid; gap: 6px; margin-top: 9px; }
+.annual-payment-row { display: grid; grid-template-columns: auto auto minmax(70px, 1fr) auto auto; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
+.annual-payment-row strong { color: var(--ink); white-space: nowrap; }
+.annual-payment-row span:nth-child(3) { overflow-wrap: anywhere; }
+.annual-payment-row form { display: inline-flex; }
+.annual-payment-row .annual-secondary-button, .annual-payment-row .annual-danger-button { min-height: 34px; padding: 6px 8px; font-size: 12px; }
+.annual-empty { margin-top: 18px; padding: 16px; border: 1px dashed var(--line-strong); border-radius: 12px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.annual-mobile-budget-select, .annual-mobile-add-trigger, .annual-mobile-sheet-layer { display: none; }
+.annual-mobile-budget-card { display: contents; }
+.annual-mobile-budget-summary, .annual-mobile-budget-totals, .annual-mobile-budget-details { display: none; }
+
+@media (max-width: 720px) {
+  /* Mobile annual planning is a focused list, not a shrunken desktop dashboard. */
+  .annual-planning-hero { min-height: 0; margin-top: 12px; padding: 16px 16px 0; border-radius: 14px; }
+  .annual-planning-content h1 { font-size: 27px; }
+  .annual-planning-active { gap: 7px; margin-top: 6px; }
+  .annual-planning-active strong { font-size: 32px; }
+  .annual-planning-active span { font-size: 13px; }
+  .annual-planning-content > p:last-child { display: none; }
+  .annual-planning-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; min-height: 0; margin: 14px -16px -16px; padding: 12px 4px 14px; }
+  .annual-planning-stat { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 5px; align-items: center; padding: 0 6px; border-left: 1px solid rgba(197, 204, 207, .22); }
+  .annual-planning-stat:first-child { padding-left: 6px; border-left: 0; }
+  .annual-planning-stat-icon { width: 28px; height: 28px; flex-basis: 28px; }
+  .annual-planning-stat > span:last-child { min-width: 0; }
+  .annual-planning-stat strong { overflow-wrap: anywhere; font-size: 12px; }
+  .annual-planning-stat small { font-size: 12px; line-height: 1.2; }
+  .annual-planning-toolbar { gap: 10px; margin-top: 12px; padding: 10px; }
+  .annual-planning-year-control { justify-content: space-between; }
+  .annual-planning-year-control select { width: 100px; min-height: 42px; }
+  .annual-planning-year-control .investment-dropdown { width: 100px; }
+  .annual-planning-year-control .investment-dropdown-trigger { min-height: 42px; }
+  .annual-budget-filter-controls { display: none; }
+  .annual-mobile-budget-select { display: grid; gap: 5px; }
+  .annual-mobile-budget-select span { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .annual-mobile-budget-select select { width: 100%; min-height: 44px; border: 1px solid var(--line-strong); border-radius: 9px; background: var(--surface); color: var(--ink); padding: 8px 10px; font-size: 12px; }
+  .annual-mobile-budget-select .investment-dropdown { width: 100%; }
+  .annual-mobile-budget-select .investment-dropdown-trigger { min-height: 44px; border-radius: 9px; font-size: 12px; }
+  .annual-manage-budgets-button { min-height: 44px; }
+  .annual-mobile-add-trigger { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 46px; margin-top: 10px; padding: 10px 14px; font-size: 12px; }
+  .annual-mobile-add-trigger > span:last-child { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: var(--navy); font-size: 18px; line-height: 1; }
+  .annual-template-panel { display: none; }
+  .annual-budget-sections { gap: 12px; margin-top: 12px; }
+  .annual-budget-card { padding: 12px; border-radius: 14px; }
+  .annual-budget-card > .annual-budget-header, .annual-budget-card > .annual-budget-metrics, .annual-budget-card > .annual-table-wrap, .annual-budget-card > .annual-empty { display: none; }
+  .annual-mobile-budget-card { display: block; }
+  .annual-mobile-budget-summary { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .annual-mobile-budget-summary > div { min-width: 0; }
+  .annual-mobile-budget-summary .eyebrow { margin-bottom: 4px; }
+  .annual-mobile-budget-summary .card-title { overflow-wrap: anywhere; font-size: 20px; line-height: 1.1; }
+  .annual-mobile-budget-summary .card-subtitle { margin-top: 4px; overflow-wrap: anywhere; }
+  .annual-mobile-forecast-pill { flex: 0 0 auto; padding: 6px 8px; border-radius: 999px; background: var(--positive-surface); color: var(--positive); font-size: 12px; font-weight: 800; white-space: nowrap; }
+  .annual-mobile-forecast-pill.is-negative { background: var(--danger-surface); color: var(--danger); }
+  .annual-mobile-budget-totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 14px; }
+  .annual-mobile-budget-totals > div { display: grid; gap: 4px; min-width: 0; padding: 9px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+  .annual-mobile-budget-totals span, .annual-mobile-budget-meta small { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .annual-mobile-budget-totals strong { overflow-wrap: anywhere; color: var(--ink); font-size: 12px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+  .annual-mobile-budget-details { display: block; margin-top: 12px; border-top: 1px solid var(--line); }
+  .annual-mobile-budget-details > summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; color: var(--navy); cursor: pointer; font-size: 12px; font-weight: 800; list-style: none; }
+  .annual-mobile-budget-details > summary::-webkit-details-marker { display: none; }
+  .annual-mobile-budget-details > summary::after { content: ""; width: 8px; height: 8px; flex: 0 0 8px; border-right: 2px solid var(--gold-ink); border-bottom: 2px solid var(--gold-ink); transform: rotate(45deg); transition: transform .15s ease; }
+  .annual-mobile-budget-details[open] > summary::after { content: ""; transform: rotate(225deg); }
+  .annual-mobile-budget-meta { display: grid; gap: 8px; padding: 0 0 10px; }
+  .annual-mobile-budget-meta > span { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 8px; padding: 8px 10px; border-radius: 9px; background: var(--panel); }
+  .annual-mobile-budget-meta small { grid-column: 1 / -1; }
+  .annual-mobile-budget-meta strong { min-width: 0; color: var(--ink); font-size: 12px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .annual-mobile-budget-meta em { color: var(--muted); font-size: 12px; font-style: normal; text-align: right; }
+  .annual-mobile-expense-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .annual-mobile-expense-item { display: grid; gap: 8px; min-width: 0; padding: 11px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); }
+  .annual-mobile-expense-item.is-archived { background: var(--archived-surface); }
+  .annual-mobile-expense-main { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; min-width: 0; }
+  .annual-mobile-expense-main > div { display: grid; gap: 3px; min-width: 0; }
+  .annual-mobile-expense-main > div > strong { color: var(--ink); font-size: 13px; line-height: 1.25; overflow-wrap: anywhere; }
+  .annual-mobile-expense-main > strong { flex: 0 0 auto; color: var(--ink); font-size: 13px; font-family: var(--font-numeric); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .annual-mobile-expense-due { color: var(--gold-ink); font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+  .annual-mobile-expense-stats { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; color: var(--muted); font-size: 12px; }
+  .annual-mobile-expense-stats > span { padding: 4px 6px; border-radius: 999px; background: var(--panel); }
+  .annual-mobile-expense-stats > .annual-status { min-height: 0; padding: 4px 7px; }
+  .annual-mobile-expense-actions { display: grid; gap: 8px; padding-top: 2px; }
+  .annual-mobile-expense-actions > details { border-top: 1px solid var(--line); padding-top: 8px; }
+  .annual-mobile-payment-details > summary { min-height: 30px; color: var(--navy); cursor: pointer; font-size: 12px; font-weight: 800; }
+  .annual-mobile-payment-details > ul { display: grid; gap: 5px; margin: 5px 0 0; padding: 0; list-style: none; }
+  .annual-mobile-payment-details li { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 12px; }
+  .annual-mobile-payment-details li strong { color: var(--ink); font-family: var(--font-numeric); font-variant-numeric: tabular-nums; }
+  .annual-mobile-no-payments { padding-top: 8px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+  .annual-mobile-expense-actions > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+  .annual-mobile-expense-actions form { display: block; min-width: 0; }
+  .annual-mobile-expense-actions button { width: 100%; min-height: 44px; }
+  .annual-mobile-sheet-layer { position: fixed; inset: 0; z-index: 40; display: grid; place-items: end stretch; background: rgba(17, 28, 38, .42); }
+  .annual-mobile-sheet { width: 100%; max-height: min(92vh, 720px); overflow-y: auto; box-sizing: border-box; padding: 16px 16px max(18px, env(safe-area-inset-bottom)); border: 1px solid var(--line); border-bottom: 0; border-radius: 20px 20px 0 0; background: var(--surface); box-shadow: 0 -18px 50px rgba(17, 28, 38, .24); }
+  .annual-mobile-sheet-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .annual-mobile-sheet-head .card-title { font-size: 21px; }
+  .annual-mobile-sheet-close { display: grid; place-items: center; width: 40px; height: 40px; flex: 0 0 40px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); color: var(--navy); font-size: 16px; }
+  .annual-mobile-sheet-close:hover { border-color: var(--gold); background: var(--gold-surface); }
+  .annual-mobile-expense-form { display: grid; gap: 13px; padding-top: 15px; }
+  .annual-mobile-expense-form input, .annual-mobile-expense-form select { min-height: 46px; font-size: 13px; }
+  .annual-mobile-expense-form .investment-dropdown-trigger { min-height: 46px; font-size: 13px; }
+  .annual-mobile-sheet-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; padding-top: 2px; }
+  .annual-mobile-sheet-actions button { width: 100%; min-height: 46px; }
+}
+
+@media (max-width: 900px) {
+  .annual-expenses-page::before { right: 12px; width: min(84%, 720px); height: 290px; opacity: .25; }
+  .annual-planning-toolbar { grid-template-columns: minmax(120px, .45fr) minmax(0, 1fr); }
+  .annual-budget-filter-controls { grid-column: 1 / -1; }
+  .annual-manage-budgets-button { justify-self: end; }
+  .annual-form-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .annual-form-actions { grid-column: span 3; }
+  .annual-budget-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .annual-budget-management-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 720px) {
+  .annual-expenses-page::before { top: 20px; right: 10px; width: min(92%, 620px); height: 240px; opacity: .2; }
+  .annual-planning-hero { min-height: 230px; padding: 20px 18px 0; }
+  .annual-planning-content h1 { font-size: clamp(28px, 8vw, 38px); }
+  .annual-planning-active strong { font-size: 38px; }
+  .annual-planning-active span { font-size: 16px; }
+  .annual-planning-stats { align-items: flex-start; flex-wrap: wrap; min-height: auto; padding: 10px 0; }
+  .annual-planning-stat { min-width: 50%; min-height: 34px; padding: 4px 10px; }
+  .annual-planning-stat:nth-child(3) { padding-left: 0; border-left: 0; }
+  .annual-planning-toolbar { grid-template-columns: 1fr; align-items: stretch; }
+  .annual-budget-filter-controls { grid-column: auto; flex-wrap: wrap; }
+  .annual-manage-budgets-button { justify-self: stretch; justify-content: center; }
+  .annual-template-panel-head { align-items: stretch; flex-direction: column; }
+  .annual-add-item-button { width: 100%; justify-content: center; }
+  .annual-budget-management-bar { align-items: flex-start; flex-direction: column; }
+  .annual-budget-management-bar .annual-secondary-button { width: 100%; }
+}
+
+@media (max-width: 720px) {
+  .annual-template-panel, .annual-budget-card { padding: 16px; }
+  .annual-year-control { align-items: stretch; }
+  .annual-year-control label { flex: 1 1 100%; }
+  .annual-year-control select { flex: 1 1 100%; }
+  .annual-form-grid { grid-template-columns: 1fr; }
+  .annual-form-actions { grid-column: auto; align-items: stretch; }
+  .annual-form-actions .annual-primary-button, .annual-form-actions .annual-secondary-button { flex: 1 1 50%; }
+  .annual-budget-total { justify-items: start; width: fit-content; }
+  .annual-budget-metrics { grid-template-columns: 1fr 1fr; }
+  .annual-modal-layer { padding: 12px; }
+  .annual-modal-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .annual-modal-tabs { overflow-x: auto; }
+  .annual-modal-form, .annual-modal-split { grid-template-columns: 1fr; }
+  .annual-remainder-transfer-summary { grid-template-columns: 1fr; gap: 10px; }
+  .annual-remainder-transfer-arrow { transform: rotate(90deg); justify-self: start; }
+  .annual-budget-manage-form, .annual-budget-create-form { grid-template-columns: 1fr; align-items: stretch; }
+  .annual-budget-manage-form button, .annual-budget-create-form button { width: 100%; }
+  .annual-payment-row { grid-template-columns: 1fr 1fr; padding: 7px 0; border-top: 1px solid var(--line); }
+  .annual-payment-row span:nth-child(3) { grid-column: span 2; }
+  .annual-payment-row form { justify-self: end; }
+}
+
+/* Keep the focused Annual Expenses mobile composition authoritative over the shared mobile fallbacks above. */
+@media (max-width: 720px) {
+  .annual-planning-hero { box-sizing: border-box; width: 100%; min-width: 0; min-height: 0; grid-template-rows: auto auto; row-gap: 16px; margin-top: 12px; padding: 16px 16px 0; }
+  .annual-planning-hero::before { inset: 0; opacity: .16; background-size: cover; }
+  .annual-planning-content { min-width: 0; max-width: none; }
+  .annual-planning-content .eyebrow { font-size: 12px; letter-spacing: .11em; line-height: 1.2; }
+  .annual-planning-content h1 { max-width: 100%; overflow-wrap: anywhere; font-size: clamp(30px, 8.4vw, 36px); line-height: 1.05; }
+  .annual-planning-active { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 8px; min-width: 0; margin-top: 8px; }
+  .annual-planning-active strong { font-size: clamp(44px, 14vw, 54px); }
+  .annual-planning-active span { min-width: 0; font-size: 15px; line-height: 1.2; }
+  .annual-planning-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; flex-wrap: nowrap; width: calc(100% + 32px); min-height: 0; margin: 4px -16px -16px; padding: 14px 8px 24px; box-sizing: border-box; }
+  .annual-planning-stat { grid-template-columns: 32px minmax(0, 1fr); gap: 7px; min-width: 0; min-height: 0; padding: 0 8px; overflow: hidden; }
+  .annual-planning-stat:first-child { padding-left: 8px; border-left: 0; }
+  .annual-planning-stat:nth-child(3) { padding-left: 8px; border-left: 1px solid rgba(197, 204, 207, .22); }
+  .annual-planning-stat-icon { width: 32px; height: 32px; flex-basis: 32px; }
+  .annual-planning-stat strong { font-size: 16px; line-height: 1.15; }
+  .annual-planning-stat small { font-size: 12px; line-height: 1.2; }
+  .annual-budget-card { padding: 12px; }
+  .annual-mobile-budget-details > summary { position: relative; padding: 0 4px; }
+  .annual-mobile-budget-details > summary::after { content: ""; width: 8px; height: 8px; flex: 0 0 8px; border-right: 2px solid var(--gold-ink); border-bottom: 2px solid var(--gold-ink); transform: rotate(45deg); transition: transform .15s ease; }
+  .annual-mobile-budget-details[open] > summary::after { content: ""; transform: rotate(225deg); }
+  .annual-mobile-budget-details > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+}
+
+/* Annual Expenses mobile finishing pass: prioritize the budget decision, then disclose detail. */
+@media (max-width: 720px) {
+  .annual-planning-hero {
+    margin-top: 16px;
+    padding: 18px 16px 0;
+    border-radius: 16px;
+  }
+
+  .annual-planning-content h1 {
+    font-size: clamp(30px, 8.8vw, 36px);
+    line-height: 1.08;
+  }
+
+  .annual-planning-active {
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .annual-planning-active span {
+    max-width: 190px;
+  }
+
+  .annual-planning-stats {
+    margin-top: 12px;
+    padding-bottom: 26px;
+  }
+
+  .annual-planning-stat {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 8px;
+    padding-inline: 10px;
+  }
+
+  .annual-planning-stat strong {
+    font-size: 17px;
+  }
+
+  .annual-planning-stat small {
+    font-size: 12px;
+  }
+
+  .annual-planning-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+  }
+
+  .annual-planning-year-control {
+    min-width: 0;
+  }
+
+  .annual-planning-year-control select {
+    width: 112px;
+    min-height: 44px;
+  }
+
+  .annual-planning-year-control .investment-dropdown {
+    width: 112px;
+  }
+
+  .annual-planning-year-control .investment-dropdown-trigger {
+    min-height: 44px;
+  }
+
+  .annual-mobile-budget-select {
+    grid-column: 1 / -1;
+    gap: 6px;
+  }
+
+  .annual-mobile-budget-select span {
+    font-size: 12px;
+  }
+
+  .annual-mobile-budget-select select {
+    min-height: 48px;
+    border-radius: 11px;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .annual-mobile-budget-select .investment-dropdown-trigger {
+    min-height: 48px;
+    border-radius: 11px;
+    font-size: 14px;
+  }
+
+  .annual-manage-budgets-button {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    font-size: 13px;
+  }
+
+  .annual-mobile-add-trigger {
+    min-height: 50px;
+    margin-top: 12px;
+    border-radius: 12px;
+    padding-inline: 16px;
+    font-size: 14px;
+  }
+
+  .annual-budget-sections {
+    gap: 14px;
+    margin-top: 16px;
+  }
+
+  .annual-budget-card {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .annual-mobile-budget-summary .card-title {
+    font-size: 22px;
+    line-height: 1.08;
+  }
+
+  .annual-mobile-budget-summary .card-subtitle {
+    font-size: 13px;
+  }
+
+  .annual-mobile-forecast-pill {
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .annual-mobile-budget-totals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .annual-mobile-budget-totals > div {
+    min-height: 58px;
+    padding: 11px 10px;
+  }
+
+  .annual-mobile-budget-totals > div:last-child {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-color: #d5bc83;
+    background: var(--gold-surface);
+  }
+
+  .annual-mobile-budget-totals span,
+  .annual-mobile-budget-meta small {
+    font-size: 12px;
+  }
+
+  .annual-mobile-budget-totals strong {
+    font-size: 18px;
+  }
+
+  .annual-mobile-budget-totals > div:not(:last-child) strong {
+    font-size: 14px;
+  }
+
+  .annual-mobile-budget-details {
+    margin-top: 14px;
+  }
+
+  .annual-mobile-budget-details > summary {
+    min-height: 48px;
+    font-size: 13px;
+  }
+
+  .annual-mobile-budget-details > summary span:last-child {
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .annual-mobile-budget-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding-bottom: 12px;
+  }
+
+  .annual-mobile-budget-meta > span {
+    padding: 10px;
+  }
+
+  .annual-mobile-budget-meta > span:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .annual-mobile-budget-meta strong {
+    font-size: 13px;
+  }
+
+  .annual-mobile-budget-meta em {
+    font-size: 12px;
+  }
+
+  .annual-mobile-expense-list {
+    gap: 10px;
+  }
+
+  .annual-mobile-expense-item {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .annual-mobile-expense-main > div > strong,
+  .annual-mobile-expense-main > strong {
+    font-size: 14px;
+  }
+
+  .annual-mobile-expense-stats {
+    font-size: 12px;
+  }
+
+  .annual-mobile-expense-stats > span {
+    padding: 5px 7px;
+  }
+
+  .annual-mobile-expense-actions button {
+    min-height: 46px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .annual-planning-hero {
+    padding-inline: 14px;
+  }
+
+  .annual-planning-stats {
+    width: calc(100% + 28px);
+    margin-left: -14px;
+    margin-right: -14px;
+  }
+
+  .annual-planning-stat {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 5px;
+    padding-inline: 6px;
+  }
+
+  .annual-planning-stat-icon {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+  }
+
+  .annual-planning-stat strong {
+    font-size: 15px;
+  }
+
+  .annual-planning-stat small {
+    font-size: 12px;
+  }
+
+  .annual-mobile-budget-summary .card-title {
+    font-size: 20px;
+  }
+}

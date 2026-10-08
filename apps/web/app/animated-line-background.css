@@ -1,0 +1,33 @@
+/* Shared animated-line-background styles, kept in original rule order. */
+.animated-line-background--module-first-use { inset: -12% -8% -12% 28%; opacity: .86; }
+.animated-line-background--getting-started { inset: -12% 0 -12% 34%; }
+.animated-line-background { position: absolute; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; max-width: none; overflow: hidden; opacity: var(--animated-line-opacity, .3); pointer-events: none; transform: var(--animated-line-placement-transform, scale(var(--animated-line-scale, 1))); transform-origin: center; }
+.animated-line-background__line { fill: none; animation: animated-line-background-drift var(--animated-line-duration, var(--animated-line-speed, 16s)) ease-in-out infinite alternate; animation-delay: var(--animated-line-delay, 0s); transform-box: fill-box; transform-origin: center; }
+.animated-line-background__path, .animated-line-background__accent { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.animated-line-background__path { stroke: var(--animated-line-path-color, var(--animated-line-color, #9F9270)); stroke-width: var(--animated-line-stroke-width, 1.35); opacity: var(--animated-line-line-opacity, .78); }
+.animated-line-background__accent { stroke: var(--animated-line-accent-color, #E0C681); stroke-width: calc(var(--animated-line-stroke-width, 1.35) * 1.45); opacity: .14; animation: animated-line-background-pulse var(--animated-line-duration, var(--animated-line-speed, 16s)) linear infinite; animation-delay: var(--animated-line-delay, 0s); }
+.animated-line-background__static-path { display: none; }
+.animated-line-background__mobile-art { display: none; }
+@keyframes animated-line-background-drift { 0%, 100% { transform: translate3d(calc(var(--animated-line-drift-x, 3px) * -1 * var(--animated-line-direction-sign, 1)), calc(var(--animated-line-drift-y, 3px) * -1), 0); } 50% { transform: translate3d(calc(var(--animated-line-drift-x, 3px) * var(--animated-line-direction-sign, 1)), var(--animated-line-drift-y, 3px), 0); } }
+@keyframes animated-line-background-pulse { 0% { opacity: .08; stroke-dashoffset: 1.15; } 34% { opacity: .22; } 48% { opacity: var(--animated-line-pulse-strength, .82); } 62% { opacity: .18; } 100% { opacity: .08; stroke-dashoffset: -1.15; } }
+@media (max-width: 720px) {
+  .animated-line-background__geometry { display: none; }
+  .animated-line-background__mobile-art { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animated-line-background, .animated-line-background__line, .animated-line-background__path, .animated-line-background__accent, .animated-line-background *::before, .animated-line-background *::after { animation: none !important; }
+  .animated-line-background__animated-path, .animated-line-background__morph { display: none; }
+  .animated-line-background__static-path { display: block; }
+}
+.animated-line-background--accounts-mobile { inset: 0 0 0 34%; }
+.animated-line-background--recurring-hero { inset: 0 20% 0 10%; --animated-line-placement-transform: scaleX(-1) rotate(12deg) scale(var(--animated-line-scale, 1)); }
+.animated-line-background--cash-flow { inset: -12% auto auto 0; width: 100%; max-width: none; height: 124%; }
+.animated-line-background--home-mobile { inset: 0 -14% 0 28%; --animated-line-placement-transform: scaleX(-1) rotate(12deg) scale(var(--animated-line-scale, 1)); }
+.animated-line-background--salary-latest { inset: 0 30%; }
+.animated-line-background--annual-planning { z-index: 1; --animated-line-placement-transform: none; }
+.animated-line-background--projects-header { inset: 0 0 0 30%; z-index: 1; }
+.animated-line-background--public-security { inset: 0 0 0 42%; --animated-line-placement-transform: scaleX(-1) scale(var(--animated-line-scale, 1)); }
+
+@media (max-width: 560px) {
+  .animated-line-background--salary-latest { inset: 0 auto 0 28%; width: 72%; max-width: 72%; transform: none; }
+}

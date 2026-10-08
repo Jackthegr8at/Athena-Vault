@@ -1,0 +1,12 @@
+# syntax=docker/dockerfile:1.7
+
+ARG POSTGRES_IMAGE=postgres:18.4-alpine3.24@sha256:b6a16ed0eb96e2c362811f7eeb951eac8b459e7b40be4149ea5444aa7c65569b
+ARG AGE_PACKAGE_VERSION=1.3.1-r6
+FROM ${POSTGRES_IMAGE}
+ARG AGE_PACKAGE_VERSION
+
+RUN apk add --no-cache "age=${AGE_PACKAGE_VERSION}"
+
+COPY scripts/docker/restore-database.sh /usr/local/bin/restore-database.sh
+COPY scripts/docker/scheduled-backup.sh /usr/local/bin/scheduled-backup.sh
+RUN chmod 0555 /usr/local/bin/restore-database.sh /usr/local/bin/scheduled-backup.sh

@@ -1,0 +1,37 @@
+packages:
+  - apps/*
+  - packages/*
+
+ignoredBuiltDependencies:
+  - esbuild
+  - sharp
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: false
+overrides:
+  "postcss>nanoid": "^3.3.18"
+  "@univerjs/core>nanoid": "^5.1.16"
+  "@esbuild-kit/core-utils>esbuild": "^0.25.0"
+  # Athena uses only the root factory and sheets-core preset at this exact version.
+  # Remove unused preset edges so fresh images do not install their Pro dependencies.
+  "@univerjs/presets@0.25.1>@univerjs/preset-docs-advanced": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-docs-collaboration": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-docs-core": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-docs-drawing": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-docs-hyper-link": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-docs-node-core": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-docs-thread-comment": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-advanced": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-collaboration": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-conditional-formatting": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-data-validation": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-drawing": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-filter": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-find-replace": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-hyper-link": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-node-core": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-note": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-sort": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-table": "-"
+  "@univerjs/presets@0.25.1>@univerjs/preset-sheets-thread-comment": "-"

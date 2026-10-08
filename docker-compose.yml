@@ -1,0 +1,153 @@
+# Shared Athena Vault services. Select a host mode with one of the narrow
+# overrides: docker-compose.dev.yml or docker-compose.prod.yml.
+
+services:
+  postgres:
+    image: ${ATHENA_POSTGRES_IMAGE:-postgres:18.4-alpine3.24@sha256:b6a16ed0eb96e2c362811f7eeb951eac8b459e7b40be4149ea5444aa7c65569b}
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${ATHENA_DB_NAME:-athena_vault}
+      POSTGRES_USER: ${ATHENA_MIGRATOR_USER:-athena_migrator}
+      POSTGRES_PASSWORD: ${ATHENA_MIGRATOR_PASSWORD:?ATHENA_MIGRATOR_PASSWORD must be set in the Docker environment file}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - athena_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migration
+      args:
+        NODE_IMAGE: ${ATHENA_NODE_IMAGE:-node:22.15.1-alpine3.21@sha256:d1068d8b737ffed2b8e9d0e9313177a2e2786c36780c5467ac818232e603ccd0}
+        PNPM_VERSION: ${ATHENA_PNPM_VERSION:-10.12.4}
+    restart: "no"
+    environment:
+      DATABASE_URL: ${ATHENA_MIGRATOR_DATABASE_URL:?ATHENA_MIGRATOR_DATABASE_URL must be set in the Docker environment file}
+      ATHENA_DB_PASSWORD: ${ATHENA_DB_PASSWORD:?ATHENA_DB_PASSWORD must be set in the Docker environment file}
+      ATHENA_AUTH_ROLE_PASSWORD: ${ATHENA_AUTH_ROLE_PASSWORD:?ATHENA_AUTH_ROLE_PASSWORD must be set in the Docker environment file}
+      ATHENA_DOCKER_EMPTY_DATABASE: ${ATHENA_DOCKER_EMPTY_DATABASE:-false}
+      ATHENA_ENABLE_LOCAL_EXPORT: "false"
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - athena_internal
+    command: ["./packages/database/node_modules/.bin/tsx", "scripts/docker/migrate.ts"]
+
+  demo-provision:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migration
+      args:
+        NODE_IMAGE: ${ATHENA_NODE_IMAGE:-node:22.15.1-alpine3.21@sha256:d1068d8b737ffed2b8e9d0e9313177a2e2786c36780c5467ac818232e603ccd0}
+        PNPM_VERSION: ${ATHENA_PNPM_VERSION:-10.12.4}
+    profiles: ["demo-provision"]
+    restart: "no"
+    environment:
+      ATHENA_MIGRATOR_DATABASE_URL: ${ATHENA_MIGRATOR_DATABASE_URL:?ATHENA_MIGRATOR_DATABASE_URL must be set in the Docker environment file}
+      ATHENA_MIGRATOR_PASSWORD: ${ATHENA_MIGRATOR_PASSWORD:?ATHENA_MIGRATOR_PASSWORD must be set in the Docker environment file}
+      ATHENA_DB_NAME: ${ATHENA_DB_NAME:-athena_vault}
+      ATHENA_DEMO_ENABLED: ${ATHENA_DEMO_ENABLED:-false}
+      ATHENA_DEMO_TARGET_CONFIRM: ${ATHENA_DEMO_TARGET_CONFIRM:-}
+      ATHENA_DEMO_IDENTIFIER: ${ATHENA_DEMO_IDENTIFIER:-}
+      ATHENA_DEMO_PASSWORD: ${ATHENA_DEMO_PASSWORD:-}
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    networks:
+      - athena_internal
+    command: ["./packages/database/node_modules/.bin/tsx", "scripts/demo/provision-demo.ts"]
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+      args:
+        NODE_IMAGE: ${ATHENA_NODE_IMAGE:-node:22.15.1-alpine3.21@sha256:d1068d8b737ffed2b8e9d0e9313177a2e2786c36780c5467ac818232e603ccd0}
+        PNPM_VERSION: ${ATHENA_PNPM_VERSION:-10.12.4}
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL must be set in the Docker environment file}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET must be set in the Docker environment file}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:8080}
+      ATHENA_AUTH_COOKIE_SECURE: ${ATHENA_AUTH_COOKIE_SECURE:-false}
+      ATHENA_AUTH_TRUSTED_ORIGINS: ${ATHENA_AUTH_TRUSTED_ORIGINS:-}
+      ATHENA_AUTH_TRUSTED_PROXY_IPS: ${ATHENA_AUTH_TRUSTED_PROXY_IPS:-}
+      ATHENA_AUTH_REQUIRE_2FA: ${ATHENA_AUTH_REQUIRE_2FA:-false}
+      ATHENA_AUTH_SETUP_TOKEN: ${ATHENA_AUTH_SETUP_TOKEN:-}
+      ATHENA_AUTH_DATABASE_URL: ${ATHENA_AUTH_DATABASE_URL:-}
+      ATHENA_AUTH_ROLE_PASSWORD: ${ATHENA_AUTH_ROLE_PASSWORD:-}
+      ATHENA_EODHD_API_TOKEN: ${ATHENA_EODHD_API_TOKEN:-}
+      ATHENA_PASSWORD_BREACH_CHECK: ${ATHENA_PASSWORD_BREACH_CHECK:-enforce}
+      ATHENA_DEMO_ENABLED: ${ATHENA_DEMO_ENABLED:-false}
+      ATHENA_DEMO_IDENTIFIER: ${ATHENA_DEMO_IDENTIFIER:-}
+      ATHENA_DEMO_PASSWORD: ${ATHENA_DEMO_PASSWORD:-}
+      ATHENA_ENABLE_LOCAL_EXPORT: "false"
+      NODE_ENV: production
+      HOSTNAME: 0.0.0.0
+      PORT: "3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    networks:
+      - athena_internal
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/api/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+  db-tools:
+    image: ${ATHENA_DB_TOOLS_IMAGE:-athena-vault-db-tools:local}
+    build:
+      context: .
+      dockerfile: Dockerfile.db-tools
+      args:
+        POSTGRES_IMAGE: ${ATHENA_POSTGRES_IMAGE:-postgres:18.4-alpine3.24@sha256:b6a16ed0eb96e2c362811f7eeb951eac8b459e7b40be4149ea5444aa7c65569b}
+    profiles: ["tools"]
+    restart: "no"
+    environment:
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGDATABASE: ${ATHENA_DB_NAME:-athena_vault}
+      PGUSER: ${ATHENA_MIGRATOR_USER:-athena_migrator}
+      PGPASSWORD: ${ATHENA_MIGRATOR_PASSWORD:?ATHENA_MIGRATOR_PASSWORD must be set in the Docker environment file}
+      ATHENA_DB_PASSWORD: ${ATHENA_DB_PASSWORD:-}
+      ATHENA_AUTH_ROLE_PASSWORD: ${ATHENA_AUTH_ROLE_PASSWORD:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - backup_data:/backups
+    networks:
+      - athena_internal
+    entrypoint: ["sh", "-c"]
+    command: ["echo 'db-tools is manual-only; use an explicit backup or restore command.'"]
+
+volumes:
+  postgres_data:
+    name: ${ATHENA_POSTGRES_VOLUME_NAME:-athena-vault-postgres}
+  backup_data:
+    name: ${ATHENA_BACKUP_VOLUME_NAME:-athena-vault-backups}
+
+networks:
+  athena_internal:
+    name: ${ATHENA_INTERNAL_NETWORK_NAME:-athena-vault-internal}
+    internal: true
