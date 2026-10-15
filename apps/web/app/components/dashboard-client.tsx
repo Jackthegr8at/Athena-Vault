@@ -35,13 +35,13 @@ import {
   metricPercent,
   metricSnapshot,
   type MetricSnapshot,
-  SERIES_CONFIG,
   type NetWorthHistorySeriesConfig,
 } from "./net-worth-history-data";
 import { buildSparklinePaths } from "./net-worth-history-geometry";
 import { NearTermCashCard, NetWorthHeroCard } from "./overview-hero-cards";
 import { AccountGlanceCard, GLANCE_SERIES, OverviewAccountsGlance } from "./overview-glance-cards";
 import { CashFlowStrip } from "./overview-cash-flow-strip";
+import { paydayNetWorthSnapshot } from "./overview-payday-comparison";
 
 const dollars = (minor: number) => formatMoneyMinor(minor);
 const signedDollars = (minor: number) => formatSignedMoneyMinor(minor, { zeroSign: "+" });
@@ -104,6 +104,7 @@ export interface DashboardInitialData {
   readonly liabilitiesMinor: number;
   readonly netWorthMinor: number;
   readonly netWorthHistory: NetWorthHistoryModel;
+  readonly netWorthPaydays: readonly string[];
   readonly nextPeriodId: string | null;
   readonly onboarding: OnboardingSnapshot | null;
   readonly overviewHelpSeen: boolean;
@@ -217,8 +218,11 @@ export function DashboardClient({ data, isAdmin }: { data: DashboardInitialData;
     : null;
   const actualHistoryPoints = overviewActualHistoryPoints(data.netWorthHistory);
   const latestActualPoint = latestActualNetWorthPoint(data.netWorthHistory);
-  const netWorthSeries = SERIES_CONFIG.find((series) => series.key === "netWorth");
-  const netWorthSnapshot = netWorthSeries ? overviewMetricSnapshot(actualHistoryPoints, netWorthSeries) : null;
+  const paydaySnapshot = paydayNetWorthSnapshot(actualHistoryPoints, data.netWorthPaydays, data.todayIso);
+  const netWorthSnapshot = {
+    ...paydaySnapshot,
+    percentText: metricPercent(paydaySnapshot.changeMinor, paydaySnapshot.currentMinor !== null && paydaySnapshot.changeMinor !== null ? paydaySnapshot.currentMinor - paydaySnapshot.changeMinor : null),
+  };
   const investmentsShare = data.netWorthMinor > 0 && latestActualPoint?.investmentsMinor != null && latestActualPoint.investmentsMinor > 0
     ? Math.min(100, Math.round((latestActualPoint.investmentsMinor * 100) / data.netWorthMinor))
     : null;

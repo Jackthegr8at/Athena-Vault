@@ -75,12 +75,36 @@ const data: DashboardInitialData = {
   liabilitiesMinor: 2_000,
   netWorthMinor: 25_000,
   netWorthHistory: history,
+  netWorthPaydays: ["2026-08-01", "2026-09-01"],
   nextPeriodId: "period-1",
   onboarding: { state: "active", account: true, balance: false, recurring: false, completedCount: 1, nextStepId: "balance" },
   overviewHelpSeen: true,
 };
 
 describe("Overview presentation", () => {
+  it("renders payday-to-payday change without changing the live headline amount", () => {
+    const points = [
+      { ...history.points[0]!, asOf: "2026-09-30", netWorthMinor: 10_000_000 },
+      { ...history.points[0]!, asOf: "2026-10-14", netWorthMinor: 10_500_000 },
+      { ...history.points[0]!, asOf: "2026-10-15", netWorthMinor: 10_500_000 },
+    ];
+    const fixture = { ...data, todayIso: "2026-10-15", netWorthMinor: 10_500_000, netWorthPaydays: ["2026-09-30", "2026-10-14"], netWorthHistory: { ...history, evaluationDate: "2026-10-15", points } };
+    const markup = renderToStaticMarkup(React.createElement(DashboardClient, { data: fixture, isAdmin: false }));
+    const hero = markup.split('class="card hero-card overview-net-worth-hero"')[1]!.split("</article>")[0]!;
+    expect(hero).toContain("$105,000.00");
+    expect(hero).toContain("+$5,000.00");
+    expect(hero).toContain("+5.0%");
+    expect(hero).toContain("vs. Sep 30, 2026");
+    expect(hero).not.toContain("vs. Oct 14, 2026");
+  });
+
+  it("shows no prior data when an exact payday point is missing", () => {
+    const markup = renderToStaticMarkup(React.createElement(DashboardClient, { data: { ...data, netWorthPaydays: ["2026-08-02", "2026-09-01"] }, isAdmin: false }));
+    const hero = markup.split('class="card hero-card overview-net-worth-hero"')[1]!.split("</article>")[0]!;
+    expect(hero).toContain("No prior data");
+    expect(hero).not.toContain("+$0.00");
+  });
+
   it("renders the net-worth hero, current-period actions, semantic movement rows, and guide", () => {
     const markup = renderToStaticMarkup(React.createElement(DashboardClient, { data, isAdmin: false }));
 

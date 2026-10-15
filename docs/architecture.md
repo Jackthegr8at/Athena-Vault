@@ -34,6 +34,8 @@ The holdings ledger stores owner-scoped fund/ETF positions and optional pricing 
 
 Overview derives current net worth from the owner's current financial account values plus Home equity, with explicit liability handling. Historical and projected chart values are read models over stored account and projection data, not separate mutable balances. Chart display must not change source rows.
 
+The Overview net-worth hero change compares exact actual points for the two latest scheduled paydays on or before the Toronto evaluation date, not today's live evaluation point against the latest payday. Both payday points must exist; missing values show No prior data rather than a fabricated zero or an older-date substitute. The live headline amount and history chart remain unchanged. Payday metadata comes from the existing owner-scoped dashboard period window; this comparison adds no database read.
+
 ## Goals
 
 Goals use owner-scoped plans and contributions with integer minor units. Planning scenarios remain separate from actual account balances and transactions. A goal calculation change requires focused tests and an explicit rule update.

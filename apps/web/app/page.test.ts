@@ -110,4 +110,14 @@ describe("Overview route read boundary", () => {
     expect(page.props.data.overviewHelpSeen).toBe(false);
     expect(mocks.pageHelpSeen).toHaveBeenCalledWith(mocks.ownerId, "overview");
   });
+
+  it("passes only the latest two elapsed paydays from the existing owner-scoped window", async () => {
+    const model = await mocks.getDashboardReadModel();
+    model.periodWindow.periods = ["2026-08-05", "2026-08-19", "2026-09-02", "2026-09-16"].map((payDate, index) => ({
+      period: { id: `synthetic-${index}`, label: "Synthetic payday", startsOn: payDate, endsOn: payDate, payDate, status: "planned", currency: "CAD", openingBalanceMinor: 0 },
+      transactions: [], transfers: [],
+    }));
+    const page = await Dashboard() as ReactElement<{ readonly data: { readonly netWorthPaydays: readonly string[] } }>;
+    expect(page.props.data.netWorthPaydays).toEqual(["2026-08-19", "2026-09-02"]);
+  });
 });

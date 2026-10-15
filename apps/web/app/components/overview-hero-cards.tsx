@@ -51,7 +51,7 @@ export function NetWorthHeroCard({
           {changePercentText ? <span>{changePercentText}</span> : null}
           {changeFromAsOf ? <small>vs. {formatFullDate(changeFromAsOf)}</small> : null}
         </div>
-      ) : null}
+      ) : <div className="overview-hero-change is-unavailable"><small>No prior data</small></div>}
       <div className="hero-caption">Financial accounts plus current Home equity</div>
       <div className="hero-footer">
         <div className="mini-stat">

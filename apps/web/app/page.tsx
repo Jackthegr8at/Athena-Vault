@@ -186,6 +186,7 @@ export default async function Dashboard() {
     liabilitiesMinor: liveNetWorth.liabilitiesMinor,
     netWorthMinor: liveNetWorth.netWorthMinor,
     netWorthHistory: alignNetWorthHistoryCurrentPoint(netWorthHistory, liveNetWorth),
+    netWorthPaydays: [...new Set(periodWindow.periods.map(entry => entry.period.payDate).filter(date => date <= asOfIso))].sort().slice(-2),
     onboarding,
     overviewHelpSeen,
   };
