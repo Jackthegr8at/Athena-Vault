@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "lockfileSha256": "bd158495f293fce003f687892f4269ccde1832d518d6e529689e8234577c2099",
+  "lockfileSha256": "23ed5f8902bbc53d6f232099b7587de6d626e64e85e9ccef7a54228233f6296c",
   "scope": "Exact lockfile packages; only locally installed matching versions have harvested notices. Missing platforms and unknown/missing licenses require artifact review.",
   "packages": [
     {
@@ -1033,7 +1033,7 @@
     },
     {
       "name": "@grpc/grpc-js",
-      "version": "1.14.4",
+      "version": "1.14.6",
       "installed": true,
       "license": "Apache-2.0",
       "notices": [
@@ -1144,182 +1144,182 @@
     },
     {
       "name": "@img/sharp-darwin-arm64",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-darwin-x64",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-freebsd-wasm32",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-libvips-darwin-arm64",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-libvips-darwin-x64",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-libvips-linux-arm64",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-libvips-linux-arm",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-libvips-linux-ppc64",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-libvips-linux-riscv64",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-libvips-linux-s390x",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-libvips-linux-x64",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-libvips-linuxmusl-arm64",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-libvips-linuxmusl-x64",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-linux-arm64",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-linux-arm",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-linux-ppc64",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-linux-riscv64",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-linux-s390x",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-linux-x64",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-linuxmusl-arm64",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-linuxmusl-x64",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-wasm32",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-webcontainers-wasm32",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-win32-arm64",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-win32-ia32",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@img/sharp-win32-x64",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": true,
       "license": "Apache-2.0 AND LGPL-3.0-or-later",
       "notices": [
@@ -1429,88 +1429,73 @@
     },
     {
       "name": "@next/env",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "installed": true,
       "license": "MIT",
-      "notices": [
-        {
-          "file": "upstream:upstream/next-16.3.4-LICENSE.txt",
-          "sha256": "25afff58f46401f460b24a90cfa0ecb316f9fc0151e60feb2c488f37df2be986"
-        }
-      ]
+      "notices": []
     },
     {
       "name": "@next/eslint-plugin-next",
-      "version": "16.3.5",
+      "version": "16.3.8",
       "installed": true,
       "license": "MIT",
-      "notices": [
-        {
-          "file": "upstream:upstream/next-16.3.5-LICENSE.txt",
-          "sha256": "25afff58f46401f460b24a90cfa0ecb316f9fc0151e60feb2c488f37df2be986"
-        }
-      ]
+      "notices": []
     },
     {
       "name": "@next/swc-darwin-arm64",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@next/swc-darwin-x64",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@next/swc-linux-arm64-gnu",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@next/swc-linux-arm64-musl",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@next/swc-linux-x64-gnu",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@next/swc-linux-x64-musl",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@next/swc-win32-arm64-msvc",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "installed": false,
       "license": null,
       "notices": []
     },
     {
       "name": "@next/swc-win32-x64-msvc",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "installed": true,
       "license": "MIT",
-      "notices": [
-        {
-          "file": "upstream:upstream/next-16.3.4-LICENSE.txt",
-          "sha256": "25afff58f46401f460b24a90cfa0ecb316f9fc0151e60feb2c488f37df2be986"
-        }
-      ]
+      "notices": []
     },
     {
       "name": "@noble/ciphers",
@@ -3261,85 +3246,85 @@
     },
     {
       "name": "@vitest/expect",
-      "version": "3.2.7",
+      "version": "4.1.11",
       "installed": true,
       "license": "MIT",
       "notices": [
         {
           "file": "LICENSE",
-          "sha256": "ecc63fa1c6d8d69e8491494b0a5522b844c19479bd503c0e1390ed4f66faf58b"
+          "sha256": "c7d2b1c2fc0202ec4cf87374860210f4432634cc8a1fc1f1ade41798c59fc247"
         }
       ]
     },
     {
       "name": "@vitest/mocker",
-      "version": "3.2.7",
+      "version": "4.1.11",
       "installed": true,
       "license": "MIT",
       "notices": [
         {
           "file": "LICENSE",
-          "sha256": "ecc63fa1c6d8d69e8491494b0a5522b844c19479bd503c0e1390ed4f66faf58b"
+          "sha256": "c7d2b1c2fc0202ec4cf87374860210f4432634cc8a1fc1f1ade41798c59fc247"
         }
       ]
     },
     {
       "name": "@vitest/pretty-format",
-      "version": "3.2.7",
+      "version": "4.1.11",
       "installed": true,
       "license": "MIT",
       "notices": [
         {
           "file": "LICENSE",
-          "sha256": "ecc63fa1c6d8d69e8491494b0a5522b844c19479bd503c0e1390ed4f66faf58b"
+          "sha256": "c7d2b1c2fc0202ec4cf87374860210f4432634cc8a1fc1f1ade41798c59fc247"
         }
       ]
     },
     {
       "name": "@vitest/runner",
-      "version": "3.2.7",
+      "version": "4.1.11",
       "installed": true,
       "license": "MIT",
       "notices": [
         {
           "file": "LICENSE",
-          "sha256": "ecc63fa1c6d8d69e8491494b0a5522b844c19479bd503c0e1390ed4f66faf58b"
+          "sha256": "c7d2b1c2fc0202ec4cf87374860210f4432634cc8a1fc1f1ade41798c59fc247"
         }
       ]
     },
     {
       "name": "@vitest/snapshot",
-      "version": "3.2.7",
+      "version": "4.1.11",
       "installed": true,
       "license": "MIT",
       "notices": [
         {
           "file": "LICENSE",
-          "sha256": "ecc63fa1c6d8d69e8491494b0a5522b844c19479bd503c0e1390ed4f66faf58b"
+          "sha256": "c7d2b1c2fc0202ec4cf87374860210f4432634cc8a1fc1f1ade41798c59fc247"
         }
       ]
     },
     {
       "name": "@vitest/spy",
-      "version": "3.2.7",
+      "version": "4.1.11",
       "installed": true,
       "license": "MIT",
       "notices": [
         {
           "file": "LICENSE",
-          "sha256": "ecc63fa1c6d8d69e8491494b0a5522b844c19479bd503c0e1390ed4f66faf58b"
+          "sha256": "c7d2b1c2fc0202ec4cf87374860210f4432634cc8a1fc1f1ade41798c59fc247"
         }
       ]
     },
     {
       "name": "@vitest/utils",
-      "version": "3.2.7",
+      "version": "4.1.11",
       "installed": true,
       "license": "MIT",
       "notices": [
         {
           "file": "LICENSE",
-          "sha256": "ecc63fa1c6d8d69e8491494b0a5522b844c19479bd503c0e1390ed4f66faf58b"
+          "sha256": "c7d2b1c2fc0202ec4cf87374860210f4432634cc8a1fc1f1ade41798c59fc247"
         }
       ]
     },
@@ -3745,7 +3730,7 @@
     },
     {
       "name": "brace-expansion",
-      "version": "5.0.9",
+      "version": "5.0.12",
       "installed": true,
       "license": "MIT",
       "notices": [
@@ -3788,18 +3773,6 @@
         {
           "file": "LICENSE",
           "sha256": "46b1051c617c1cb9f284d15c9bfc9837d03d89c34aa9e955da756a20fae29668"
-        }
-      ]
-    },
-    {
-      "name": "cac",
-      "version": "6.7.14",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "13ffba3573c29638656a35c60c0d12a4170101df0e0fd4314fa0d935b4cfd833"
         }
       ]
     },
@@ -3865,7 +3838,7 @@
     },
     {
       "name": "chai",
-      "version": "5.3.3",
+      "version": "6.3.0",
       "installed": true,
       "license": "MIT",
       "notices": [
@@ -3884,18 +3857,6 @@
         {
           "file": "license",
           "sha256": "c9808a775260db5602f6a0c29f5f8b78e81f9666a33623fedfa34a22208b1063"
-        }
-      ]
-    },
-    {
-      "name": "check-error",
-      "version": "2.1.3",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "dd785a967508b6625804527e2d2b02cb6e44ba3588a14fc36a120834290a8006"
         }
       ]
     },
@@ -4151,18 +4112,6 @@
         {
           "file": "LICENCE.md",
           "sha256": "fa4b628d145370cc1686daecad41b83fb9b233c5f90d5fbc59068f2f2ee134d6"
-        }
-      ]
-    },
-    {
-      "name": "deep-eql",
-      "version": "5.0.2",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "dd785a967508b6625804527e2d2b02cb6e44ba3588a14fc36a120834290a8006"
         }
       ]
     },
@@ -4427,7 +4376,7 @@
     },
     {
       "name": "es-module-lexer",
-      "version": "1.7.0",
+      "version": "2.3.2",
       "installed": true,
       "license": "MIT",
       "notices": [
@@ -4535,15 +4484,10 @@
     },
     {
       "name": "eslint-config-next",
-      "version": "16.3.5",
+      "version": "16.3.8",
       "installed": true,
       "license": "MIT",
-      "notices": [
-        {
-          "file": "upstream:upstream/next-16.3.5-LICENSE.txt",
-          "sha256": "25afff58f46401f460b24a90cfa0ecb316f9fc0151e60feb2c488f37df2be986"
-        }
-      ]
+      "notices": []
     },
     {
       "name": "eslint-import-resolver-node",
@@ -5836,18 +5780,6 @@
       ]
     },
     {
-      "name": "js-tokens",
-      "version": "9.0.1",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "022f58db84100037faf37a49a5a0edb8f1dc16efd924c88ba974bcee0b32c590"
-        }
-      ]
-    },
-    {
       "name": "js-yaml",
       "version": "4.3.2",
       "installed": true,
@@ -6203,22 +6135,6 @@
       ]
     },
     {
-      "name": "loupe",
-      "version": "3.2.1",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "01cf26be969f6765948912d7f8eeec1316828a1e1ba09b317d58b93a10174fb7"
-        },
-        {
-          "file": "README.md",
-          "sha256": "3cd36a9889370de382099823a950bb4358e2f5081dd6ef7f85b3ba709828c592"
-        }
-      ]
-    },
-    {
       "name": "lru-cache",
       "version": "10.4.3",
       "installed": true,
@@ -6419,7 +6335,7 @@
     },
     {
       "name": "next",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "installed": true,
       "license": "MIT",
       "notices": [
@@ -6590,6 +6506,10 @@
         {
           "file": "dist/compiled/gzip-size/LICENSE",
           "sha256": "c9808a775260db5602f6a0c29f5f8b78e81f9666a33623fedfa34a22208b1063"
+        },
+        {
+          "file": "dist/compiled/hash.js/sha256/LICENSE",
+          "sha256": "12cace26c5167502e17269607d6428928bd3a28b9ce70407d41ee464a9c78ff6"
         },
         {
           "file": "dist/compiled/https-browserify/LICENSE",
@@ -6975,7 +6895,7 @@
     },
     {
       "name": "nodemailer",
-      "version": "10.0.0",
+      "version": "10.0.2",
       "installed": true,
       "license": "MIT-0",
       "notices": [
@@ -7102,6 +7022,18 @@
         {
           "file": "LICENSE",
           "sha256": "07d333ca37861bd58aa7385fdaf0f948a8e88f65a9746920f5ed9ee7715d8401"
+        }
+      ]
+    },
+    {
+      "name": "obug",
+      "version": "2.2.1",
+      "installed": true,
+      "license": "MIT",
+      "notices": [
+        {
+          "file": "LICENSE",
+          "sha256": "e200d5c2b112f0301d4cbf0caeff485ae9ce8b9ca52ae55c0e0ea505f8c12b4d"
         }
       ]
     },
@@ -7258,18 +7190,6 @@
         {
           "file": "LICENSE",
           "sha256": "d785edfd5a8ff55734ddd8cf37c398a1e01b02dbb5069f1e01eba1a90523e6f4"
-        }
-      ]
-    },
-    {
-      "name": "pathval",
-      "version": "2.0.1",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "7d3fca18c05a2abc16f5633114d56a5a51de5c1e840acbc9b1cc9b49bf672f55"
         }
       ]
     },
@@ -7911,7 +7831,7 @@
     },
     {
       "name": "sharp",
-      "version": "0.35.4",
+      "version": "0.35.5",
       "installed": true,
       "license": "Apache-2.0",
       "notices": [
@@ -8019,7 +7939,7 @@
     },
     {
       "name": "source-map-js",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "installed": true,
       "license": "BSD-3-Clause",
       "notices": [
@@ -8069,7 +7989,7 @@
     },
     {
       "name": "std-env",
-      "version": "3.10.0",
+      "version": "4.3.0",
       "installed": true,
       "license": "MIT",
       "notices": [
@@ -8212,18 +8132,6 @@
       ]
     },
     {
-      "name": "strip-literal",
-      "version": "3.1.0",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "64d000ad2cc7a318f087fd925efc724c43d5e11aa04f5ed2b1d83b8b88388db4"
-        }
-      ]
-    },
-    {
       "name": "styled-jsx",
       "version": "5.1.6",
       "installed": true,
@@ -8321,7 +8229,7 @@
     },
     {
       "name": "tinyexec",
-      "version": "0.3.2",
+      "version": "1.3.1",
       "installed": true,
       "license": "MIT",
       "notices": [
@@ -8344,32 +8252,8 @@
       ]
     },
     {
-      "name": "tinypool",
-      "version": "1.1.1",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "e2caf5443f76f48375645bd1d6fb3c816661b120e0a9ce6e6dc81698a3bfc4c1"
-        }
-      ]
-    },
-    {
       "name": "tinyrainbow",
-      "version": "2.0.0",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENCE",
-          "sha256": "551dde9639240832bb1918281c523cf772bd2391a4a46464adb1498b07f48591"
-        }
-      ]
-    },
-    {
-      "name": "tinyspy",
-      "version": "4.0.4",
+      "version": "3.2.0",
       "installed": true,
       "license": "MIT",
       "notices": [
@@ -8716,18 +8600,6 @@
       ]
     },
     {
-      "name": "vite-node",
-      "version": "3.2.4",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "ecc63fa1c6d8d69e8491494b0a5522b844c19479bd503c0e1390ed4f66faf58b"
-        }
-      ]
-    },
-    {
       "name": "vite",
       "version": "7.3.6",
       "installed": true,
@@ -8741,13 +8613,13 @@
     },
     {
       "name": "vitest",
-      "version": "3.2.7",
+      "version": "4.1.11",
       "installed": true,
       "license": "MIT",
       "notices": [
         {
           "file": "LICENSE.md",
-          "sha256": "789ece91b1263e67cc2c26ab649cb28c4411aee1f1e72d4841e7229f07c56575"
+          "sha256": "ddf26045289f089392d30ba7a05d85f458f43e7fc24c70407ed5c7c068e0cede"
         }
       ]
     },

@@ -25,6 +25,7 @@ COPY packages/database/package.json packages/database/package.json
 COPY packages/finance-engine/package.json packages/finance-engine/package.json
 COPY packages/ui/package.json packages/ui/package.json
 COPY packages/validation/package.json packages/validation/package.json
+COPY patches/ ./patches/
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 

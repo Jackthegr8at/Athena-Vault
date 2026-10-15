@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+if [ -z "${ATHENA_GITLEAKS_BIN:-}" ]; then
+  ATHENA_GITLEAKS_BIN=$(git config --local --get athena.gitleaksBin || true)
+  if [ -n "$ATHENA_GITLEAKS_BIN" ]; then export ATHENA_GITLEAKS_BIN; fi
+fi
+exec node scripts/security/public-pre-push.mjs "$@"
