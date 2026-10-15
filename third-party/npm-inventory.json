@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "lockfileSha256": "23ed5f8902bbc53d6f232099b7587de6d626e64e85e9ccef7a54228233f6296c",
+  "lockfileSha256": "a9ce308094412a7d32566366b16b72fbcd276ae5d8677c7805432e9df58c26b3",
   "scope": "Exact lockfile packages; only locally installed matching versions have harvested notices. Missing platforms and unknown/missing licenses require artifact review.",
   "packages": [
     {
@@ -3714,7 +3714,7 @@
     },
     {
       "name": "brace-expansion",
-      "version": "1.1.18",
+      "version": "1.1.21",
       "installed": true,
       "license": "MIT",
       "notices": [
@@ -6895,7 +6895,7 @@
     },
     {
       "name": "nodemailer",
-      "version": "10.0.2",
+      "version": "10.0.9",
       "installed": true,
       "license": "MIT-0",
       "notices": [

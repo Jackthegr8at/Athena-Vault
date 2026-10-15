@@ -3436,7 +3436,7 @@ SOFTWARE.
 ========================================================================
 Document SHA-256: 4b42e0447d1f4e8794e7eacfb8f104320e8f34f87df5ad6c3c19af7acb6ec2bd
 Sources:
-  nodemailer@10.0.2 / LICENSE
+  nodemailer@10.0.9 / LICENSE
 
 Copyright (c) 2011-2023 Andris Reinman
 
@@ -6229,7 +6229,7 @@ SOFTWARE.
 Document SHA-256: 6f203c01965501ab17a750e94c191a47c61c7043f587400fbeea92be853e337d
 Sources:
   balanced-match@1.0.2 / README.md
-  brace-expansion@1.1.18 / README.md
+  brace-expansion@1.1.21 / README.md
 
 ## License
 
@@ -15473,7 +15473,7 @@ SOFTWARE.
 ========================================================================
 Document SHA-256: cfe46dde9d4b5f4c1e2db0935b3f5b8570a19c59e8938bb082065e3b6e26d834
 Sources:
-  brace-expansion@1.1.18 / LICENSE
+  brace-expansion@1.1.21 / LICENSE
   isarray@2.0.5 / LICENSE
 
 MIT License
