@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
     getPeriodWindow: vi.fn(),
     listRecurringSeries: vi.fn(),
     listExcludedExpenses: vi.fn(),
+    countExcludedExpenses: vi.fn(async () => 0),
   },
   createCashFlowRepository: vi.fn(),
   addIsoDays: vi.fn(),

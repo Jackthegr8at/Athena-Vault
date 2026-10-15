@@ -8,9 +8,19 @@ The one-time historical workbook importer is retired. Operational pages read Pos
 
 `/workbooks` is an owner-scoped scratch domain for formulas and notes. It stores bounded JSON snapshots and is separate from Accounts, Cash Flow, budgets, Investments, and other financial rows. Clipboard range paste does not make it a financial import path. Demo access is read-only.
 
+The page selects a workbook from its owner-scoped metadata list; it does not load snapshot JSON just to choose a name/ID. The client obtains the selected snapshot through the existing authenticated snapshot API. Invalid or unlisted selection IDs fall back to the first metadata row.
+
+## Accounts window reads
+
+The Accounts page uses `getTimelineWindow()` and a shared pure payday-window selector. Full payday metadata remains available for navigation, but snapshots, notes and payday confirmations are restricted to the visible dates, with separate Actual/manual predecessor snapshots retained. Shared full-history `getTimeline()` remains available to net-worth and annual-expense consumers. Cash Flow opening overlays still use their complete authoritative projection seed path; bounding display rows does not narrow financial projection inputs or remove hidden accounts.
+
 ## Cash Flow recurring series
 
 Cash Flow maintains dated account balances, transactions, recurring income/expenses/transfers, projection anchors, and generated future occurrences. Actual and manual rows remain distinct from generated projections. Editable generated occurrences reconcile through protected version rules; owner scoping and transactional writes are mandatory. Account visibility is display-only and never removes an account from projection calculations.
+
+Cash Flow initially sends projection/range inputs, relevant recurring-version IDs and an excluded-expense count. Editor version details and excluded rows load through the owner-scoped, MFA-required `/api/cash-flow/details` endpoint on first opening their controls. Responses are private/no-store. Per-mounted-client request state deduplicates in-flight loads, offers loading/retry feedback, ignores stale responses and invalidates on refreshed period props or mutation results; it is not a shared financial-data cache. Editor writes remain disabled while required detail is unavailable. Historical occurrence identity and range schedules are preserved.
+
+Period assembly assigns movements through indexed nonoverlapping window bounds, preserving original movement order. Overlapping or invalid bounds use the reference filtering behavior. Projection-ID lookup retains the first duplicate, matching the previous `find()` behavior. These are read/serialization optimizations, not changed financial rules.
 
 ## Investment planning
 

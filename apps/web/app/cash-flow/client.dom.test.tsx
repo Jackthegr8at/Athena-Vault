@@ -76,6 +76,20 @@ const dom = createDomTestRoot();
 describe("CashFlowClient responsive and period-scoped state", () => {
   beforeEach(() => vi.clearAllMocks());
 
+  it("fetches excluded details only when opened and keeps the server count before loading", async () => {
+    vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
+    const fetch = vi.fn(async () => ({ ok: true, json: async () => ({ data: [{ id: "synthetic-excluded", accountName: "Synthetic", recurringTransactionId: null, transactionDate: "2030-01-01", status: "planned", description: "Synthetic deferred expense", category: null, amountMinor: 123 }] }) }));
+    vi.stubGlobal("fetch", fetch);
+    const period = makePeriod("period-a", "2026-09-16", null);
+    await dom.render(<CashFlowClient {...clientProps([period], period.period.id)} deferredDetails excludedExpenseCount={1} />);
+    expect(fetch).not.toHaveBeenCalled();
+    expect(dom.get(".cash-flow-excluded-disclosure summary").textContent).toBe("Excluded items (1)");
+    const disclosure = dom.get<HTMLDetailsElement>(".cash-flow-excluded-disclosure");
+    await act(async () => { disclosure.open = true; disclosure.dispatchEvent(new Event("toggle", { bubbles: true })); });
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(dom.get(".cash-flow-excluded-row").textContent).toContain("Synthetic deferred expense");
+  });
+
   it("starts the account and payday details collapsed on compact viewports", async () => {
     vi.stubGlobal("matchMedia", vi.fn().mockImplementation((query: string) => ({
       matches: query === "(max-width: 720px)",

@@ -14,6 +14,7 @@ The root [README](../README.md) is the project overview and local-development st
 ## Engineering
 
 - [Architecture](architecture.md) — monorepo responsibilities, service boundaries, persistence access, and derived read models.
+- [Request-data optimizations](request-data-optimization.md) — bounded reads, deferred details, synthetic evidence, and validation limits.
 - [Data model](data-model.md) — schema-backed domain rules that code and tests must preserve.
 - [Contributing](../CONTRIBUTING.md) — contributor workflow, local checks, migration discipline, and documentation-privacy rules.
 - [Migration catalog](../packages/database/src/migrations/catalog.ts) — executable migration order, schema-state inspection, and post-application verification.

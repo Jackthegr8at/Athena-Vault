@@ -18,6 +18,7 @@ import {
 import type { AccountTimelineSectionKey, PeriodState, SnapshotStatus } from "@athena/database/account-timeline";
 import type { AccountContributionRuleView } from "@athena/database";
 import { ACCOUNTS_PAGE_HELP_CONTENT, type AccountsPageHelpActionId, type PageHelpSnapshot } from "../components/page-help-content";
+import { selectAccountTimelineWindow } from "@athena/database/account-timeline";
 import { formatSignedMoneyMinor } from "../../lib/format-money";
 
 export interface AccountTimelinePresentationInput {
@@ -274,10 +275,8 @@ export function buildAccountsPresentation(
   timeline: AccountTimelinePresentationInput,
   options: { readonly todayIso: string; readonly selectedDate?: string | null; readonly pastPeriods?: number; readonly futurePeriods?: number } ,
 ): AccountsPresentation {
-  const paydays = normalizeIsoDates(timeline.paydays);
-  const selectedDate = resolveTimelineSelection(paydays, options.selectedDate, options.todayIso);
-  const pastPeriods = Math.max(0, Math.min(24, options.pastPeriods ?? 3));
-  const futurePeriods = Math.max(0, Math.min(24, options.futurePeriods ?? 5));
+  const window = selectAccountTimelineWindow(timeline.paydays, options);
+  const { dates: paydays, selectedDate, pastPeriods, futurePeriods } = window;
   const statusByDate = new Map<string, SnapshotStatus[]>();
   for (const account of timeline.accounts) {
     if (!account.isActive) continue;
@@ -304,10 +303,7 @@ export function buildAccountsPresentation(
       isFuture,
     };
   });
-  const selectedColumnIndex = selectedDate ? allColumns.findIndex((column) => column.date === selectedDate) : -1;
-  const visibleStart = selectedColumnIndex < 0 ? 0 : Math.max(0, selectedColumnIndex - pastPeriods);
-  const visibleEnd = selectedColumnIndex < 0 ? allColumns.length : Math.min(allColumns.length, selectedColumnIndex + futurePeriods + 1);
-  const columns = allColumns.slice(visibleStart, visibleEnd);
+  const columns = allColumns.slice(window.start, window.end);
   const selectedStateLabel = selectedDate
     ? periodPositionLabel(selectedDate, currentPayday)
     : "Projected";

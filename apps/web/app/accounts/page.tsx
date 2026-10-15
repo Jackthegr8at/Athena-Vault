@@ -120,9 +120,10 @@ export default async function AccountsPage({
   const todayIso = toTorontoDateIso();
   const { timeline, pageHelpSeen } = await withAuthenticatedPageDatabase(async (database, user) => {
     const [timeline, pageHelpSeen] = await Promise.all([
-      createAccountTimelineRepository(database).getTimeline(user.owner.id, {
+      createAccountTimelineRepository(database).getTimelineWindow(user.owner.id, {
         includeArchived: showArchived,
         selectedDate: requestedDate ?? undefined,
+        todayIso, pastPeriods, futurePeriods,
       }),
       hasPageHelpSeen(database, user, ACCOUNTS_PAGE_HELP_CONTENT.pageId),
     ]);

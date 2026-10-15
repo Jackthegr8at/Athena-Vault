@@ -2715,6 +2715,18 @@ export function createCashFlowRepository(db: Database) {
         accountName: row.accountId ? names.get(row.accountId) ?? "Unassigned" : "Unassigned",
       }));
     },
+    async countExcludedExpenses(ownerId: string): Promise<number> {
+      const [row] = await db.select({ count: sql<number>`count(*)::int` }).from(transactions)
+        .where(and(eq(transactions.ownerId, ownerId), eq(transactions.kind, "expense"), eq(transactions.isExcluded, true)));
+      return row?.count ?? 0;
+    },
+    async getRecurringEditorDetails(ownerId: string) {
+      const series = await listRecurringSeries(ownerId, { includeHistory: true });
+      return series.map(entry => ({ id: entry.id, state: entry.state, versions: entry.versions.map(version => ({
+        id: version.id, kind: version.kind, name: version.name, frequency: version.frequency,
+        amountMinor: version.amountMinor, status: version.status, isCurrent: version.isCurrent,
+      })) }));
+    },
     async listRecurringTransactions(ownerId: string): Promise<readonly CashFlowRecurringTransactionView[]> {
       const series = await listRecurringSeries(ownerId, { includeHistory: false });
       return series.flatMap((entry) => {

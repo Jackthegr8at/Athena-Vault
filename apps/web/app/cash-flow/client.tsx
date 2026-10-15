@@ -12,7 +12,9 @@ import { ConfirmationDialog } from "../components/confirmation-dialog";
 import { FormDropdown } from "../components/form-dropdown";
 import { InvestmentDropdown, type InvestmentDropdownOption } from "../investments/investment-dropdown";
 import { cashFlowCurrentPeriodHref, cashFlowPaydayVariance, cashFlowPeriodHref, cashFlowPeriodTimelineMetrics, cashFlowProjectionMovementLabel, groupCashFlowMovementsBySection } from "./presentation";
-import { getCashFlowOccurrenceEditorModel, type CashFlowRecurringOption } from "./recurring-editor";
+import { buildCashFlowRecurringOptions, getCashFlowOccurrenceEditorModel, type CashFlowRecurringOption } from "./recurring-editor";
+import { useDeferredDetails } from "./use-deferred-details";
+import { isRecurringDetails, isExcludedDetails } from "./deferred-detail-types";
 import { expandCashFlowRecurringRangeOptions, type CashFlowRecurringRangeSegment } from "./recurring-range-options";
 import { recurringSeriesHref } from "./recurring-manager";
 import { periodPositionLabel, periodStateLabel } from "@athena/database/account-timeline";
@@ -61,7 +63,7 @@ export type SerializedCashFlowProjection = Omit<ChainedCashFlowPeriodProjection,
 export interface SerializedCashFlowPeriod { readonly period: Omit<SerializedPayPeriod, "items"> & { readonly items: readonly RecurringCashFlowItem[] }; readonly editableIncomeId: string | null; readonly projection: SerializedCashFlowProjection; readonly observedMainAccountBalanceMinor: number | null; readonly paydayCheck: SerializedCashFlowPaydayCheck | null; readonly paydayNote: string | null }
 export interface CashFlowAccountOption { readonly id: string; readonly label: string; readonly includeInAvailableCash: boolean; readonly isVisibleInCashFlow: boolean }
 export interface SerializedExcludedExpense { readonly id: string; readonly accountName: string; readonly recurringTransactionId: string | null; readonly transactionDate: string; readonly status: "actual" | "planned"; readonly description: string; readonly category: string | null; readonly amountMinor: number }
-interface CashFlowClientProps { readonly initialPeriods: readonly SerializedCashFlowPeriod[]; readonly selectedPeriodId: string; readonly currentPeriodId: string | null; readonly currentPeriodPayDate: string | null; readonly totalPeriodCount: number; readonly showAll: boolean; readonly todayIso: string; readonly accountOptions: readonly CashFlowAccountOption[]; readonly paydayCheckAccountId: string | null; readonly visibleAccountIds: readonly string[]; readonly showAllAccounts: boolean; readonly recurringOptions: readonly CashFlowRecurringOption[]; readonly excludedExpenses: readonly SerializedExcludedExpense[]; readonly recurringRangeSegments: readonly CashFlowRecurringRangeSegment[] }
+interface CashFlowClientProps { readonly initialPeriods: readonly SerializedCashFlowPeriod[]; readonly selectedPeriodId: string; readonly currentPeriodId: string | null; readonly currentPeriodPayDate: string | null; readonly totalPeriodCount: number; readonly showAll: boolean; readonly todayIso: string; readonly accountOptions: readonly CashFlowAccountOption[]; readonly paydayCheckAccountId: string | null; readonly visibleAccountIds: readonly string[]; readonly showAllAccounts: boolean; readonly recurringOptions: readonly CashFlowRecurringOption[]; readonly excludedExpenses: readonly SerializedExcludedExpense[]; readonly recurringRangeSegments: readonly CashFlowRecurringRangeSegment[]; readonly deferredDetails?: boolean; readonly excludedExpenseCount?: number; readonly relevantRecurringVersionIds?: readonly string[] }
 interface NewCashFlowTransactionDraft { readonly accountId: string; readonly accountName: string; readonly transactionDate: string; readonly kind: "income" | "expense"; readonly description: string; readonly amount: string }
 
 type MovementItemIndex = ReadonlyMap<string, RecurringCashFlowItem>;
@@ -377,7 +379,7 @@ function ReadOnlyCashFlowField({ label, value }: { readonly label: string; reado
   return <label className="cash-flow-record-read-only-field">{label}<output className="cash-flow-record-read-only-value">{value}</output></label>;
 }
 
-export function CashFlowClient({ initialPeriods, selectedPeriodId, currentPeriodId, currentPeriodPayDate, totalPeriodCount, showAll, todayIso, accountOptions, paydayCheckAccountId, visibleAccountIds, showAllAccounts, recurringOptions, excludedExpenses, recurringRangeSegments }: CashFlowClientProps) {
+export function CashFlowClient({ initialPeriods, selectedPeriodId, currentPeriodId, currentPeriodPayDate, totalPeriodCount, showAll, todayIso, accountOptions, paydayCheckAccountId, visibleAccountIds, showAllAccounts, recurringOptions: initialRecurringOptions, excludedExpenses: initialExcludedExpenses, recurringRangeSegments, deferredDetails = false, excludedExpenseCount, relevantRecurringVersionIds }: CashFlowClientProps) {
   const selectedEntry = initialPeriods.find((entry) => entry.period.id === selectedPeriodId) ?? initialPeriods[0];
   const isCompactViewport = useSyncExternalStore(subscribeCompactViewport, getCompactViewportSnapshot, () => false);
   const [editingItem, setEditingItem] = useState<RecurringCashFlowItem | null>(null);
@@ -394,6 +396,17 @@ export function CashFlowClient({ initialPeriods, selectedPeriodId, currentPeriod
   const [recurringState, recurringAction, recurringPending] = useActionState(applyRecurringOccurrenceExceptionAction, initialCashFlowActionState);
   const [recurringRestoreState, recurringRestoreAction, recurringRestorePending] = useActionState(restoreRecurringOccurrenceAction, initialCashFlowActionState);
   const [latestRecurringState, setLatestRecurringState] = useState(initialCashFlowActionState);
+  const [excludedOpen, setExcludedOpen] = useState(false);
+  const detailScope = useMemo(() => ({ initialPeriods, recordState, createTransactionState, deleteState, restoreState, recurringState, recurringRestoreState }), [initialPeriods, recordState, createTransactionState, deleteState, restoreState, recurringState, recurringRestoreState]);
+  const recurringDetails = useDeferredDetails("recurring", deferredDetails, detailScope, isRecurringDetails);
+  const excludedDetails = useDeferredDetails("excluded", deferredDetails, detailScope, isExcludedDetails);
+  const recurringOptions = useMemo(() => deferredDetails ? buildCashFlowRecurringOptions(recurringDetails.data ?? [], new Set(relevantRecurringVersionIds ?? [])) : initialRecurringOptions, [deferredDetails, recurringDetails.data, relevantRecurringVersionIds, initialRecurringOptions]);
+  const excludedExpenses = deferredDetails ? excludedDetails.data ?? [] : initialExcludedExpenses;
+  const editorReady = !deferredDetails || recurringDetails.status === "ready";
+  const { status: recurringDetailStatus, load: loadRecurringDetails } = recurringDetails;
+  const { status: excludedDetailStatus, load: loadExcludedDetails } = excludedDetails;
+  useEffect(() => { if (editingItem && recurringDetailStatus === "idle") loadRecurringDetails(); }, [editingItem, recurringDetailStatus, loadRecurringDetails]);
+  useEffect(() => { if (excludedOpen && excludedDetailStatus === "idle") loadExcludedDetails(); }, [excludedOpen, excludedDetailStatus, loadExcludedDetails]);
   const [accountDetailsOpenOverride, setAccountDetailsOpenOverride] = useState<boolean | null>(null);
   const accountDetailsOpen = accountDetailsOpenOverride ?? !isCompactViewport;
   const previousRecord = useRef(recordState); const previousCreateTransaction = useRef(createTransactionState); const previousDelete = useRef(deleteState); const previousRecurring = useRef(recurringState); const previousRestore = useRef(recurringRestoreState); const dialogRef = useRef<HTMLFormElement | null>(null); const createDialogRef = useRef<HTMLFormElement | null>(null); const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -498,8 +511,10 @@ export function CashFlowClient({ initialPeriods, selectedPeriodId, currentPeriod
         <summary className="cash-flow-details-header"><div><p className="eyebrow">Selected period</p><h3 className="card-title"><span className="cash-flow-account-details-desktop-title">Selected period details</span><span className="cash-flow-account-details-mobile-title">Account details</span></h3><p className="card-subtitle"><span className="cash-flow-account-details-desktop-subtitle">Included accounts and accounts with movements are shown by default.</span><span className="cash-flow-account-details-mobile-subtitle">Movements, balances, and account actions for this period.</span></p></div><span className="cash-flow-account-details-toggle"><span>View account movements</span><ChevronDown aria-hidden="true" size={18} strokeWidth={1.8} /></span></summary>
         <div className="cash-flow-account-groups">{displayedAccounts.length ? displayedAccounts.map((account) => <AccountProjectionCard key={account.accountId} account={account} itemIndex={itemIndex} onEdit={openEditor} onAdd={openCreateTransaction} isVisibleInCashFlow={accountOptions.find((option) => option.id === account.accountId)?.isVisibleInCashFlow ?? true} />) : <p className="insight">No accounts are visible in this view. Use “Show all accounts” above to reveal and restore an account.</p>}</div>
       </details>
-      <details className="card cash-flow-excluded-disclosure">
-        <summary>Excluded items ({excludedExpenses.length})</summary>
+      <details className="card cash-flow-excluded-disclosure" onToggle={event => setExcludedOpen(event.currentTarget.open)}>
+        <summary>Excluded items ({deferredDetails ? excludedExpenseCount ?? 0 : excludedExpenses.length})</summary>
+        {deferredDetails && excludedDetails.status === "loading" ? <p role="status">Loading excluded items…</p> : null}
+        {deferredDetails && excludedDetails.status === "error" ? <div role="alert">Excluded items unavailable. <button type="button" onClick={excludedDetails.load}>Retry</button></div> : null}
         {excludedExpenses.map((expense) => <div className="cash-flow-excluded-row" key={expense.id}><span>{expense.description} · {expense.transactionDate} · {expense.accountName}</span><strong>{dollars(expense.amountMinor)}</strong><form action={restoreAction}><input type="hidden" name="id" value={expense.id} /><input type="hidden" name="confirm" value="true" /><button className="account-secondary-button" type="submit" disabled={restorePending}>Restore</button></form></div>)}
         {restoreState.message ? <p className="cash-flow-action-message" role={restoreState.ok ? "status" : "alert"}>{restoreState.message}</p> : null}
       </details>
@@ -523,6 +538,8 @@ export function CashFlowClient({ initialPeriods, selectedPeriodId, currentPeriod
         <div className="cash-flow-record-backdrop" role="presentation" onClick={closeEditor}>
           <form ref={dialogRef} className="cash-flow-record-modal" role="dialog" aria-modal="true" aria-labelledby="cash-flow-record-modal-title" action={recordAction} onClick={(event) => event.stopPropagation()} onKeyDown={onDialogKeyDown} onSubmit={(event) => { const submitter = event.nativeEvent.submitter as HTMLElement | null; if (submitter?.getAttribute("formaction")) return; setRecordMessageVisible(true); }}>
             <div className="cash-flow-record-modal-head"><div><p className="eyebrow">{editingItem.kind === "transfer" ? "Transfer" : "Transaction"}</p><h3 id="cash-flow-record-modal-title">Edit {editingItem.label}</h3></div><button className="account-secondary-button" type="button" onClick={closeEditor} data-cash-flow-dialog-initial-focus>Close</button></div>
+            {deferredDetails && recurringDetails.status !== "ready" ? <div role={recurringDetails.status === "error" ? "alert" : "status"}>{recurringDetails.status === "error" ? <>Editor details unavailable. <button type="button" onClick={recurringDetails.load}>Retry</button></> : "Loading editor details…"}</div> : null}
+            <fieldset disabled={!editorReady} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
             <input type="hidden" name="id" value={editingItem.recordId ?? editingItem.id} /><input type="hidden" name="confirm" value="true" /><input type="hidden" name="recordKind" value={editingItem.kind === "transfer" ? "transfer" : "transaction"} />
             {editable ? <><input type="hidden" name="seriesId" value={editingItem.recurringSeriesId} /><input type="hidden" name="versionId" value={editingItem.recurringTransactionId} /><input type="hidden" name="scheduledOccurrenceOn" value={editingItem.scheduledOccurrenceOn} /><input type="hidden" name="transactionId" value={editingItem.kind === "transfer" ? "" : editingItem.recordId ?? editingItem.id} /><input type="hidden" name="transferId" value={editingItem.kind === "transfer" ? editingItem.recordId ?? editingItem.id : ""} /><input type="hidden" name="endingOccurrenceOn" value={editingItem.scheduledOccurrenceOn} /></> : null}
             <div className="cash-flow-record-form-grid">
@@ -549,6 +566,7 @@ export function CashFlowClient({ initialPeriods, selectedPeriodId, currentPeriod
             {recordMessageVisible && recordState.message ? <p className="cash-flow-action-message" role={recordState.ok ? "status" : "alert"}>{recordState.message}</p> : null}
             {deleteMessageVisible && deleteState.message ? <p className="cash-flow-action-message" role={deleteState.ok ? "status" : "alert"}>{deleteState.message}</p> : null}
             {latestRecurringState.message ? <p className="cash-flow-action-message" role={latestRecurringState.ok ? "status" : "alert"}>{latestRecurringState.message}</p> : null}
+            </fieldset>
           </form>
         </div>
       ) : null}

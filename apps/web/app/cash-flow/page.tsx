@@ -6,7 +6,7 @@ import { CashFlowClient, type RecurringCashFlowItem, type SerializedCashFlowMove
 import { ModulePage } from "../components/module-page";
 import { CASH_FLOW_PAGE_HELP_CONTENT } from "../components/page-help-content";
 import { forwardCashFlowPeriodBounds } from "./period-windows";
-import { buildCashFlowRecurringOptions } from "./recurring-editor";
+import { firstByPeriodId, groupPeriodMovements } from "./period-projection-data";
 import { buildCashFlowRecurringRangeSegments } from "./recurring-range-segments";
 import type { CashFlowRecurringRangeSegment } from "./recurring-range-options";
 import { buildCashFlowHelpSnapshot, cashFlowFirstUseStep } from "./presentation";
@@ -114,29 +114,25 @@ export default async function CashFlowPage({ searchParams }: { readonly searchPa
   const params = searchParams ? await searchParams : {};
   const todayIso = toTorontoDateIso();
   const showAll = firstValue(params.view) === "all";
-  const { window, recurringSeries, excludedExpenses, pageHelpSeen } = await withAuthenticatedPageDatabase(async (database, user) => {
+  const { window, recurringSeries, excludedExpenseCount, pageHelpSeen } = await withAuthenticatedPageDatabase(async (database, user) => {
     const cashFlowRepository = createCashFlowRepository(database);
-    const [window, recurringSeries, excludedExpenses, pageHelpSeen] = await Promise.all([
+    const [window, recurringSeries, excludedExpenseCount, pageHelpSeen] = await Promise.all([
       cashFlowRepository.getPeriodWindow(user.owner.id, {
         asOfIso: todayIso,
         selectedPeriodId: firstValue(params.period) ?? null,
         includeAll: showAll,
       }),
       cashFlowRepository.listRecurringSeries(user.owner.id, { includeHistory: true, asOfIso: todayIso }),
-      cashFlowRepository.listExcludedExpenses(user.owner.id),
+      cashFlowRepository.countExcludedExpenses(user.owner.id),
       hasPageHelpSeen(database, user, CASH_FLOW_PAGE_HELP_CONTENT.pageId),
     ]);
-    return { window, recurringSeries, excludedExpenses, pageHelpSeen };
+    return { window, recurringSeries, excludedExpenseCount, pageHelpSeen };
   }, { requireTwoFactor: true });
   const forwardBounds = forwardCashFlowPeriodBounds(window.periods.map((entry) => entry.period));
-  const forwardPeriods: readonly PeriodData[] = window.periods.map((entry, index) => {
-    const bounds = forwardBounds[index]!;
-    return {
-      period: { ...entry.period, ...bounds },
-      transactions: window.projectionTransactions.filter((transaction) => transaction.transactionDate >= bounds.startsOn && transaction.transactionDate <= bounds.endsOn),
-      transfers: window.projectionTransfers.filter((transfer) => transfer.transferDate >= bounds.startsOn && transfer.transferDate <= bounds.endsOn),
-    };
-  });
+  const forwardPeriods: readonly PeriodData[] = groupPeriodMovements(
+    window.periods.map((entry, index) => ({ ...entry.period, ...forwardBounds[index]! })),
+    window.projectionTransactions, window.projectionTransfers,
+  );
   const cashFlowHelp = {
     content: CASH_FLOW_PAGE_HELP_CONTENT,
     snapshot: buildCashFlowHelpSnapshot({
@@ -206,8 +202,9 @@ export default async function CashFlowPage({ searchParams }: { readonly searchPa
   const paydayNotesByPayday = new Map(window.paydayNotes
     .filter((note) => paydayCheckAccount?.id === note.accountId)
     .map((note) => [note.asOf, note.note] as const));
+  const projectionsById = firstByPeriodId(chain.periods);
   const initialPeriods: SerializedCashFlowPeriod[] = periods.flatMap((period) => {
-    const projection = chain.periods.find((candidate) => candidate.period.id === period.period.id);
+    const projection = projectionsById.get(period.period.id);
     const paydayCheck = paydayCheckAccount ? paydayChecksByPayday.get(period.period.payDate) ?? null : null;
     if (!projection) return [];
     const itemKeys = new Set(period.period.items.map((item) => `${item.recordId ?? item.id}:${item.direction ?? "record"}`));
@@ -230,17 +227,6 @@ export default async function CashFlowPage({ searchParams }: { readonly searchPa
       ...entry.transfers.filter((transfer) => transfer.isGenerated && transfer.status === "planned").map((transfer) => transfer.recurringTransactionId),
     ]),
   ].flatMap((versionId) => versionId ? [versionId] : []));
-  const recurringOptions = buildCashFlowRecurringOptions(recurringSeries, relevantRecurringVersionIds);
-  const serializedExcludedExpenses = excludedExpenses.map((expense) => ({
-    id: expense.id,
-    accountName: expense.accountName,
-    recurringTransactionId: expense.recurringTransactionId,
-    transactionDate: expense.transactionDate,
-    status: expense.status,
-    description: expense.description,
-    category: expense.category,
-    amountMinor: expense.amountMinor,
-  }));
   const recurringRangeSegments: readonly CashFlowRecurringRangeSegment[] = buildCashFlowRecurringRangeSegments(
     recurringSeries.map((series) => ({ id: series.id, versions: series.versions.map((version) => ({ id: version.id, schedule: version })) })),
     window.projectionTransactions
@@ -260,7 +246,7 @@ export default async function CashFlowPage({ searchParams }: { readonly searchPa
   const visibleAccountIds = window.accounts.filter((account) => account.isVisibleInCashFlow && (account.includeInAvailableCash || movingAccountIds.has(account.id))).map((account) => account.id);
   return (
     <ModulePage active="Cash flow" mainClassName="cash-flow-page editorial-module-page" eyebrow="Projection workspace" title="Cash flow" subtitle="Review pay periods, inspect the selected period, and preview the next-pay projection." help={cashFlowHelp} pageHelpSeen={pageHelpSeen}>
-      <CashFlowClient initialPeriods={initialPeriods} selectedPeriodId={window.selectedPeriodId} currentPeriodId={window.currentPeriodId} currentPeriodPayDate={window.currentPeriodPayDate} totalPeriodCount={window.totalPeriodCount} showAll={showAll} todayIso={todayIso} accountOptions={accountOptions} paydayCheckAccountId={paydayCheckAccount?.id ?? null} visibleAccountIds={visibleAccountIds} showAllAccounts={firstValue(params.accounts) === "all"} recurringOptions={recurringOptions} excludedExpenses={serializedExcludedExpenses} recurringRangeSegments={recurringRangeSegments} />
+      <CashFlowClient initialPeriods={initialPeriods} selectedPeriodId={window.selectedPeriodId} currentPeriodId={window.currentPeriodId} currentPeriodPayDate={window.currentPeriodPayDate} totalPeriodCount={window.totalPeriodCount} showAll={showAll} todayIso={todayIso} accountOptions={accountOptions} paydayCheckAccountId={paydayCheckAccount?.id ?? null} visibleAccountIds={visibleAccountIds} showAllAccounts={firstValue(params.accounts) === "all"} deferredDetails excludedExpenseCount={excludedExpenseCount} relevantRecurringVersionIds={[...relevantRecurringVersionIds]} recurringOptions={[]} excludedExpenses={[]} recurringRangeSegments={recurringRangeSegments} />
     </ModulePage>
   );
 }

@@ -1,5 +1,6 @@
 import { and, asc, desc, eq, inArray, or, sql } from "drizzle-orm";
 import type { Database } from "../client";
+import { selectAccountTimelineWindow } from "../account-timeline-window";
 import {
   accounts,
   annualBudgets,
@@ -382,12 +383,21 @@ function accountContributionRuleViewFromRow(
 
 export function createAccountTimelineRepository(db: Database) {
   return {
-    async getTimeline(ownerId: string, options: { includeArchived?: boolean; selectedDate?: string; cashFlowPeriods?: readonly CashFlowEndingBalancesPeriod[] | Promise<readonly CashFlowEndingBalancesPeriod[]> } = {}): Promise<AccountTimelineView> {
+    async getTimelineWindow(ownerId: string, options: { includeArchived?: boolean; selectedDate?: string; todayIso: string; pastPeriods?: number; futurePeriods?: number }): Promise<AccountTimelineView> {
+      const dates = await db.select({ payDate: cashFlowPeriods.payDate }).from(cashFlowPeriods)
+        .where(eq(cashFlowPeriods.ownerId, ownerId)).orderBy(asc(cashFlowPeriods.payDate), asc(cashFlowPeriods.id));
+      const window = selectAccountTimelineWindow(dates.map(row => row.payDate), options);
+      return createAccountTimelineRepository(db).getTimeline(ownerId, {
+        includeArchived: options.includeArchived, selectedDate: window.selectedDate ?? undefined,
+        windowDates: window.visibleDates, preloadedPaydays: dates,
+      });
+    },
+    async getTimeline(ownerId: string, options: { includeArchived?: boolean; selectedDate?: string; cashFlowPeriods?: readonly CashFlowEndingBalancesPeriod[] | Promise<readonly CashFlowEndingBalancesPeriod[]>; windowDates?: readonly string[]; preloadedPaydays?: readonly { payDate: string }[] } = {}): Promise<AccountTimelineView> {
       const includeArchived = options.includeArchived ?? false;
       const accountWhere = includeArchived
         ? eq(accounts.ownerId, ownerId)
         : and(eq(accounts.ownerId, ownerId), eq(accounts.isActive, true));
-      const periodRowsPromise = options.cashFlowPeriods !== undefined
+      const periodRowsPromise = options.preloadedPaydays !== undefined ? Promise.resolve(options.preloadedPaydays) : options.cashFlowPeriods !== undefined
         ? Promise.resolve(options.cashFlowPeriods).then((rows) => rows.map((row) => ({ payDate: row.payDate })))
         : db.select({ payDate: cashFlowPeriods.payDate })
           .from(cashFlowPeriods)
@@ -419,7 +429,13 @@ export function createAccountTimelineRepository(db: Database) {
         }).from(accounts)
           .innerJoin(institutions, and(eq(institutions.id, accounts.institutionId), eq(institutions.ownerId, ownerId)))
           .leftJoin(accountGroups, and(eq(accountGroups.id, accounts.groupId), eq(accountGroups.ownerId, ownerId)))
-          .leftJoin(balanceSnapshots, and(eq(balanceSnapshots.accountId, accounts.id), eq(balanceSnapshots.ownerId, ownerId)))
+          .leftJoin(balanceSnapshots, and(eq(balanceSnapshots.accountId, accounts.id), eq(balanceSnapshots.ownerId, ownerId), options.windowDates === undefined ? undefined : or(
+            inArray(balanceSnapshots.asOf, [...options.windowDates]),
+            // Preserve separate Actual/manual predecessors; CF projections below still
+            // obtain their complete authoritative seed set through the existing helper.
+            sql`${balanceSnapshots.asOf} = (select max(seed.as_of) from balance_snapshots seed where seed.owner_id = ${ownerId} and seed.account_id = ${accounts.id} and seed.as_of < ${options.windowDates[0] ?? "0001-01-01"} and seed.status = 'actual')`,
+            sql`${balanceSnapshots.asOf} = (select max(seed.as_of) from balance_snapshots seed where seed.owner_id = ${ownerId} and seed.account_id = ${accounts.id} and seed.as_of < ${options.windowDates[0] ?? "0001-01-01"} and seed.status = 'planned' and seed.is_generated = false)`,
+          )))
           .where(accountWhere)
           .orderBy(asc(accounts.timelineOrder), asc(accounts.name), asc(accounts.id), asc(balanceSnapshots.asOf), asc(balanceSnapshots.id)),
         periodRowsPromise,
@@ -429,11 +445,11 @@ export function createAccountTimelineRepository(db: Database) {
           payDate: cashFlowPaydayChecks.payDate,
           actualBalanceMinor: cashFlowPaydayChecks.actualBalanceMinor,
         }).from(cashFlowPaydayChecks)
-          .where(eq(cashFlowPaydayChecks.ownerId, ownerId))
+          .where(and(eq(cashFlowPaydayChecks.ownerId, ownerId), options.windowDates === undefined ? undefined : inArray(cashFlowPaydayChecks.payDate, [...options.windowDates])))
           .orderBy(asc(cashFlowPaydayChecks.payDate), asc(cashFlowPaydayChecks.accountId), asc(cashFlowPaydayChecks.id)),
         db.select({ id: accountBalanceNotes.id, accountId: accountBalanceNotes.accountId, asOf: accountBalanceNotes.asOf, note: accountBalanceNotes.note })
           .from(accountBalanceNotes)
-          .where(eq(accountBalanceNotes.ownerId, ownerId))
+          .where(and(eq(accountBalanceNotes.ownerId, ownerId), options.windowDates === undefined ? undefined : inArray(accountBalanceNotes.asOf, [...options.windowDates])))
           .orderBy(asc(accountBalanceNotes.asOf), asc(accountBalanceNotes.accountId), asc(accountBalanceNotes.id)),
       ]);
       const notes = noteRows.flatMap((row) => {
@@ -504,6 +520,7 @@ export function createAccountTimelineRepository(db: Database) {
         if (!openings) continue;
         const snapshotsByDate = new Map(account.snapshots.map((snapshot) => [snapshot.asOf, snapshot]));
         for (const [payDate, openingMinor] of openings) {
+          if (options.windowDates && !options.windowDates.includes(payDate)) continue;
           const existing = snapshotsByDate.get(payDate);
           if (existing) {
             if (existing.status === "planned" && existing.isGenerated) {

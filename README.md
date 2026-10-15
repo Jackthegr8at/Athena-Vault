@@ -23,6 +23,7 @@ PostgreSQL is the authoritative operational store. Financial amounts are represe
 - [Contributing](CONTRIBUTING.md) — contributor workflow, checks, and data-safety principles
 - [Data model](docs/data-model.md) — product rules and domain boundaries
 - [Architecture](docs/architecture.md) — packages, persistence, and read-model boundaries
+- [Request-data optimizations](docs/request-data-optimization.md) — bounded reads, deferred details, synthetic evidence, and validation limits
 - [Investment planning](docs/investment-planning.md) — REEI/RDSP holdings, symbol search and instrument verification, calculator/portfolio modes, Cash Flow source boundaries, and validation status
 - [Security](docs/security.md) — authentication, ownership, secrets, and operational safety
 - [Backup and restore](docs/backup-and-restore.md) — encrypted backups, standalone restore verification, and local runtime-permission reconciliation

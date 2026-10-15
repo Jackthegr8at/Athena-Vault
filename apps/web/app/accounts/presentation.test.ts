@@ -9,8 +9,16 @@ import {
   shouldShowAccountsFirstUse,
 } from "./presentation";
 import type { AccountTimelinePresentationInput } from "./presentation";
+import { selectAccountTimelineWindow } from "@athena/database/account-timeline";
 
 const ownerCurrency = "CAD" as const;
+
+it("keeps visible presentation identical when unrelated snapshots are bounded", () => {
+  const options = { todayIso: "2026-08-20", selectedDate: "2026-08-19", pastPeriods: 0, futurePeriods: 0 };
+  const window = selectAccountTimelineWindow(timeline.paydays, options);
+  const bounded = { ...timeline, accounts: timeline.accounts.map(account => ({ ...account, snapshots: account.snapshots.filter(s => window.visibleDates.includes(s.asOf)), notes: account.notes?.filter(n => window.visibleDates.includes(n.asOf)) })) };
+  expect(buildAccountsPresentation(bounded, options)).toEqual(buildAccountsPresentation(timeline, options));
+});
 
 function snapshot(id: string, accountId: string, asOf: string, balanceMinor: number, status: "actual" | "planned") {
   return { id, accountId, asOf, balanceMinor, status, currency: ownerCurrency };

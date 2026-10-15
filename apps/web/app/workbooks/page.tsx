@@ -4,6 +4,7 @@ import { createCalculationWorkbooksRepository } from "@athena/database";
 import { ModulePage } from "../components/module-page";
 import { withAuthenticatedPageDatabase } from "../../lib/server/owner-database";
 import { CalculationWorkbench, type CalculationWorkbookSummary } from "./calculation-workbench";
+import { selectWorkbookSummary } from "./selection";
 
 export const dynamic = "force-dynamic";
 
@@ -46,18 +47,12 @@ export default async function WorkbooksPage({ searchParams }: WorkbooksPageProps
 
       const repository = createCalculationWorkbooksRepository(database);
       const rows = await repository.listByOwner(user.owner.id);
-      const requested = requestedWorkbookId ? await repository.getById(user.owner.id, requestedWorkbookId) : null;
-      const selected = requested ?? (rows[0] ? await repository.getById(user.owner.id, rows[0].id) : null);
       const workbooks: CalculationWorkbookSummary[] = rows.map((row) => ({
         id: row.id,
         name: row.name,
         updatedAt: row.updatedAt.toISOString(),
       }));
-      const selectedWorkbook: CalculationWorkbookSummary | null = selected ? {
-        id: selected.id,
-        name: selected.name,
-        updatedAt: selected.updatedAt.toISOString(),
-      } : null;
+      const selectedWorkbook = selectWorkbookSummary(workbooks, requestedWorkbookId);
       return { workbooks, selectedWorkbook, migrationRequired: false, isDemo: user.owner.isDemo };
     }, { requireTwoFactor: true });
   } catch (error) {

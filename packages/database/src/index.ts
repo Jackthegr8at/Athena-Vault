@@ -18,6 +18,7 @@ export * from "./repositories/goals";
 export * from "./repositories/audit";
 export * from "./repositories/notifications";
 export * from "./repositories/account-timeline";
+export { selectAccountTimelineWindow } from "./account-timeline-window";
 export * from "./repositories/goal-plans";
 export type { OwnerRecord, TimelineExtensionResult } from "./repositories/shared";
 export * from "./annual-maintenance";

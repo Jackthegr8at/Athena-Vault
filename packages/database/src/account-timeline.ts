@@ -1,3 +1,5 @@
+export { selectAccountTimelineWindow } from "./account-timeline-window";
+
 export const ACCOUNT_KIND_METADATA = {
   checking: { label: "Chequing", group: "liquid", isLiquid: true, supportsCustomLabel: false },
   savings: { label: "Savings", group: "liquid", isLiquid: true, supportsCustomLabel: false },
