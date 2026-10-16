@@ -4,6 +4,56 @@ Athena Vault is a self-hosted personal-finance and projection workspace. It comb
 
 PostgreSQL is the authoritative operational store. Financial amounts are represented as integer minor units, and financial rules are designed to be explicit, deterministic, and covered by focused tests.
 
+## A look inside
+
+Overview brings net worth, available cash, and account trends together in one workspace.
+
+![Athena Vault Overview showing synthetic net worth, available cash, and account trends](docs/images/demo-overview.jpg)
+
+All screenshots show the read-only demo with synthetic data, captured on October 16, 2026. Names, balances, and projections are fictional; projections are illustrative, not financial advice. The deployed demo may differ from the latest source.
+
+### Explore the app
+
+Expand a preview below, then click its image to see it at full size.
+
+<details>
+<summary>Accounts — balances and payday timelines</summary>
+
+Review account totals and follow balances across pay periods.
+
+![Demo Accounts showing account categories, balances, and payday timeline controls](docs/images/demo-accounts.jpg)
+
+</details>
+
+<details>
+<summary>Cash Flow — pay periods and available cash</summary>
+
+Inspect income, spending, payday checks, and the amount available before the next pay.
+
+![Demo Cash Flow showing the selected period, available cash, payday check, and timeline](docs/images/demo-cash-flow.jpg)
+
+</details>
+
+<details>
+<summary>Goals — funding progress and future plans</summary>
+
+Keep savings targets and progress visible alongside everyday finances.
+
+![Demo Goals showing an emergency reserve, funding progress, and other savings targets](docs/images/demo-goals.jpg)
+
+</details>
+
+<details>
+<summary>Investment planning — compare long-term scenarios</summary>
+
+Compare hypothetical growth scenarios, contribution schedules, and their assumptions without changing account balances.
+
+![Demo investment projection showing four growth scenarios, contributions, and planning assumptions](docs/images/demo-investments.jpg)
+
+</details>
+
+The shared demo is read-only. For self-hosting its synthetic workspace, see the [demo procedure](docs/deployment.md#optional-shared-demo).
+
 ## Features
 
 - Net-worth overview and account balance timelines
