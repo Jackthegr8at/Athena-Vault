@@ -1,0 +1,11 @@
+diff --git a/dist/utils/get-root-dirs.js b/dist/utils/get-root-dirs.js
+--- a/dist/utils/get-root-dirs.js
++++ b/dist/utils/get-root-dirs.js
+@@ -16,5 +16,7 @@
+  */ var processRootDir = function(rootDir) {
+     return (0, _fastglob.globSync)(rootDir.replace(/\\/g, '/'), {
++        absolute: require("path").isAbsolute(rootDir.replace(/\\/g, '/')),
++        expandDirectories: false,
+         onlyDirectories: true
+     });
+ };

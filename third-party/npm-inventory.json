@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "lockfileSha256": "a9ce308094412a7d32566366b16b72fbcd276ae5d8677c7805432e9df58c26b3",
+  "lockfileSha256": "662f8def415930b4fd7b3b27c267f9e9be0c9ae07ab886f0240659ec8d41bb97",
   "scope": "Exact lockfile packages; only locally installed matching versions have harvested notices. Missing platforms and unknown/missing licenses require artifact review.",
   "packages": [
     {
@@ -1518,42 +1518,6 @@
         {
           "file": "LICENSE",
           "sha256": "4f221aee6e072336700c408c68ab3b96a3fc09f6aebe6f48f1bd99e5ef13faec"
-        }
-      ]
-    },
-    {
-      "name": "@nodelib/fs.scandir",
-      "version": "2.1.5",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "2416a1c74f7d1b46eb51fddce99d6ab6d7021af8e7ef211daca95edad5809557"
-        }
-      ]
-    },
-    {
-      "name": "@nodelib/fs.stat",
-      "version": "2.0.5",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "2416a1c74f7d1b46eb51fddce99d6ab6d7021af8e7ef211daca95edad5809557"
-        }
-      ]
-    },
-    {
-      "name": "@nodelib/fs.walk",
-      "version": "1.2.8",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "2416a1c74f7d1b46eb51fddce99d6ab6d7021af8e7ef211daca95edad5809557"
         }
       ]
     },
@@ -3741,18 +3705,6 @@
       ]
     },
     {
-      "name": "braces",
-      "version": "3.0.3",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "d99bf3271ffd7561b89e2c51b5da6ca3a3669e031efc6543f477541520a1566b"
-        }
-      ]
-    },
-    {
       "name": "browserslist",
       "version": "4.28.7",
       "installed": true,
@@ -4758,18 +4710,6 @@
       ]
     },
     {
-      "name": "fast-glob",
-      "version": "3.3.1",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "2416a1c74f7d1b46eb51fddce99d6ab6d7021af8e7ef211daca95edad5809557"
-        }
-      ]
-    },
-    {
       "name": "fast-json-stable-stringify",
       "version": "2.1.0",
       "installed": true,
@@ -4794,18 +4734,6 @@
       ]
     },
     {
-      "name": "fastq",
-      "version": "1.20.3",
-      "installed": true,
-      "license": "ISC",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "61817d32cf2cc8abd3b14b637ecb7a4c2eaae4334f58b3dab4f762583e1cf380"
-        }
-      ]
-    },
-    {
       "name": "fdir",
       "version": "6.5.0",
       "installed": true,
@@ -4826,18 +4754,6 @@
         {
           "file": "LICENSE",
           "sha256": "fa4daa7026bbfc4024dc9cf8a653b467b96bb5dadc671bac710231aa3b2dc119"
-        }
-      ]
-    },
-    {
-      "name": "fill-range",
-      "version": "7.1.1",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "d99bf3271ffd7561b89e2c51b5da6ca3a3669e031efc6543f477541520a1566b"
         }
       ]
     },
@@ -5044,18 +4960,6 @@
         {
           "file": "LICENSE",
           "sha256": "8dded67841a9261a622c739fb61c81785e93765de852828ceeb9403d20a74581"
-        }
-      ]
-    },
-    {
-      "name": "glob-parent",
-      "version": "5.1.2",
-      "installed": true,
-      "license": "ISC",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "7717b8ffed1f5beb6292c00125a202ba9ae40c1e271c6614a4c8010ba2438b6e"
         }
       ]
     },
@@ -5572,18 +5476,6 @@
         {
           "file": "LICENSE",
           "sha256": "07d333ca37861bd58aa7385fdaf0f948a8e88f65a9746920f5ed9ee7715d8401"
-        }
-      ]
-    },
-    {
-      "name": "is-number",
-      "version": "7.0.0",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "d99bf3271ffd7561b89e2c51b5da6ca3a3669e031efc6543f477541520a1566b"
         }
       ]
     },
@@ -6191,30 +6083,6 @@
         {
           "file": "LICENSE",
           "sha256": "42fbee6b9cc2d44bbb5d831882e4fff369b9f77e1d459aa027b04d673eeaf927"
-        }
-      ]
-    },
-    {
-      "name": "merge2",
-      "version": "1.4.1",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "7440bbb7acbb291812bf9a815e9f6d992f2361553fdd574ce41249e7f093ab31"
-        }
-      ]
-    },
-    {
-      "name": "micromatch",
-      "version": "4.0.8",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "d99bf3271ffd7561b89e2c51b5da6ca3a3669e031efc6543f477541520a1566b"
         }
       ]
     },
@@ -7207,18 +7075,6 @@
     },
     {
       "name": "picomatch",
-      "version": "2.3.2",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "9219a3ebed1d1e1bc469cc605ca626c8433997a1a3013aba1338e03e381bbe11"
-        }
-      ]
-    },
-    {
-      "name": "picomatch",
       "version": "4.0.5",
       "installed": true,
       "license": "MIT",
@@ -7394,18 +7250,6 @@
         {
           "file": "LICENSE",
           "sha256": "fd736bb5671ced17542cdb7baf9a471b3e47fed26da131211ccd49412362cb5e"
-        }
-      ]
-    },
-    {
-      "name": "queue-microtask",
-      "version": "1.2.3",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "df12b5d07fbd3cf2891a43bebdc8cdda70819efb37aac6c43f25001670a06bd2"
         }
       ]
     },
@@ -7614,18 +7458,6 @@
       ]
     },
     {
-      "name": "reusify",
-      "version": "1.1.0",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "7eb05843f078916a78f1be5f00b944653a398d208d8f7aa3df4f8f6986323bb7"
-        }
-      ]
-    },
-    {
       "name": "rollup",
       "version": "4.62.4",
       "installed": true,
@@ -7658,18 +7490,6 @@
         {
           "file": "LICENSE.txt",
           "sha256": "22152d68b13f0260c7e4f2f8d905a566db39c32f1c9933ac58fdbcd27c530e3d"
-        }
-      ]
-    },
-    {
-      "name": "run-parallel",
-      "version": "1.2.0",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "df12b5d07fbd3cf2891a43bebdc8cdda70819efb37aac6c43f25001670a06bd2"
         }
       ]
     },
@@ -8284,18 +8104,6 @@
         {
           "file": "LICENSE",
           "sha256": "417c6c9f11c44a2e16b43a4bcfb93f7fd0204541bc80b00344316bc04919c393"
-        }
-      ]
-    },
-    {
-      "name": "to-regex-range",
-      "version": "5.0.1",
-      "installed": true,
-      "license": "MIT",
-      "notices": [
-        {
-          "file": "LICENSE",
-          "sha256": "f6355b305c682df8ad29fac06d679f92e3261a5c8e6ffa3815537232f9f176ad"
         }
       ]
     },
